@@ -1,0 +1,25 @@
+@import '../../theme-variables.scss';
+
+.play-button-container {
+  width: 4em;
+  height: 4em;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color:#1d1d1d;
+  cursor: pointer;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background-color: $primary-color-hover;
+  }
+}
+
+
+.lottie-button{
+  width: 5em;
+  height: 5em;
+  cursor: pointer;
+}

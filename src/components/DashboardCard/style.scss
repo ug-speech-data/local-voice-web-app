@@ -1,0 +1,15 @@
+@import '../../theme-variables.scss';
+
+.dashboard-card {
+  .card-content {
+    margin: 0.5em;
+    box-shadow: 0.1em 0.1em 0.4em rgba(0, 0, 0, 0.2);
+    min-height: 5em;
+    border-radius: 0.4em;
+
+    &:hover {
+      background-color: rgba($primary-color, 0.05);
+      cursor: pointer;
+    }
+  }
+}

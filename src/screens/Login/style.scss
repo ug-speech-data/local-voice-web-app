@@ -1,0 +1,22 @@
+.login-page {
+  height: 100vh;
+}
+
+.login-card {
+  background-color: white;
+  padding: 1em;
+  border-radius: 4px;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding-top: 0.5rem;
+}
