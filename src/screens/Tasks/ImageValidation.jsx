@@ -49,7 +49,7 @@ function ImageValidation() {
     }
 
     return (
-        <section className='my-3'>
+        <section className='my-5'>
             {isFetching &&
                 <div className="my-3 d-flex justify-content-center">
                     <Spinner
