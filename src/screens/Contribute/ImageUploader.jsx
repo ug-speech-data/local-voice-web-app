@@ -1,7 +1,7 @@
 import './style.scss';
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
-import logo from "../../logo.svg";
+import logo from "../../assets/images/logo.png";
 
 
 function ImageUploader() {

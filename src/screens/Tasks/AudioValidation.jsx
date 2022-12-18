@@ -2,7 +2,7 @@ import './style.scss';
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import AudioPlayer from "../../components/AudioPlayer";
-import logo from "../../logo.svg";
+import logo from "../../assets/images/logo.png";
 
 function AudioValidation() {
     return (

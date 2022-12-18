@@ -1,10 +1,7 @@
 import './style.scss';
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
-import logo from "../../logo.svg";
-import testWave from '../../assets/audio/test.wav'
-
-let audio = new Audio(testWave);
+import logo from "../../assets/images/logo.png";
 
 function ImageValidation() {
     return (
