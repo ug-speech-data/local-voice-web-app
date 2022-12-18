@@ -1,8 +1,5 @@
 import './style.scss';
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
-import testWave from '../../assets/audio/test.wav'
 
 function AudiosTable() {
     return (

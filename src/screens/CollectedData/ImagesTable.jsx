@@ -1,6 +1,5 @@
 import './style.scss';
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
 
 
 function ImagesTable() {

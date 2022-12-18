@@ -1,12 +1,9 @@
 import './style.scss';
-import { Fragment } from "react";
-import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 
 
 function ImageUploader() {
     return (
-
         <div className="col-md-6 mx-auto my-4">
             <div className='d-flex my-2'>
                 <input type="url" placeholder='Image URL' className="form-control" />

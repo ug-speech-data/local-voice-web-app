@@ -12,3 +12,32 @@
     text-align: center;
   }
 }
+
+.controls-container {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  left: 50%;
+  border: 2px solid red;
+}
+
+.btn-control {
+  background-color: white;
+  box-shadow: 0 0 0.4em #888888;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  padding: 0.2em;
+  height: 4em;
+  width: 4em;
+
+  &:hover {
+    box-shadow: 0 0 1em #888888;
+  }
+
+  &:active {
+    background-color:  rgb(250, 250, 250);
+  }
+}

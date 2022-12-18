@@ -15,11 +15,17 @@ export const authenticationSlice = createSlice({
         },
         setToken: (state, action) => {
             state.token = action.payload
+        },
+        logOutLocally: (state) => {
+            localStorage.removeItem("token")
+            localStorage.removeItem("user")
+            state.token = null
+            state.user = null
         }
     },
 });
 
-export const { setUser, setToken } = authenticationSlice.actions;
+export const { setUser, setToken, logOutLocally } = authenticationSlice.actions;
 export default authenticationSlice.reducer;
 
 
@@ -48,8 +54,16 @@ export const apiSlice = createApi({
                     }
                 },
             }),
+            logOutUser: builder.mutation({
+                query() {
+                    return {
+                        url: `/auth/logout/`,
+                        method: 'POST',
+                    }
+                },
+            }),
         };
     },
 });
 
-export const { useLoginUserMutation, useRegisterUserMutation } = apiSlice;
+export const { useLoginUserMutation, useRegisterUserMutation, useLogOutUserMutation } = apiSlice;
