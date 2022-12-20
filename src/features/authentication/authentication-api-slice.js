@@ -30,7 +30,7 @@ export default authenticationSlice.reducer;
 
 
 export const apiSlice = createApi({
-    reducerPath: 'api',
+    reducerPath: 'auth-api',
     baseQuery: fetchBaseQuery({
         baseUrl: BASE_URL
     }),

@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const BASE_URL = 'http://127.0.0.1:8000/api';
 
 export const resourceApiSlice = createApi({
-    reducerPath: 'api',
+    reducerPath: 'resources-api',
     baseQuery: fetchBaseQuery({
         baseUrl: BASE_URL,
         prepareHeaders(headers) {
@@ -19,8 +19,31 @@ export const resourceApiSlice = createApi({
                 },
             }),
 
+            getAudiosToValidate: builder.query({
+                query(page = 1) {
+                    return `/get-audios-to-validate?page=${page}`;
+                },
+            }),
+            validateImage: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/validate-image/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
+            validateAudio: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/validate-audio/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
         };
     },
 });
 
-export const { useGetImagesToValidateQuery } = resourceApiSlice;
+export const { useGetImagesToValidateQuery, useValidateImageMutation, useGetAudiosToValidateQuery, useValidateAudioMutation } = resourceApiSlice;

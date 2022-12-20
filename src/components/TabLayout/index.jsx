@@ -7,9 +7,9 @@ function TabLayout({ children, tabs }) {
 
     return (
         <Fragment>
-            <nav className='tabs d-flex'>
+            <nav className='tabs d-flex align-items-center'>
                 {tabs.map((tab, index) => (
-                    <p key={index} className={'tab-item me-3 my-0 ' + (activeTab === index ? 'active' : '')} onClick={() => setActiveTab(index)} ><b>{tab.toUpperCase()}</b></p>
+                    <p key={index} className={'tab-item me-3 m-0 p-0' + (activeTab === index ? ' active' : '')} onClick={() => setActiveTab(index)} ><b>{tab.toUpperCase()}</b></p>
                 ))}
             </nav>
             <div className='tab-content'>
