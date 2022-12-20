@@ -19,9 +19,9 @@ export const resourceApiSlice = createApi({
                 },
             }),
 
-            getAudiosToValidate: builder.query({
-                query(page = 1) {
-                    return `/get-audios-to-validate?page=${page}`;
+            getAudioToValidate: builder.query({
+                query(id = -1) {
+                    return `/get-audios-to-validate?offsetId=${id}`;
                 },
             }),
             validateImage: builder.mutation({
@@ -46,4 +46,4 @@ export const resourceApiSlice = createApi({
     },
 });
 
-export const { useGetImagesToValidateQuery, useValidateImageMutation, useGetAudiosToValidateQuery, useValidateAudioMutation } = resourceApiSlice;
+export const { useGetImagesToValidateQuery, useValidateImageMutation, useGetAudioToValidateQuery, useValidateAudioMutation } = resourceApiSlice;
