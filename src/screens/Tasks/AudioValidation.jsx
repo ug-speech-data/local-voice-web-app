@@ -7,10 +7,10 @@ import { useGetAudioToValidateQuery, useValidateAudioMutation } from '../../feat
 
 
 function AudioValidation() {
-    //HACK : offsetImageId is used to trigger a new request to the API
-    const [offsetImageId, setOffsetImageId] = useState(0);
-    
-    const { data: response = {}, isFetching: isFetchingAudios, error: audioFetchingError } = useGetAudioToValidateQuery(offsetImageId);
+    //HACK : index is used to trigger a new request to the API
+    const [index, setIndex] = useState(0);
+
+    const { data: response = {}, isFetching: isFetchingAudios, error: audioFetchingError } = useGetAudioToValidateQuery(index);
     const [validateAudio, { isLoading: isValidatingAudio, error: audioValidationError }] = useValidateAudioMutation()
     const toast = useToast()
     const modalRef = useRef(null);
@@ -18,6 +18,8 @@ function AudioValidation() {
     const [modal, setModal] = useState(null);
     const [isActionButtonDisabled, setIsActionButtonDisabled] = useState(true)
     const [isAudioBuffering, setIsAudioBuffering] = useState(true)
+
+    console.log(response)
 
     let currentAudio = response["audio"]
     if (audioFetchingError) {
@@ -36,7 +38,7 @@ function AudioValidation() {
         setCurrentImageLoading(true)
         setIsAudioBuffering(true)
         setIsActionButtonDisabled(true)
-        setOffsetImageId(offsetImageId + 1)
+        setIndex(index + 1)
     }
 
     useEffect(() => {
@@ -84,10 +86,6 @@ function AudioValidation() {
         setIsActionButtonDisabled(false)
     }
 
-    useEffect(() => {
-        console.log("useEffect", "useEffect")
-    })
-
     return (
         <section className='image-validation'>
             <div className="my-3 d-flex justify-content-end position-relative">
@@ -100,7 +98,7 @@ function AudioValidation() {
                 </div> : null
             }
 
-            {currentAudio && 
+            {currentAudio &&
                 <div ref={modalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-xl">
                         <div className="modal-content">
@@ -117,7 +115,7 @@ function AudioValidation() {
                                     size="xl"
                                     color='purple.500'
                                 />}
-                                <img 
+                                <img
                                     onLoad={() => setCurrentImageLoading(false)}
                                     className="image"
                                     style={{ "opacity": (currentImageLoading || isFetchingAudios) ? "0.5" : "1" }}
@@ -150,7 +148,7 @@ function AudioValidation() {
                         <img onClick={showModal}
                             onLoad={() => setCurrentImageLoading(false)}
                             className="image"
-                            style={{ "opacity": (currentImageLoading || isFetchingAudios) ? "0.5" : "1" }}
+                            style={{ "opacity": (currentImageLoading || isFetchingAudios) ? "0.5" : "1", maxHeight: "50vh" }}
                             src={currentAudio.image_url}
                             alt="Described image" />}
                 </div>
@@ -173,9 +171,9 @@ function AudioValidation() {
                 </div>
             }
 
-            <div className="d-flex justify-content-center my-5 page-actions">
+            <div className="d-flex justify-content-center my-5 p-2 page-actions">
                 <button
-                    className="btn btn-outline-danger me-2 p-3"
+                    className="btn btn-outline-danger me-2 px-3"
                     disabled={isValidatingAudio || isActionButtonDisabled}
                     onClick={() => handleValidate("rejected")}>
                     {isValidatingAudio ? <Spinner size="sm" /> :
@@ -183,14 +181,12 @@ function AudioValidation() {
                     }
                 </button>
                 <button
-                    className="btn btn-outline-primary mx-3 p-3"
+                    className="btn btn-outline-primary mx-3 px-3"
                     disabled={isValidatingAudio}
-                    onClick={() => setOffsetImageId(offsetImageId + 1)}>
-                    {isValidatingAudio ? <Spinner size="sm" /> :
-                        <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
-                    }
+                    onClick={() => setIndex(index + 1)}>
+                    <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
                 </button>
-                <button className="btn btn-outline-success me-2 p-3"
+                <button className="btn btn-outline-success me-2 px-3"
                     disabled={isValidatingAudio || isActionButtonDisabled}
                     onClick={() => handleValidate("accepted")}>
                     {isValidatingAudio ? <Spinner size="sm" /> :

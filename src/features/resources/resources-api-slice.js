@@ -13,15 +13,15 @@ export const resourceApiSlice = createApi({
     }),
     endpoints(builder) {
         return {
-            getImagesToValidate: builder.query({
+            getImageToValidate: builder.query({
                 query(page = 1) {
-                    return `/get-images-to-validate?page=${page}`;
+                    return `/get-image-to-validate?page=${page}`;
                 },
             }),
 
             getAudioToValidate: builder.query({
                 query(id = -1) {
-                    return `/get-audios-to-validate?offsetId=${id}`;
+                    return `/get-audio-to-validate?offsetId=${id}`;
                 },
             }),
             validateImage: builder.mutation({
@@ -42,8 +42,18 @@ export const resourceApiSlice = createApi({
                     }
                 },
             }),
+
+            submitTranscription: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/submit-transcription/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
         };
     },
 });
 
-export const { useGetImagesToValidateQuery, useValidateImageMutation, useGetAudioToValidateQuery, useValidateAudioMutation } = resourceApiSlice;
+export const { useGetImageToValidateQuery, useValidateImageMutation, useGetAudioToValidateQuery, useValidateAudioMutation, useSubmitTranscriptionMutation } = resourceApiSlice;

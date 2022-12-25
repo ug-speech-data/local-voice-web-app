@@ -1,19 +1,19 @@
 import './style.scss';
 import React, { useState, useRef } from 'react'
 import { Link } from "react-router-dom";
-import { useGetImagesToValidateQuery, useValidateImageMutation } from '../../features/resources/resources-api-slice';
+import { useGetImageToValidateQuery, useValidateImageMutation } from '../../features/resources/resources-api-slice';
 import { useToast, Spinner } from '@chakra-ui/react'
 import { useEffect } from 'react';
 import { Modal } from 'bootstrap';
 import TagInput from '../../components/TagInput';
-import { mod } from '../../utils/functions';
 
 
 function ImageValidation() {
-    const { data: response = [], isFetching: isFetchingImages, error } = useGetImagesToValidateQuery(1);
-    const [validateImage, { isLoading: isValidatingImage, error: imageValidationError }] = useValidateImageMutation()
+    //HACK : index is used to trigger a new request to the API
+    const [index, setIndex] = useState(0);
 
-    const [imageIndex, setImageIndex] = useState(0);
+    const { data: response = [], isFetching: isFetchingImages, error } = useGetImageToValidateQuery(index);
+    const [validateImage, { isLoading: isValidatingImage, error: imageValidationError }] = useValidateImageMutation()
     const [currentImageLoading, setCurrentImageLoading] = useState(true);
     const [modal, setModal] = useState(null);
     const toast = useToast()
@@ -27,27 +27,26 @@ function ImageValidation() {
     if (error) {
         toast({
             position: 'top-center',
-            title: `An error occurred`,
+            title: `An error occurred: ${error.originalStatus}`,
             description: error.data.detail,
             status: 'error',
             duration: 2000,
             isClosable: true,
         })
     } else {
-        if (response["images"] !== undefined) {
-            currentImage = response["images"][imageIndex]
+        if (response["image"] !== undefined) {
+            currentImage = response["image"]
         }
     }
 
-    const handleImageChange = (index) => {
-        setImageIndex(mod(index, response["images"].length));
-        currentImage = response["images"][imageIndex]
-
+    const handleImageChange = () => {
         // Reset selected tags
         setSelectedTags([])
 
         // Loading image
         setCurrentImageLoading(true)
+
+        setIndex(index + 1)
     }
 
     useEffect(() => {
@@ -64,7 +63,7 @@ function ImageValidation() {
     const handleValidate = async (status) => {
         if (isValidatingImage) return
 
-        const body = { image_id: 1, status }
+        const body = { image_id: 1, categories: selectedTags, status }
         const response = await validateImage(body).unwrap()
         if (response['message'] != null) {
             toast({
@@ -77,7 +76,7 @@ function ImageValidation() {
             })
         }
         // Next image
-        handleImageChange(imageIndex + 1)
+        handleImageChange()
     }
 
     if (imageValidationError) {
@@ -94,21 +93,12 @@ function ImageValidation() {
 
     return (
         <section className='my-5 image-validation'>
-            {response["images"] === undefined || response["images"].length === 0 ?
+            <p>For each image, select the appropriate category. Also, <b>reject</b> images that <b>are of low resolution or contains water marks</b></p>
+
+            {response["image"] === undefined || response["image"].length === 0 ?
                 <div className="my-3 d-flex justify-content-center align-items-center">
                     <h3>No images to validate</h3>
                 </div> : null
-            }
-
-            {isFetchingImages &&
-                <div className="my-3 d-flex justify-content-center">
-                    <Spinner
-                        thickness='4px'
-                        speed='0.65s'
-                        emptyColor='gray.200'
-                        color='purple.500'
-                        size='xl' />
-                </div>
             }
 
             {currentImage &&
@@ -120,7 +110,7 @@ function ImageValidation() {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body d-flex justify-content-center overflow-scroll">
-                                {currentImageLoading && <Spinner
+                                {(currentImageLoading || isFetchingImages) && <Spinner
                                     className='center-parent'
                                     thickness='4px'
                                     speed='0.65s'
@@ -131,7 +121,7 @@ function ImageValidation() {
                                 <img onClick={showModal}
                                     onLoad={() => setCurrentImageLoading(false)}
                                     className="image"
-                                    style={{ "opacity": currentImageLoading ? "0.5" : "1" }}
+                                    style={{ "opacity": (currentImageLoading || isFetchingImages) ? "0.5" : "1" }}
                                     src={currentImage.image_url}
                                     alt="Described image" />
                             </div>
@@ -145,15 +135,10 @@ function ImageValidation() {
 
             {currentImage &&
                 <div className="row my-5">
-                    <div className="col-1 d-flex align-items-center">
-                        <button className="btn-control text-muted" onClick={() => handleImageChange(imageIndex - 1)}>
-                            <i className="bi bi-arrow-left"></i>
-                        </button>
-                    </div>
-                    <div className="col-10">
+                    <div className="col-11 mx-auto">
                         <div className="row">
                             <div className='col-md-7 mx-auto d-flex align-items-center justify-content-center position-relative'>
-                                {currentImageLoading && <Spinner
+                                {(currentImageLoading || isFetchingImages) && <Spinner
                                     className='center-parent'
                                     thickness='4px'
                                     speed='0.65s'
@@ -164,7 +149,7 @@ function ImageValidation() {
                                 <img onClick={showModal}
                                     onLoad={() => setCurrentImageLoading(false)}
                                     className="image"
-                                    style={{ "opacity": currentImageLoading ? "0.5" : "1" }}
+                                    style={{ "opacity": (currentImageLoading || isFetchingImages) ? "0.5" : "1" }}
                                     src={currentImage.image_url}
                                     alt="Described image" />
                             </div>
@@ -181,11 +166,6 @@ function ImageValidation() {
                             </div>
                         </div>
                     </div>
-                    <div className="col-1 d-flex align-items-center">
-                        <button className="btn-control text-muted" onClick={() => handleImageChange(imageIndex + 1)}>
-                            <i className="bi bi-arrow-right"></i>
-                        </button>
-                    </div>
                 </div>
             }
 
@@ -194,20 +174,26 @@ function ImageValidation() {
                 <TagInput tags={categories} selectedTags={selectedTags} setSelectedTags={setSelectedTags} maxSelection={3} />
             </div>
 
-            <div className="d-flex justify-content-center my-4 page-actions">
+            <div className="d-flex justify-content-center my-5 p-2 page-actions">
                 <button
-                    className="btn btn-outline-danger me-2 p-3"
-                    disabled={isValidatingImage}
+                    className="btn btn-outline-danger me-2 px-3"
+                    disabled={isValidatingImage || currentImageLoading}
                     onClick={() => handleValidate("rejected")}>
                     {isValidatingImage ? <Spinner size="sm" /> :
-                        <span><i className="bi bi-hand-thumbs-down"></i>Reject</span>
+                        <span><i className="bi bi-hand-thumbs-down me-1"></i>Reject</span>
                     }
                 </button>
-                <button className="btn btn-outline-success me-2 p-3"
-                    disabled={isValidatingImage || selectedTags.length < 1}
+                <button
+                    className="btn btn-outline-primary mx-3 px-3"
+                    disabled={isValidatingImage}
+                    onClick={handleImageChange}>
+                    <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
+                </button>
+                <button className="btn btn-outline-success me-2 px-3"
+                    disabled={isValidatingImage || currentImageLoading || selectedTags.length < 1}
                     onClick={() => handleValidate("accepted")}>
                     {isValidatingImage ? <Spinner size="sm" /> :
-                        <span><i className="bi bi-hand-thumbs-up"></i>Accept</span>
+                        <span><i className="bi bi-hand-thumbs-up me-1"></i>Accept</span>
                     }
                 </button>
             </div>

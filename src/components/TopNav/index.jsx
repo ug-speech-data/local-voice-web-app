@@ -1,4 +1,5 @@
 import './style.scss';
+import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { useLogOutUserMutation, logOutLocally } from '../../features/authentication/authentication-api-slice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,6 +10,7 @@ function TopNav() {
     const [logOutUser, { isLoading }] = useLogOutUserMutation()
     const dispatch = useDispatch();
     const toast = useToast()
+    const [activeMenu, setActiveMenu] = useState('home')
 
     const handleLogout = async () => {
         try {
@@ -29,13 +31,13 @@ function TopNav() {
     return (
         <header className="top-nav d-flex justify-content-between">
             <div className='nav-left'>
-                <Link to="/" className='nav-menu-item active'>HOME</Link>
-                <Link to="/tasks" className='nav-menu-item'>VALIDATION AND TRANSCRIPTION</Link>
-                <Link to="/collected-data" className='nav-menu-item'>COLLECTED DATA</Link>
+                <Link to="/" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>HOME</Link>
+                <Link to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>
+                <Link to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>COLLECTED DATA</Link>
             </div>
             <div className='nav-right'>
-                <Link to="" className='nav-menu-item'>SETUP</Link>
-                <Link to="" className='nav-menu-item'>{user.email_address}</Link>
+                <Link to="" className={`nav-menu-item ${activeMenu === 'setup' ? 'active' : ''}`} onClick={() => setActiveMenu("setup")}>SETUP</Link>
+                <Link to="" className={`nav-menu-item ${activeMenu === user.email_address ? 'active' : ''}`} onClick={() => setActiveMenu(`{ user.email_address }`)}>{user.email_address}</Link>
                 <button className='btn btn-light' onClick={handleLogout}>
                     {isLoading ? <Spinner
                         thickness='4px'

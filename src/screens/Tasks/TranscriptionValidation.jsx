@@ -1,15 +1,15 @@
 import './style.scss';
 import AudioPlayer from "../../components/AudioPlayer";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useToast, Spinner } from '@chakra-ui/react';
-import { useGetAudioToValidateQuery, useSubmitTranscriptionMutation } from '../../features/resources/resources-api-slice';
+import { useGetAudioToValidateQuery, useValidateAudioMutation } from '../../features/resources/resources-api-slice';
 
-function Transcription() {
+function TranscriptionValidation() {
     //HACK : index is used to trigger a new request to the API
     const [index, setIndex] = useState(0);
 
     const { data: response = {}, isFetching: isFetchingAudio, error: audioFetchingError } = useGetAudioToValidateQuery(index);
-    const [submitTranscription, { isLoading: isSubmittingTranscription, error: audioValidationError }] = useSubmitTranscriptionMutation()
+    const [validateAudio, { isLoading: isValidatingAudio, error: audioValidationError }] = useValidateAudioMutation()
     const toast = useToast()
     const [text, setText] = useState('')
     const [isActionButtonDisabled, setIsActionButtonDisabled] = useState(true)
@@ -35,11 +35,11 @@ function Transcription() {
         setText('')
     }
 
-    const handleSubmitTranscription = async () => {
-        if (isSubmittingTranscription) return
+    const handleValidate = async () => {
+        if (isValidatingAudio) return
 
         const body = { audio_id: 1, text }
-        const response = await submitTranscription(body).unwrap()
+        const response = await validateAudio(body).unwrap()
         if (response['message'] != null) {
             toast({
                 position: 'top-center',
@@ -72,16 +72,18 @@ function Transcription() {
     return (
         <section className='image-validation'>
             <div className="my-5 d-flex justify-content-center position-relative">
-                <p>Please transcribe the audio below as it is.</p>
+                <p>Please verify whether the text is a word-for-word transcription of the audio..</p>
             </div>
-
-            {currentAudio && !isFetchingAudio && <p className='text-center'>{currentAudio.name}</p>}
 
             {currentAudio === undefined ?
                 <div className="my-5 d-flex justify-content-center align-items-center">
                     <h2>No audios to validate</h2>
                 </div> : null
             }
+
+            <div className="col-md-10 mx-auto transcription-box">
+                <p className="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, quas.</p>
+            </div>
 
             {currentAudio &&
                 <div className='my-3 position-relative d-flex justify-content-center'>
@@ -100,28 +102,47 @@ function Transcription() {
                 </div>
             }
 
-            <div className="col-md-10 mx-auto transcription-box">
-                <textarea className='form-control' value={text} rows="5" placeholder='Type here' onChange={e => setText(e.target.value)}>
-                </textarea>
-            </div>
-
             <div className="d-flex justify-content-center my-5 p-2 page-actions">
                 <button
+                    className="btn btn-outline-danger me-2 px-3"
+                    disabled={isValidatingAudio || isActionButtonDisabled}
+                    onClick={() => handleValidate("rejected")}>
+                    {isValidatingAudio ? <Spinner size="sm" /> :
+                        <span><i className="bi bi-hand-thumbs-down me-1"></i>Reject</span>
+                    }
+                </button>
+                <button
                     className="btn btn-outline-primary mx-3 px-3"
-                    disabled={isSubmittingTranscription}
+                    disabled={isValidatingAudio}
                     onClick={() => setIndex(index + 1)}>
                     <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
                 </button>
                 <button className="btn btn-outline-success me-2 px-3"
-                    disabled={isSubmittingTranscription || isActionButtonDisabled || text.length === 0}
-                    onClick={() => handleSubmitTranscription("accepted")}>
-                    {isSubmittingTranscription ? <Spinner size="sm" /> :
+                    disabled={isValidatingAudio || isActionButtonDisabled}
+                    onClick={() => handleValidate("accepted")}>
+                    {isValidatingAudio ? <Spinner size="sm" /> :
                         <span><i className="bi bi-hand-thumbs-up me-1"></i>Accept</span>
                     }
                 </button>
             </div>
+
+            {/* <div className="d-flex justify-content-center my-5 p-2 page-actions">
+                <button
+                    className="btn btn-outline-primary mx-3 px-3"
+                    disabled={isValidatingAudio}
+                    onClick={() => setIndex(index + 1)}>
+                    <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
+                </button>
+                <button className="btn btn-outline-success me-2 px-3"
+                    disabled={isValidatingAudio || isActionButtonDisabled || text.length === 0}
+                    onClick={() => handleSubmitTranscription("accepted")}>
+                    {isValidatingAudio ? <Spinner size="sm" /> :
+                        <span><i className="bi bi-hand-thumbs-up me-1"></i>Accept</span>
+                    }
+                </button>
+            </div> */}
         </section>
     );
 }
 
-export default Transcription;
+export default TranscriptionValidation;
