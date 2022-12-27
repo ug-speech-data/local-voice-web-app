@@ -28,7 +28,7 @@ function ImageValidation() {
         toast({
             position: 'top-center',
             title: `An error occurred: ${error.originalStatus}`,
-            description: error.data.detail,
+            description: error.status,
             status: 'error',
             duration: 2000,
             isClosable: true,

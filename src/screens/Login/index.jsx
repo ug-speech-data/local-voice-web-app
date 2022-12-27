@@ -6,7 +6,7 @@ import { useToast, Spinner } from '@chakra-ui/react'
 import logo from "../../assets/images/logo.png";
 import { Navigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { useLoginUserMutation, setUser as setStoreUser, setToken } from '../../features/authentication/authentication-api-slice';
+import { useLoginUserMutation, setUser as setStoreUser, setToken, setUserPermissions } from '../../features/authentication/authentication-api-slice';
 
 
 function LoginScreen() {
@@ -36,6 +36,8 @@ function LoginScreen() {
                 // Save token to local storage
                 localStorage.setItem('token', response['token'])
                 localStorage.setItem('user', JSON.stringify(response['user']))
+                localStorage.setItem('user_permissions', JSON.stringify(response['user_permissions']))
+
                 toast({
                     position: 'top-center',
                     title: 'Login successful',
@@ -48,6 +50,7 @@ function LoginScreen() {
                 setUser(response['user'])
                 dispatch(setStoreUser(response['user']));
                 dispatch(setToken(setToken['token']));
+                dispatch(setUserPermissions(response['user_permissions']))
             }
         } catch (err) {
             toast({

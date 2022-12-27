@@ -7,7 +7,7 @@
   position: sticky;
   top: 0;
   background-color: white;
-  z-index: 1;  
+  z-index: 1;
 
   .nav-menu-item {
     margin-left: 1.5em;
@@ -17,18 +17,47 @@
     &.active,
     &:hover {
       color: $primary-color;
-      
-      &::after{
-        content: "";
+
+      &::after {
+        content: '';
         position: absolute;
         height: 0.2em;
         width: 100%;
         left: 0;
         background-color: $primary-color;
         bottom: -0.2em;
-        border-radius: 100%;
       }
-
     }
   }
+
+  .drop-container {
+    cursor: pointer;
+
+    &:hover .drop-down {
+      display: block;
+    }
+
+    .drop-down {
+      background-color: white;
+      position: absolute;
+      box-shadow: 0 0.2em 0.5em rgba(0, 0, 0, 0.2);
+      display: none;
+      right: 0;
+      min-width: 200px;
+
+      .drop-down-item {
+        padding: 0.8em 0.5em;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+}
+
+.profile-image {
+  height: 2.5em;
+  width: 2.5em;
+  border-radius: 100%;
 }

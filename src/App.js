@@ -10,6 +10,7 @@ import CollectedData from "./screens/CollectedData";
 import LoginScreen from "./screens/Login";
 import RegisterScreen from "./screens/Register";
 import ProtectedRoute from "./components/Common/ProtectedRoute";
+import Permissions from "./utils/permissions";
 
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
         } />
 
         <Route path="/collected-data" element={
-          <ProtectedRoute>
+          <ProtectedRoute permissions={[Permissions.MANAGE_COLLECTED_DATA]}>
             <CollectedData />
           </ProtectedRoute>
         } />

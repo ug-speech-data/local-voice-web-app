@@ -19,6 +19,12 @@ export const resourceApiSlice = createApi({
                 },
             }),
 
+            getUserPermissions: builder.query({
+                query() {
+                    return `/auth/user-permissions/`;
+                },
+            }),
+
             getAudioToValidate: builder.query({
                 query(id = -1) {
                     return `/get-audio-to-validate?offsetId=${id}`;
@@ -56,4 +62,11 @@ export const resourceApiSlice = createApi({
     },
 });
 
-export const { useGetImageToValidateQuery, useValidateImageMutation, useGetAudioToValidateQuery, useValidateAudioMutation, useSubmitTranscriptionMutation } = resourceApiSlice;
+export const { useGetImageToValidateQuery,
+    useValidateImageMutation,
+    useGetAudioToValidateQuery,
+    useValidateAudioMutation,
+    useSubmitTranscriptionMutation,
+    useGetUserPermissionsQuery,
+    useLazyGetUserPermissionsQuery,
+} = resourceApiSlice;

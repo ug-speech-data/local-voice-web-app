@@ -19,8 +19,6 @@ function AudioValidation() {
     const [isActionButtonDisabled, setIsActionButtonDisabled] = useState(true)
     const [isAudioBuffering, setIsAudioBuffering] = useState(true)
 
-    console.log(response)
-
     let currentAudio = response["audio"]
     if (audioFetchingError) {
         toast({
@@ -88,10 +86,6 @@ function AudioValidation() {
 
     return (
         <section className='image-validation'>
-            <div className="my-3 d-flex justify-content-end position-relative">
-                <span className="me-4"></span>
-            </div>
-
             {currentAudio === undefined ?
                 <div className="my-5 d-flex justify-content-center align-items-center">
                     <h2>No audios to validate</h2>
@@ -131,9 +125,10 @@ function AudioValidation() {
             }
 
             <div className="container">
-                <div className="col-10 col-md-8 mx-auto d-flex justify-content-center align-items-center">
-                    <p className='m-2'>Please verify whether the audio correctly describes the image below.</p>
-                </div>
+                {currentAudio &&
+                    <div className="col-10 col-md-8 mx-auto d-flex justify-content-center align-items-center">
+                        <p className='m-2'>Please verify whether the audio correctly describes the image below.</p>
+                    </div>}
 
                 <div className="col-10 col-md-8 mx-auto d-flex justify-content-center align-items-center">
                     {(currentImageLoading || isFetchingAudios) && <Spinner
@@ -171,29 +166,30 @@ function AudioValidation() {
                 </div>
             }
 
-            <div className="d-flex justify-content-center my-5 p-2 page-actions">
-                <button
-                    className="btn btn-outline-danger me-2 px-3"
-                    disabled={isValidatingAudio || isActionButtonDisabled}
-                    onClick={() => handleValidate("rejected")}>
-                    {isValidatingAudio ? <Spinner size="sm" /> :
-                        <span><i className="bi bi-hand-thumbs-down me-1"></i>Reject</span>
-                    }
-                </button>
-                <button
-                    className="btn btn-outline-primary mx-3 px-3"
-                    disabled={isValidatingAudio}
-                    onClick={() => setIndex(index + 1)}>
-                    <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
-                </button>
-                <button className="btn btn-outline-success me-2 px-3"
-                    disabled={isValidatingAudio || isActionButtonDisabled}
-                    onClick={() => handleValidate("accepted")}>
-                    {isValidatingAudio ? <Spinner size="sm" /> :
-                        <span><i className="bi bi-hand-thumbs-up me-1"></i>Accept</span>
-                    }
-                </button>
-            </div>
+            {currentAudio &&
+                <div className="d-flex justify-content-center my-5 p-2 page-actions">
+                    <button
+                        className="btn btn-outline-danger me-2 px-3"
+                        disabled={isValidatingAudio || isActionButtonDisabled}
+                        onClick={() => handleValidate("rejected")}>
+                        {isValidatingAudio ? <Spinner size="sm" /> :
+                            <span><i className="bi bi-hand-thumbs-down me-1"></i>Reject</span>
+                        }
+                    </button>
+                    <button
+                        className="btn btn-outline-primary mx-3 px-3"
+                        disabled={isValidatingAudio}
+                        onClick={() => setIndex(index + 1)}>
+                        <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
+                    </button>
+                    <button className="btn btn-outline-success me-2 px-3"
+                        disabled={isValidatingAudio || isActionButtonDisabled}
+                        onClick={() => handleValidate("accepted")}>
+                        {isValidatingAudio ? <Spinner size="sm" /> :
+                            <span><i className="bi bi-hand-thumbs-up me-1"></i>Accept</span>
+                        }
+                    </button>
+                </div>}
         </section>
     );
 }
