@@ -58,6 +58,78 @@ export const resourceApiSlice = createApi({
                     }
                 },
             }),
+
+            // Categories
+            getCategories: builder.query({
+                query() {
+                    return `/categories/`;
+                },
+            }),
+
+            putCategories: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/categories/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
+
+            deleteCategories: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/categories/`,
+                        method: 'DELETE',
+                        body,
+                    }
+                },
+            }),
+
+            // Groups
+            getGroups: builder.query({
+                query() {
+                    return `/groups/`;
+                },
+            }),
+
+            putGroups: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/groups/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
+
+            deleteGroups: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/groups/`,
+                        method: 'DELETE',
+                        body,
+                    }
+                },
+            }),
+
+            // Group Permission
+            getGroupPermissions: builder.query({
+                query(group_id = 1) {
+                    return `/permissions/group/${group_id}`;
+                },
+            }),
+
+            putGroupPermissions: builder.mutation({
+                query({ group_id = 1, body }) {
+                    return {
+                        url: `/permissions/group/${group_id}/`,
+                        method: 'POST',
+                        body,
+                }
+            },
+            }),
+
         };
     },
 });
@@ -68,5 +140,21 @@ export const { useGetImageToValidateQuery,
     useValidateAudioMutation,
     useSubmitTranscriptionMutation,
     useGetUserPermissionsQuery,
+
     useLazyGetUserPermissionsQuery,
+
+    // Categories
+    useLazyGetCategoriesQuery,
+    usePutCategoriesMutation,
+    useDeleteCategoriesMutation,
+
+    // Groups
+    useLazyGetGroupsQuery,
+    usePutGroupsMutation,
+    useDeleteGroupsMutation,
+
+
+    // Group Permission
+    useLazyGetGroupPermissionsQuery,
+    usePutGroupPermissionsMutation,
 } = resourceApiSlice;

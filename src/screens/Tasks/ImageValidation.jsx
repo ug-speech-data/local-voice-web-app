@@ -1,7 +1,7 @@
 import './style.scss';
 import React, { useState, useRef } from 'react'
 import { Link } from "react-router-dom";
-import { useGetImageToValidateQuery, useValidateImageMutation } from '../../features/resources/resources-api-slice';
+import { useGetImageToValidateQuery, useLazyGetCategoriesQuery, useValidateImageMutation } from '../../features/resources/resources-api-slice';
 import { useToast, Spinner } from '@chakra-ui/react'
 import { useEffect } from 'react';
 import { Modal } from 'bootstrap';
@@ -13,6 +13,8 @@ function ImageValidation() {
     const [index, setIndex] = useState(0);
 
     const { data: response = [], isFetching: isFetchingImages, error } = useGetImageToValidateQuery(index);
+    const [getCategories, { data: categoryResponse = [], isFetching: isFetchingCategory, error: errorFetchingCategory }] = useLazyGetCategoriesQuery()
+    const [categories, setCategories] = useState([])
     const [validateImage, { isLoading: isValidatingImage, error: imageValidationError }] = useValidateImageMutation()
     const [currentImageLoading, setCurrentImageLoading] = useState(true);
     const [modal, setModal] = useState(null);
@@ -20,8 +22,15 @@ function ImageValidation() {
     const modalRef = useRef(null);
     const [selectedTags, setSelectedTags] = useState([]);
 
-    // Todo: Get categories from API
-    const categories = Array.from({ length: 100 }, () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15))
+    useEffect(() => {
+        if (categoryResponse["categories"] !== undefined) {
+            setCategories(categoryResponse["categories"]?.map((category) => category["name"]))
+        }
+    }, [isFetchingCategory])
+
+    useEffect(() => {
+        getCategories()
+    }, [])
 
     let currentImage = null;
     if (error) {

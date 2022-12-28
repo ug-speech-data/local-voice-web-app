@@ -1,20 +1,17 @@
 import './style.scss';
 import { useState, useEffect } from 'react'
 
-function TagInput({ tags, selectedTags, setSelectedTags, maxSelection = 2 }) {
-    const [allTags, setAllTags] = useState([...tags])
+function TagInput({ tags=[], selectedTags, setSelectedTags, maxSelection = 2 }) {
     const [disabled, setDisabled] = useState(false)
 
     const handleTagClick = (tag) => {
         if (selectedTags.includes(tag)) {
             setSelectedTags(selectedTags.filter((t) => t !== tag))
-            setAllTags([...allTags, tag])
         } else {
             if (selectedTags.length >= maxSelection) {
                 return
             }
             setSelectedTags([...selectedTags, tag])
-            setAllTags(allTags.filter((t) => t !== tag))
         }
     }
 
@@ -33,7 +30,7 @@ function TagInput({ tags, selectedTags, setSelectedTags, maxSelection = 2 }) {
 
             <p className='mt-3'>Click to select</p>
             <div className="tags">
-                {allTags.length > 0 ? allTags.map((tag, index) => (
+                {tags.length > 0 ? tags.map((tag, index) => (
                     <span
                         key={index}
                         className={disabled ? "disabled" : ""}

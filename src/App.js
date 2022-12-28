@@ -9,8 +9,10 @@ import Contribute from "./screens/Contribute";
 import CollectedData from "./screens/CollectedData";
 import LoginScreen from "./screens/Login";
 import RegisterScreen from "./screens/Register";
+import Setup from "./screens/Setup";
 import ProtectedRoute from "./components/Common/ProtectedRoute";
 import Permissions from "./utils/permissions";
+import Error404Screen from "./screens/ErrorScreens/Error404";
 
 
 function App() {
@@ -19,7 +21,6 @@ function App() {
       <Routes>
         <Route exact path="/login" element={<LoginScreen />} />
         <Route exact path="/register" element={<RegisterScreen />} />
-
 
         <Route path="/tasks" element={
           <ProtectedRoute>
@@ -39,11 +40,20 @@ function App() {
           </ProtectedRoute>
         } />
 
+        <Route path="/setup" element={
+          <ProtectedRoute permissions={[Permissions.MANAGE_SETUP]}>
+            <Setup />
+          </ProtectedRoute>
+        } />
+
         <Route path="/" element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         } />
+
+        <Route path="*" element={<Error404Screen />} />
+
       </Routes>
     </Router>
   );

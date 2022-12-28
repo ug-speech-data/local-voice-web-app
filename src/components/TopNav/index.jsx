@@ -62,7 +62,7 @@ function TopNav() {
                         </p>
                         {userPermissions.has(Permissions.MANAGE_SETUP) &&
                             < p className='drop-down-item'>
-                                <Link to=""><i className="bi bi-gear mx-2"></i> Setup</Link>
+                                <Link to="/setup"><i className="bi bi-gear mx-2"></i> Setup</Link>
                             </p>
                         }
                         <p className='drop-down-item'>
