@@ -3,10 +3,14 @@ import {
     usePutGroupsMutation,
     useDeleteGroupsMutation,
 } from '../../features/resources/resources-api-slice';
+import {
+    setGroups as setStoreGroups,
+} from '../../features/global/global-slice';
 import { Fragment, useState, useEffect, useRef } from 'react';
 import { Modal } from 'bootstrap';
 import { useToast, Spinner } from '@chakra-ui/react';
 import PermissionsComponent from './PermissionComponent';
+import { useDispatch } from 'react-redux';
 
 function GroupsCard() {
     const [getGroups, { data: response = [], isFetching, error }] = useLazyGetGroupsQuery()
@@ -19,6 +23,7 @@ function GroupsCard() {
     const [selectedGroup, setSelectedGroup] = useState(null);
     const toast = useToast()
     const [groups, setGroups] = useState([])
+    const dispatch = useDispatch()
 
     const [putGroup, { isLoading: isPuttingGroup, error: errorPuttingGroup }] = usePutGroupsMutation()
     const [deleteGroup, { isLoading: isDeletingGroup, error: errorDeletingGroup }] = useDeleteGroupsMutation()
@@ -28,6 +33,7 @@ function GroupsCard() {
 
     useEffect(() => {
         setGroups(response["groups"])
+        dispatch(setStoreGroups(response["groups"]))
     }, [isFetching])
 
 
@@ -232,13 +238,13 @@ function GroupsCard() {
             </div>
 
             <div className="card">
-            <div className="card-header d-flex justify-content-between" style={{ "position": "sticky", "top": "-1em", "zIndex": "1", "background": "white" }}>
+                <div className="card-header d-flex justify-content-between" style={{ "position": "sticky", "top": "-1em", "zIndex": "1", "background": "white" }}>
                     <h1>GROUP</h1>
                     <div className="d-flex card-options justify-content-end">
                         <button className="btn btn-primary btn-sm" onClick={showNewFormGroupModal} >Add</button>
                     </div>
                 </div>
-                <div className="card-body">
+                <div className="card-body overflow-scroll">
                     <table className="table">
                         <thead>
                             <tr>

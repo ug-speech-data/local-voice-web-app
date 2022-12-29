@@ -209,7 +209,7 @@ function CategoryCard() {
                         <button className="btn btn-primary btn-sm" onClick={showNewFormCategoryModal} >Add</button>
                     </div>
                 </div>
-                <div className="card-body">
+                <div className="card-body overflow-scroll">
                     <table className="table">
                         <thead>
                             <tr>

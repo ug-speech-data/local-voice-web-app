@@ -126,8 +126,35 @@ export const resourceApiSlice = createApi({
                         url: `/permissions/group/${group_id}/`,
                         method: 'POST',
                         body,
-                }
-            },
+                    }
+                },
+            }),
+
+            // Users
+            getUsers: builder.query({
+                query() {
+                    return `/users/`;
+                },
+            }),
+
+            putUsers: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/users/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
+
+            deleteUsers: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/users/`,
+                        method: 'DELETE',
+                        body,
+                    }
+                },
             }),
 
         };
@@ -153,8 +180,13 @@ export const { useGetImageToValidateQuery,
     usePutGroupsMutation,
     useDeleteGroupsMutation,
 
-
     // Group Permission
     useLazyGetGroupPermissionsQuery,
     usePutGroupPermissionsMutation,
+
+    // Users
+    useLazyGetUsersQuery,
+    usePutUsersMutation,
+    useDeleteUsersMutation,
+
 } = resourceApiSlice;

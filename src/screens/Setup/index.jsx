@@ -4,6 +4,7 @@ import Footer from "../../components/Footer";
 import { Fragment } from "react";
 import CategoryCard from './CategoriesCard';
 import GroupsCard from './GroupsCard';
+import UsersCard from './UsersCard';
 
 
 function Tasks() {
@@ -45,6 +46,10 @@ function Tasks() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div className="col-md-12 setup-card-container overflow-scroll">
+                        <UsersCard />
                     </div>
                 </div>
             </div>
