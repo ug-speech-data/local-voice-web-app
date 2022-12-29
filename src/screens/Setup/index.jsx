@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import CategoryCard from './CategoriesCard';
 import GroupsCard from './GroupsCard';
 import UsersCard from './UsersCard';
+import SystemConfigurationCard from './SystemConfigurationCard';
 
 
 function Tasks() {
@@ -19,36 +20,19 @@ function Tasks() {
                 </p>
 
                 <div className="row setup-container">
-                    <div className="col-md-6 setup-card-container">
-                        <GroupsCard />
+                    <div className="col-md-6 setup-card-container mx-auto">
+                        <SystemConfigurationCard />
                     </div>
 
-                    <div className="col-md-6 setup-card-container">
+                    <div className="col-md-6 setup-card-container mx-auto">
                         <CategoryCard />
                     </div>
 
-                    <div className="col-md-6 setup-card-container">
-                        <div className="card">
-                            <div className="card-header d-flex justify-content-between">
-                                <h1>GLOBAL CONFIGURATIONS</h1>
-                                <div className="d-flex card-options justify-content-end">
-                                    <button className="btn btn-primary btn-sm">Save</button>
-                                </div>
-                            </div>
-                            <div className="card-body">
-                                <div className="form-group my-2">
-                                    <p>Maximum Image Category</p>
-                                    <input className="form-control" type="text" />
-                                </div>
-                                <div className="form-group my-2">
-                                    <p>Maximum Image Category</p>
-                                    <input className="form-control" type="text" />
-                                </div>
-                            </div>
-                        </div>
+                    <div className="col-md-12 setup-card-container mx-auto">
+                        <GroupsCard />
                     </div>
 
-                    <div className="col-md-12 setup-card-container overflow-scroll">
+                    <div className="col-md-12 mx-auto overflow-scroll">
                         <UsersCard />
                     </div>
                 </div>

@@ -6,9 +6,12 @@ import { useToast, Spinner } from '@chakra-ui/react'
 import { useEffect } from 'react';
 import { Modal } from 'bootstrap';
 import TagInput from '../../components/TagInput';
+import { useSelector } from 'react-redux';
 
 
 function ImageValidation() {
+    const configurations = useSelector((state) => state.global.configurations);
+
     //HACK : index is used to trigger a new request to the API
     const [index, setIndex] = useState(0);
 
@@ -179,8 +182,8 @@ function ImageValidation() {
             }
 
             <div className='my-3'>
-                <p className='m-0 p-0'><b>Categories (Select up to 3)</b></p>
-                <TagInput tags={categories} selectedTags={selectedTags} setSelectedTags={setSelectedTags} maxSelection={3} />
+                <p className='m-0 p-0'><b>Categories (Select up to {configurations?.max_category_for_image || 3})</b></p>
+                <TagInput tags={categories} selectedTags={selectedTags} setSelectedTags={setSelectedTags} maxSelection={configurations?.max_category_for_image || 3} />
             </div>
 
             <div className="d-flex justify-content-center my-5 p-2 page-actions">

@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useToast, Spinner } from '@chakra-ui/react'
 import PermissionUpdate from '../PermissionUpdate';
 import Permissions from "../../utils/permissions";
+import { useEffect } from 'react';
 
 function TopNav() {
     const userPermissions = useSelector((state) => new Set(state.authentication.userPermissions));
@@ -32,6 +33,21 @@ function TopNav() {
         }
     }
 
+    useEffect(() => {
+        // Get path from url
+        const path = window.location.pathname;
+        // Set active menu based on path
+        if (path === "/") {
+            dispatch(setActiveNavMenu("home"));
+        } else if (path === "/tasks") {
+            dispatch(setActiveNavMenu("validation"));
+        } else if (path === "/collected-data") {
+            dispatch(setActiveNavMenu("collected-data"));
+        } else if (path === "/setup") {
+            dispatch(setActiveNavMenu("setup"));
+        }
+    }, [dispatch])
+
     const setActiveMenu = (menu) => {
         dispatch(setActiveNavMenu(menu));
     }
@@ -43,6 +59,9 @@ function TopNav() {
                 <Link to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>
                 {userPermissions.has(Permissions.MANAGE_COLLECTED_DATA) &&
                     <Link to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>COLLECTED DATA</Link>
+                }
+                {userPermissions.has(Permissions.MANAGE_SETUP) &&
+                    <Link to="/setup" className={`nav-menu-item ${activeMenu === 'setup' ? 'active' : ''}`} onClick={() => setActiveMenu("setup")}>SETUP</Link>
                 }
             </div>
             <div className='nav-right d-flex align-items-center position-relative'>
@@ -60,11 +79,6 @@ function TopNav() {
                         <p className='drop-down-item'>
                             <Link to=""><i className="bi bi-person mx-2"></i> Profile</Link>
                         </p>
-                        {userPermissions.has(Permissions.MANAGE_SETUP) &&
-                            < p className='drop-down-item'>
-                                <Link to="/setup"><i className="bi bi-gear mx-2"></i> Setup</Link>
-                            </p>
-                        }
                         <p className='drop-down-item'>
                             <PermissionUpdate />
                         </p>

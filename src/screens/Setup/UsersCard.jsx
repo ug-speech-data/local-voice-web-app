@@ -24,7 +24,7 @@ function UsersCard() {
     const [deleteUser, { isLoading: isDeletingUser, error: errorDeletingUser }] = useDeleteUsersMutation()
     const groups = useSelector((state) => state.global.groups);
     const [selectedGroups, setSelectedGroups] = useState([]);
-
+    const [allUsers, setAllUsers] = useState([])
 
     // Form input
     const [surname, setSurname] = useState('');
@@ -33,6 +33,16 @@ function UsersCard() {
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
 
+    // Filter inputs
+    const [search, setSearch] = useState('');
+    const [sort, setSort] = useState('surname');
+
+    // Pagination
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [nextPage, setNextPage] = useState(null);
+    const [previousPage, setPreviousPage] = useState(null);
+
     useEffect(() => {
         const groups = selectedUser?.groups || []
         setSelectedGroups(groups)
@@ -40,12 +50,20 @@ function UsersCard() {
 
     useEffect(() => {
         setUsers(response["users"])
+        setAllUsers(response["users"])
+        setTotalPages(response["total_pages"])
+        setNextPage(response["next_page"])
+        setPreviousPage(response["previous_page"])
     }, [isFetching])
 
 
     useEffect(() => {
-        getUsers()
+        getUsers(1)
     }, [])
+
+    useEffect(() => {
+        getUsers(page)
+    }, [page])
 
     useEffect(() => {
         if (modalRef.current !== null && modal === null) {
@@ -159,6 +177,27 @@ function UsersCard() {
             })
         }
     }, [errorDeletingUser])
+
+    useEffect(() => {
+        const users = allUsers.filter(c => {
+            return c.surname.toLowerCase().includes(search.toLowerCase())
+                || c.other_names.toLowerCase().includes(search.toLowerCase())
+                || c.phone.toLowerCase().includes(search.toLowerCase())
+                || c.email_address.toLowerCase().includes(search.toLowerCase())
+        })
+        setUsers(users)
+    }, [search])
+
+    useEffect(() => {
+        const toToSorted = [...users]
+        toToSorted.sort((a, b) => {
+            if (a[sort] < b[sort]) {
+                return -1;
+            }
+            return 1;
+        })
+        setUsers(toToSorted)
+    }, [sort])
 
     return (
         <Fragment>
@@ -276,6 +315,43 @@ function UsersCard() {
                     </div>
                 </div>
                 <div className="card-body overflow-scroll">
+                    <div className="d-flex justify-content-between mb-3">
+                        <div className="d-flex">
+                            <div className="d-flex align-items-center">
+                                <label htmlFor="search" className="form-label me-2">Search</label>
+                                <input type="text" className="form-control" id="search" aria-describedby="search"
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    placeholder="Search"
+                                    value={search} />
+                            </div>
+                            <div className="d-flex align-items-center mx-3">
+                                <button className="btn btn-sm btn-primary"
+                                    disabled={previousPage == null || isFetching}
+                                    onClick={() => setPage(page - 1)}
+                                >Previous</button>
+                                <span className="mx-2 badge bg-primary">page {page} of {totalPages}</span>
+                                <button className="btn btn-sm btn-primary"
+                                    disabled={nextPage == null || isFetching}
+                                    onClick={() => setPage(page + 1)}
+                                >Next</button>
+                            </div>
+                        </div>
+                        <div className="d-flex">
+                            <div className="d-flex align-items-center">
+                                <label htmlFor="search" className="form-label me-2">Sort</label>
+                                <select className="form-select" aria-label="Default select example"
+                                    onChange={(e) => setSort(e.target.value)}
+                                    value={sort}>
+                                    <option value="surname">Surname</option>
+                                    <option value="other_names">Other Names</option>
+                                    <option value="phone">Phone</option>
+                                    <option value="email_address">Email Address</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <table className="table">
                         <thead>
                             <tr>
@@ -289,8 +365,13 @@ function UsersCard() {
                             </tr>
                         </thead>
                         <tbody>
-                            {isFetching && <tr><td colSpan="2">Loading...</td></tr>}
-                            {(!isFetching && users?.length == 0) && <tr><td colSpan="2">No users</td></tr>}
+                            {isFetching && <tr><td colSpan="7">
+                                <p className="text-center d-flex justify-content-center">
+                                    <Spinner />
+                                    Loading...
+                                </p>
+                            </td></tr>}
+                            {(!isFetching && users?.length == 0) && <tr><td colSpan="7">No users</td></tr>}
                             {error && <tr><td colSpan="2">Error: {error.status}</td></tr>}
                             {users && users?.map((user, index) => (
                                 <tr key={index}>

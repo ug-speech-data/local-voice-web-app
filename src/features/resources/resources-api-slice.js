@@ -132,8 +132,8 @@ export const resourceApiSlice = createApi({
 
             // Users
             getUsers: builder.query({
-                query() {
-                    return `/users/`;
+                query(page = 1) {
+                    return `/users/?page=${page}`;
                 },
             }),
 
@@ -157,6 +157,23 @@ export const resourceApiSlice = createApi({
                 },
             }),
 
+
+            // Users
+            getConfigurations: builder.query({
+                query() {
+                    return `/configurations/`;
+                },
+            }),
+
+            putConfigurations: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/configurations/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
         };
     },
 });
@@ -189,4 +206,7 @@ export const { useGetImageToValidateQuery,
     usePutUsersMutation,
     useDeleteUsersMutation,
 
+    // Configurations
+    useLazyGetConfigurationsQuery,
+    usePutConfigurationsMutation,
 } = resourceApiSlice;

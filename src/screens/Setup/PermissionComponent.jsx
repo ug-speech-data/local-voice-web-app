@@ -2,8 +2,7 @@ import {
     useLazyGetGroupPermissionsQuery,
     usePutGroupPermissionsMutation,
 } from '../../features/resources/resources-api-slice';
-import { Fragment, useState, useEffect, useRef } from 'react';
-import { Modal } from 'bootstrap';
+import { Fragment, useState, useEffect } from 'react';
 import { useToast, Spinner } from '@chakra-ui/react';
 
 function PermissionsComponent({ group }) {
