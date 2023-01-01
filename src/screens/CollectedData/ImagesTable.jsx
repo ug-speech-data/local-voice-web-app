@@ -1,49 +1,341 @@
 import './style.scss';
-import { Fragment } from "react";
+import TableView from '../../components/Table';
+import { Fragment, useRef, useState, useEffect } from 'react';
+import { Modal } from 'bootstrap';
+import {
+    useDeleteImagesMutation,
+    usePutImagesMutation,
+} from '../../features/resources/resources-api-slice';
+import { Spinner, useToast } from '@chakra-ui/react';
+import TagInput from '../../components/TagInput';
+import TextOverflow from '../../components/TextOverflow';
+import ToolTip from '../../components/ToolTip';
 
 
 function ImagesTable() {
+    const [deleteImage, { isLoading: isDeletingImage, error: errorDeletingImage }] = useDeleteImagesMutation()
+    const [putImage, { isLoading: isPuttingImage, isSuccess: successPuttingImage, error: errorPuttingImage }] = usePutImagesMutation()
+
+    const deletionModalRef = useRef(null);
+    const editImageModalRef = useRef(null);
+    const toast = useToast()
+
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [deleteAlertModal, setDeleteAlertModal] = useState(null);
+    const [editImageModal, setEditImageModal] = useState(null);
+    const [newUpdate, setNewUpdate] = useState(null);
+
+    // Form input
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [name, setName] = useState('');
+    const [source, setSource] = useState('');
+    const [isAccepted, setIsAccepted] = useState(false);
+    const [isDownloaded, setIsDownloaded] = useState(false);
+
+    useEffect(() => {
+        if (editImageModalRef.current !== null && editImageModal === null) {
+            const modal = new Modal(editImageModalRef.current)
+            setEditImageModal(modal)
+        }
+        if (deletionModalRef.current !== null && deleteAlertModal === null) {
+            const modal = new Modal(deletionModalRef.current)
+            setDeleteAlertModal(modal)
+        }
+    }, [])
+
+    const handleDeleteImage = async () => {
+        if (selectedImage === null) {
+            return
+        }
+        const response = await deleteImage({ id: selectedImage.id }).unwrap()
+        const errorMessage = response["error_message"]
+        if (errorMessage !== undefined || errorMessage !== null) {
+            setNewUpdate({ item: selectedImage, action: "remove" })
+            toast({
+                position: 'top-center',
+                title: `Success`,
+                description: "Image deleted successfully",
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+            })
+        } else {
+            toast({
+                position: 'top-center',
+                title: `An error occurred`,
+                description: errorMessage,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+        deleteAlertModal?.hide()
+    }
+
+    const showEditImageModal = (image) => {
+        setSelectedImage(image)
+        editImageModal?.show()
+    }
+
+    const showDeleteImageModal = (image) => {
+        setSelectedImage(image)
+        deleteAlertModal?.show()
+    }
+
+    useEffect(() => {
+        if (selectedImage) {
+            setName(selectedImage.name)
+            setSource(selectedImage.source_url)
+            setIsAccepted(selectedImage.is_accepted)
+            setIsDownloaded(selectedImage.is_downloaded)
+            setSelectedCategories(selectedImage?.categories.map(category => category.name))
+        }
+    }, [selectedImage])
+
+    const handleSubmission = async () => {
+        if (selectedImage === null) {
+            return
+        }
+        const body = {
+            name,
+            id: selectedImage.id,
+            source_url: source,
+            is_accepted: isAccepted,
+            is_downloaded: isDownloaded,
+            categories: selectedCategories
+        }
+        const response = await putImage(body).unwrap()
+        if (response?.image !== undefined) {
+            setNewUpdate({ item: response.image, action: "update" })
+        }
+    }
+
+    useEffect(() => {
+        if (errorPuttingImage) {
+            toast({
+                title: `Error: ${errorPuttingImage.status}`,
+                description: "An error occurred while updating the image",
+                status: "error",
+                position: "top-center",
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+        if (errorDeletingImage) {
+            toast({
+                title: `Error: ${errorDeletingImage.status}`,
+                description: "An error occurred while deleting the image",
+                position: "top-center",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [errorPuttingImage, errorDeletingImage])
+
+    useEffect(() => {
+        if (successPuttingImage) {
+            toast({
+                title: "Success",
+                description: "Image updated successfully",
+                position: "top-center",
+                status: "success",
+                duration: 2000,
+                isClosable: true,
+            })
+            editImageModal?.hide()
+        }
+    }, [successPuttingImage])
+
+
     return (
         <Fragment>
-            <div className="col-md-8">
-                <div>
-                    <p>Filters</p>
+            <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-md">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">
+                                Delete Image - '{selectedImage?.name}'
+                            </h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="modal-body d-flex justify-content-center overflow-scroll">
+                                <div className="d-flex flex-column">
+                                    <h5>Are you sure you want to delete this image?</h5>
+                                    <p className="text-muted">This action cannot be undone.</p>
+                                </div>
+                            </div>
+                            <p className="text-center mb-3">
+                                {isDeletingImage && <Spinner />}
+                            </p>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-outline-danger" onClick={() => handleDeleteImage(selectedImage)} >Yes, continue</button>
+                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <table className='table'>
-                <thead>
-                    <tr>
-                        <th scope="col"><input type="checkbox" /></th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Validations</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {/* Dummy table here */}
-                    <tr>
-                        <th scope="col"><input type="checkbox" /></th>
-                        <td>Image 1</td>
-                        <td><img src="https://via.placeholder.com/150" alt="Image 1" /></td>
-                        <td>Category 1</td>
-                        <td>Validations 1</td>
-                        <td>Actions 1</td>
-                    </tr>
-                    <tr>
-                        <th scope="col"><input type="checkbox" /></th>
-                        <td>Image 2</td>
-                        <td><img src="https://via.placeholder.com/150" alt="Image 2" /></td>
-                        <td>Category 2</td>
-                        <td>Validations 2</td>
-                        <td>Actions 2</td>
-                    </tr>
+
+            <div ref={editImageModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-xl">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">
+                                {selectedImage ? "Edit Image" : "New Image"}
+                            </h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body row">
+                            <div className="col-md-6 mx-auto">
+                                <div className="d-flex justify-content-center align-items-center">
+                                    <img src={selectedImage?.image_url} alt={selectedImage?.name} />
+                                </div>
+                            </div>
+
+                            <div className="col-md-6 mx-auto">
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Name</b></label>
+                                    <input type="text" className="form-control" id="name" value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Source</b></label>
+                                    <input type="text" className="form-control" id="name"
+                                        onChange={(e) => setSource(e.target.value)}
+                                        value={source} />
+                                </div>
+
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Size</b></label>
+                                    <p>{selectedImage?.height} x {selectedImage?.width}</p>
+                                </div>
 
 
-                </tbody>
-            </table>
-        </Fragment>
+                                <div className="my-5">
+                                    <label htmlFor="name" className="form-label"><b>Categories</b></label>
+                                    <TagInput
+                                        tags={selectedImage?.categories.map(category => category.name)}
+                                        heading="Click to remove"
+                                        selectedTags={selectedCategories}
+                                        setSelectedTags={setSelectedCategories}
+                                    />
+                                </div>
+
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label me-2">Accepted</label>
+                                    <input type="checkbox" className="form-check-input"
+                                        onChange={() => setIsAccepted(!isAccepted)}
+                                        checked={isAccepted} />
+                                </div>
+
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label me-2">Image Downloaded</label>
+                                    <input type="checkbox" className="form-check-input"
+                                        onChange={() => setIsDownloaded(!isDownloaded)}
+                                        checked={isDownloaded} />
+                                </div>
+
+                                <div className="my-3 d-flex justify-content-end">
+                                    <button className="btn btn-primary btn-sm"
+                                        disabled={isPuttingImage}
+                                        onClick={handleSubmission}>{isPuttingImage && <Spinner />} Save Changes</button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div className="my-5 overflow-scroll">
+                <TableView
+                    responseDataAttribute="images"
+                    dataSourceUrl="http://127.0.0.1:8000/api/images/"
+                    newUpdate={newUpdate}
+                    filters={[{ key: "is_accepted:1", value: "Accepted" }, { key: "is_accepted:0", value: "Pending" }]}
+                    headers={[{
+                        key: "name", value: "Name", render: (item) => {
+                            return (
+                                <div className="d-flex align-items-center">
+                                    <TextOverflow text={item.name} width={30} />
+                                    {item.is_accepted ?
+                                        <ToolTip title="Add Image" header={
+                                            (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
+                                        }>
+                                            This image is ready for description. Click on more to view more details.
+                                        </ToolTip>
+                                        :
+                                        <ToolTip title="Add Image" header={
+                                            (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>)
+                                        }>
+                                            This image is pending approval. Click on more to view more details.
+                                        </ToolTip>
+                                    }
+                                </div>
+                            )
+                        }
+                    }, {
+                        key: "image_url", value: "Image", render: (item) => {
+                            return (
+                                <div>
+                                    <img src={item.thumbnail} alt={item.name} className="profile-image" onClick={() => showEditImageModal(item)} />
+                                </div>
+                            )
+                        }
+                    }, {
+                        key: "categories", value: "Categories", render: (item) => {
+                            return (
+                                <div>
+                                    {item.categories?.map((category, index) => (
+                                        <span key={index} className="badge bg-primary me-1">{category.name}</span>
+                                    ))}
+                                </div>
+                            )
+                        }
+                    }, {
+                        key: "validations", value: "Validations", render: (item) => {
+                            return (
+                                <div>
+                                    {item.validations?.map((validation, valIndex) => (
+                                        <span key={valIndex} className={validation.is_valid ? 'badge bg-primary' : 'badge bg-warning'}>{validation.user}</span>
+                                    ))}
+                                </div>
+                            )
+                        }
+                    }, {
+                        key: "source_url", value: "Source", render: (item) => {
+                            return (
+                                <a href={item.source_url} target="_blank"><TextOverflow text={item.source_url} /></a>
+                            )
+                        }
+                    }, {
+                        value: "Actions", render: (item) => {
+                            return (
+                                <div className="d-flex">
+                                    <button className="btn btn-sm btn-primary me-1 d-flex" onClick={() => showEditImageModal(item)}>
+                                        <i className="bi bi-list me-1"></i>
+                                        More
+                                    </button>
+                                    <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showDeleteImageModal(item)}>
+                                        <i className="bi bi-trash me-1"></i>
+                                        Delete
+                                    </button>
+                                </div>
+                            )
+                        }
+                    }]}
+                >
+                </TableView>
+            </div>
+        </Fragment >
     );
 }
 

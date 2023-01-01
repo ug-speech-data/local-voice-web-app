@@ -9,7 +9,7 @@ function CollectedData() {
     return (
         <Fragment>
             <TopNav />
-            <div className="my-3 mx-auto col-md-8">
+            <div className="my-3 mx-auto col-md-10">
                 <h4><b>COLLECTED DATA</b></h4>
                 <p className="text-muted mb-4">Click on each tab to find available tasks to complete.</p>
                 <TabLayout tabs={["Images", "Audios", "Participants"]}>
@@ -18,7 +18,6 @@ function CollectedData() {
                     <AudiosTable />
                 </TabLayout>
             </div>
-
             <Footer />
         </Fragment>
     );

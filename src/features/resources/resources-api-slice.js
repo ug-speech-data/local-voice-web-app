@@ -14,8 +14,8 @@ export const resourceApiSlice = createApi({
     endpoints(builder) {
         return {
             getImageToValidate: builder.query({
-                query(page = 1) {
-                    return `/get-image-to-validate?page=${page}`;
+                query(offset = 1) {
+                    return `/get-image-to-validate?offset=${offset}`;
                 },
             }),
 
@@ -62,7 +62,7 @@ export const resourceApiSlice = createApi({
             // Categories
             getCategories: builder.query({
                 query() {
-                    return `/categories/`;
+                    return `/categories?page_size=100`;
                 },
             }),
 
@@ -158,7 +158,7 @@ export const resourceApiSlice = createApi({
             }),
 
 
-            // Users
+            // Configurations
             getConfigurations: builder.query({
                 query() {
                     return `/configurations/`;
@@ -174,6 +174,34 @@ export const resourceApiSlice = createApi({
                     }
                 },
             }),
+
+            // Images
+            getUploadedImages: builder.query({
+                query() {
+                    return `/images/`;
+                },
+            }),
+
+            putImages: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/images/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
+
+            deleteImages: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/images/`,
+                        method: 'DELETE',
+                        body,
+                    }
+                },
+            }),
+
         };
     },
 });
@@ -209,4 +237,10 @@ export const { useGetImageToValidateQuery,
     // Configurations
     useLazyGetConfigurationsQuery,
     usePutConfigurationsMutation,
+
+    // Images
+    useLazyGetUploadedImagesQuery,
+    useDeleteImagesMutation,
+    usePutImagesMutation,
+
 } = resourceApiSlice;

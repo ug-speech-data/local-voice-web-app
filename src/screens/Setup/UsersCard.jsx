@@ -351,7 +351,6 @@ function UsersCard() {
                         </div>
                     </div>
 
-
                     <table className="table">
                         <thead>
                             <tr>

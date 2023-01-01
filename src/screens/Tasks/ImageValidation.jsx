@@ -12,10 +12,10 @@ import { useSelector } from 'react-redux';
 function ImageValidation() {
     const configurations = useSelector((state) => state.global.configurations);
 
-    //HACK : index is used to trigger a new request to the API
-    const [index, setIndex] = useState(0);
+    //HACK : offset is used to trigger a new request to the API
+    const [offset, setOffset] = useState(-1);
 
-    const { data: response = [], isFetching: isFetchingImages, error } = useGetImageToValidateQuery(index);
+    const { data: response = [], isFetching: isFetchingImages, error } = useGetImageToValidateQuery(offset);
     const [getCategories, { data: categoryResponse = [], isFetching: isFetchingCategory, error: errorFetchingCategory }] = useLazyGetCategoriesQuery()
     const [categories, setCategories] = useState([])
     const [validateImage, { isLoading: isValidatingImage, error: imageValidationError }] = useValidateImageMutation()
@@ -55,10 +55,7 @@ function ImageValidation() {
         // Reset selected tags
         setSelectedTags([])
 
-        // Loading image
-        setCurrentImageLoading(true)
-
-        setIndex(index + 1)
+        setOffset(currentImage.id || 0)
     }
 
     useEffect(() => {
@@ -75,7 +72,7 @@ function ImageValidation() {
     const handleValidate = async (status) => {
         if (isValidatingImage) return
 
-        const body = { image_id: 1, categories: selectedTags, status }
+        const body = { image_id: currentImage.id, categories: selectedTags, status }
         const response = await validateImage(body).unwrap()
         if (response['message'] != null) {
             toast({
@@ -102,14 +99,17 @@ function ImageValidation() {
         })
     }
 
-
     return (
         <section className='my-5 image-validation'>
             <p>For each image, select the appropriate category. Also, <b>reject</b> images that <b>are of low resolution or contains water marks</b></p>
 
-            {response["image"] === undefined || response["image"].length === 0 ?
-                <div className="my-3 d-flex justify-content-center align-items-center">
-                    <h3>No images to validate</h3>
+            {Boolean(currentImage) === false ?
+                <div className="my-3">
+                    <h3 className='text-center'>No more images to validate</h3>
+                    <p className='text-center my-3'><button className='btn btn-primary' onClick={() => setOffset(-1)}>
+                        {isFetchingImages && <Spinner />}
+                        Reload
+                    </button></p>
                 </div> : null
             }
 
@@ -160,8 +160,9 @@ function ImageValidation() {
                                 />}
                                 <img onClick={showModal}
                                     onLoad={() => setCurrentImageLoading(false)}
+                                    onChange={() => setCurrentImageLoading(true)}
                                     className="image"
-                                    style={{ "opacity": (currentImageLoading || isFetchingImages) ? "0.5" : "1" }}
+                                    style={{ maxHeight: "50vh", "opacity": (currentImageLoading || isFetchingImages) ? "0.5" : "1" }}
                                     src={currentImage.image_url}
                                     alt="Described image" />
                             </div>
@@ -173,7 +174,12 @@ function ImageValidation() {
 
                                 <div className='my-2 overflow-scroll'>
                                     <p className='m-0 p-0'><b>Source</b></p>
-                                    <Link>{currentImage.image_url}</Link>
+                                    <Link>{currentImage.source_url}</Link>
+                                </div>
+
+                                <div className='my-2 overflow-scroll'>
+                                    <p className='m-0 p-0'><b>Size</b></p>
+                                    <p className='m-0 p-0'>{currentImage.height} x {currentImage.width}</p>
                                 </div>
                             </div>
                         </div>
@@ -181,15 +187,17 @@ function ImageValidation() {
                 </div>
             }
 
-            <div className='my-3'>
-                <p className='m-0 p-0'><b>Categories (Select up to {configurations?.max_category_for_image || 3})</b></p>
-                <TagInput tags={categories} selectedTags={selectedTags} setSelectedTags={setSelectedTags} maxSelection={configurations?.max_category_for_image || 3} />
-            </div>
+            {currentImage &&
+                <div className='my-3'>
+                    <p className='m-0 p-0'><b>Categories (Select up to {configurations?.max_category_for_image || 3})</b></p>
+                    <TagInput tags={categories} selectedTags={selectedTags} setSelectedTags={setSelectedTags} maxSelection={configurations?.max_category_for_image || 3} />
+                </div>
+            }
 
             <div className="d-flex justify-content-center my-5 p-2 page-actions">
                 <button
                     className="btn btn-outline-danger me-2 px-3"
-                    disabled={isValidatingImage || currentImageLoading}
+                    disabled={isValidatingImage || currentImageLoading || Boolean(currentImage) === false}
                     onClick={() => handleValidate("rejected")}>
                     {isValidatingImage ? <Spinner size="sm" /> :
                         <span><i className="bi bi-hand-thumbs-down me-1"></i>Reject</span>
