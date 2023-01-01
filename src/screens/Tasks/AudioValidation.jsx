@@ -7,14 +7,14 @@ import { useGetAudioToValidateQuery, useValidateAudioMutation } from '../../feat
 
 
 function AudioValidation() {
-    //HACK : index is used to trigger a new request to the API
-    const [index, setIndex] = useState(0);
+    //HACK : offset is used to trigger a new request to the API
+    const [offset, setOffset] = useState(0);
 
-    const { data: response = {}, isFetching: isFetchingAudios, error: audioFetchingError } = useGetAudioToValidateQuery(index);
+    const { data: response = {}, isFetching: isFetchingAudios, error: audioFetchingError } = useGetAudioToValidateQuery(offset);
     const [validateAudio, { isLoading: isValidatingAudio, error: audioValidationError }] = useValidateAudioMutation()
     const toast = useToast()
     const modalRef = useRef(null);
-    const [currentImageLoading, setCurrentImageLoading] = useState(true);
+    const [currentImageLoading, setCurrentImageLoading] = useState(false);
     const [modal, setModal] = useState(null);
     const [isActionButtonDisabled, setIsActionButtonDisabled] = useState(true)
     const [isAudioBuffering, setIsAudioBuffering] = useState(true)
@@ -33,10 +33,9 @@ function AudioValidation() {
 
     const handleLoadNewAudio = () => {
         // Loading audio
-        setCurrentImageLoading(true)
         setIsAudioBuffering(true)
         setIsActionButtonDisabled(true)
-        setIndex(index + 1)
+        setOffset(currentAudio?.id || -1)
     }
 
     useEffect(() => {
@@ -53,7 +52,7 @@ function AudioValidation() {
     const handleValidate = async (status) => {
         if (isValidatingAudio) return
 
-        const body = { image_id: 1, status }
+        const body = { id: currentAudio?.id || -1, status }
         const response = await validateAudio(body).unwrap()
         if (response['message'] != null) {
             toast({
@@ -86,9 +85,13 @@ function AudioValidation() {
 
     return (
         <section className='image-validation'>
-            {currentAudio === undefined ?
-                <div className="my-5 d-flex justify-content-center align-items-center">
-                    <h2>No audios to validate</h2>
+            {currentAudio === undefined || currentAudio === null ?
+                <div className="my-5">
+                    <p className='text-warning text-center'><b>No more audios to validate</b></p>
+                    <p className='text-center my-3'><button className='btn btn-primary' onClick={() => setOffset(-1)}>
+                        {isFetchingAudios && <Spinner />}
+                        Reload
+                    </button></p>
                 </div> : null
             }
 
@@ -111,6 +114,7 @@ function AudioValidation() {
                                 />}
                                 <img
                                     onLoad={() => setCurrentImageLoading(false)}
+                                    onChange={() => setCurrentImageLoading(true)}
                                     className="image"
                                     style={{ "opacity": (currentImageLoading || isFetchingAudios) ? "0.5" : "1" }}
                                     src={currentAudio.image_url}
@@ -142,6 +146,7 @@ function AudioValidation() {
                     {currentAudio &&
                         <img onClick={showModal}
                             onLoad={() => setCurrentImageLoading(false)}
+                            onChange={() => setCurrentImageLoading(true)}
                             className="image"
                             style={{ "opacity": (currentImageLoading || isFetchingAudios) ? "0.5" : "1", maxHeight: "50vh" }}
                             src={currentAudio.image_url}
@@ -179,7 +184,7 @@ function AudioValidation() {
                     <button
                         className="btn btn-outline-primary mx-3 px-3"
                         disabled={isValidatingAudio}
-                        onClick={() => setIndex(index + 1)}>
+                        onClick={() => setOffset(currentAudio?.id || -1)}>
                         <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
                     </button>
                     <button className="btn btn-outline-success me-2 px-3"

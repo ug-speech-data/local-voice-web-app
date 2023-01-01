@@ -27,7 +27,7 @@ export const resourceApiSlice = createApi({
 
             getAudioToValidate: builder.query({
                 query(id = -1) {
-                    return `/get-audio-to-validate?offsetId=${id}`;
+                    return `/get-audio-to-validate?offset=${id}`;
                 },
             }),
             validateImage: builder.mutation({
@@ -175,17 +175,10 @@ export const resourceApiSlice = createApi({
                 },
             }),
 
-            // Images
-            getUploadedImages: builder.query({
-                query() {
-                    return `/images/`;
-                },
-            }),
-
-            putImages: builder.mutation({
+            updateImages: builder.mutation({
                 query(body) {
                     return {
-                        url: `/images/`,
+                        url: `/collected-images/`,
                         method: 'POST',
                         body,
                     }
@@ -195,7 +188,29 @@ export const resourceApiSlice = createApi({
             deleteImages: builder.mutation({
                 query(body) {
                     return {
-                        url: `/images/`,
+                        url: `/collected-images/`,
+                        method: 'DELETE',
+                        body,
+                    }
+                },
+            }),
+
+
+            // Audios
+            updateAudios: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/collected-audios/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
+
+            deleteAudios: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/collected-audios/`,
                         method: 'DELETE',
                         body,
                     }
@@ -239,8 +254,11 @@ export const { useGetImageToValidateQuery,
     usePutConfigurationsMutation,
 
     // Images
-    useLazyGetUploadedImagesQuery,
     useDeleteImagesMutation,
-    usePutImagesMutation,
+    useUpdateImagesMutation,
+
+    // Audios
+    useDeleteAudiosMutation,
+    useUpdateAudiosMutation,
 
 } = resourceApiSlice;

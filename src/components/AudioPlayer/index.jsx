@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import './style.scss';
 import { useToast } from '@chakra-ui/react'
 
-function AudioPlayer({ src, onEnded, setIsAudioBuffering, className = '' }) {
+function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => null, className = '' }) {
     const [fullyPlayed, setFullyPlayed] = useState(false);
     const playerRef = useRef(null);
     const toast = useToast()

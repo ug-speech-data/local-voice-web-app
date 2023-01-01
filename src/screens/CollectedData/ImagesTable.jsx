@@ -4,17 +4,18 @@ import { Fragment, useRef, useState, useEffect } from 'react';
 import { Modal } from 'bootstrap';
 import {
     useDeleteImagesMutation,
-    usePutImagesMutation,
+    useUpdateImagesMutation,
 } from '../../features/resources/resources-api-slice';
 import { Spinner, useToast } from '@chakra-ui/react';
 import TagInput from '../../components/TagInput';
 import TextOverflow from '../../components/TextOverflow';
 import ToolTip from '../../components/ToolTip';
+import { BASE_API_URI } from '../../utils/constants';
 
 
 function ImagesTable() {
     const [deleteImage, { isLoading: isDeletingImage, error: errorDeletingImage }] = useDeleteImagesMutation()
-    const [putImage, { isLoading: isPuttingImage, isSuccess: successPuttingImage, error: errorPuttingImage }] = usePutImagesMutation()
+    const [putImage, { isLoading: isPuttingImage, isSuccess: successPuttingImage, error: errorPuttingImage }] = useUpdateImagesMutation()
 
     const deletionModalRef = useRef(null);
     const editImageModalRef = useRef(null);
@@ -258,7 +259,7 @@ function ImagesTable() {
             <div className="my-5 overflow-scroll">
                 <TableView
                     responseDataAttribute="images"
-                    dataSourceUrl="http://127.0.0.1:8000/api/images/"
+                    dataSourceUrl={`${BASE_API_URI}/collected-images/`}
                     newUpdate={newUpdate}
                     filters={[{ key: "is_accepted:1", value: "Accepted" }, { key: "is_accepted:0", value: "Pending" }]}
                     headers={[{
