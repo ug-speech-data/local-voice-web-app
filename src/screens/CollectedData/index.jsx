@@ -4,6 +4,7 @@ import TabLayout from "../../components/TabLayout";
 import AudiosTable from "./AudiosTable";
 import ImagesTable from "./ImagesTable";
 import { Fragment } from "react";
+import TranscriptionsTable from "./TranscriptionsTable";
 
 function CollectedData() {
     return (
@@ -12,9 +13,10 @@ function CollectedData() {
             <div className="my-3 mx-auto col-md-10">
                 <h4><b>COLLECTED DATA</b></h4>
                 <p className="text-muted mb-4">Click on each tab to find available tasks to complete.</p>
-                <TabLayout tabs={["Images", "Audios", "Participants"]}>
+                <TabLayout tabs={["Images", "Audios", "Transcriptions", "Participants"]}>
                     <ImagesTable />
                     <AudiosTable />
+                    <TranscriptionsTable />
                     <AudiosTable />
                 </TabLayout>
             </div>

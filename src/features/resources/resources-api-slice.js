@@ -30,6 +30,19 @@ export const resourceApiSlice = createApi({
                     return `/get-audio-to-validate?offset=${id}`;
                 },
             }),
+
+            getTranscriptionToValidate: builder.query({
+                query(id = -1) {
+                    return `/get-transcription-to-validate?offset=${id}`;
+                },
+            }),
+
+            getAudioToTranscribe: builder.query({
+                query(id = -1) {
+                    return `/get-audio-to-transcribe?offset=${id}`;
+                },
+            }),
+
             validateImage: builder.mutation({
                 query(body) {
                     return {
@@ -53,6 +66,16 @@ export const resourceApiSlice = createApi({
                 query(body) {
                     return {
                         url: `/submit-transcription/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
+
+            validateTranscription: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/validate-transcription/`,
                         method: 'POST',
                         body,
                     }
@@ -217,6 +240,27 @@ export const resourceApiSlice = createApi({
                 },
             }),
 
+            // Transcriptions
+            updateTranscriptions: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/collected-transcriptions/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
+
+            deleteTranscriptions: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/collected-transcriptions/`,
+                        method: 'DELETE',
+                        body,
+                    }
+                },
+            }),
+
         };
     },
 });
@@ -229,6 +273,9 @@ export const { useGetImageToValidateQuery,
     useGetUserPermissionsQuery,
 
     useLazyGetUserPermissionsQuery,
+    useGetAudioToTranscribeQuery,
+    useGetTranscriptionToValidateQuery,
+    useValidateTranscriptionMutation,
 
     // Categories
     useLazyGetCategoriesQuery,
@@ -260,5 +307,8 @@ export const { useGetImageToValidateQuery,
     // Audios
     useDeleteAudiosMutation,
     useUpdateAudiosMutation,
+
+    useDeleteTranscriptionsMutation,
+    useUpdateTranscriptionsMutation,
 
 } = resourceApiSlice;

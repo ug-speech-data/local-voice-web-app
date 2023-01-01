@@ -2,44 +2,45 @@ import './style.scss';
 import AudioPlayer from "../../components/AudioPlayer";
 import { useState } from 'react';
 import { useToast, Spinner } from '@chakra-ui/react';
-import { useGetAudioToValidateQuery, useValidateAudioMutation } from '../../features/resources/resources-api-slice';
+import {
+    useGetTranscriptionToValidateQuery,
+    useValidateTranscriptionMutation,
+} from '../../features/resources/resources-api-slice';
 
 function TranscriptionValidation() {
-    //HACK : index is used to trigger a new request to the API
-    const [index, setIndex] = useState(0);
+    //HACK : offset is used to trigger a new request to the API
+    const [offset, setOffset] = useState(-1);
 
-    const { data: response = {}, isFetching: isFetchingAudio, error: audioFetchingError } = useGetAudioToValidateQuery(index);
-    const [validateAudio, { isLoading: isValidatingAudio, error: audioValidationError }] = useValidateAudioMutation()
+    const { data: response = {}, isFetching: isFetchingTranscription, error: transcriptionFetchingError } = useGetTranscriptionToValidateQuery(offset);
+    const [validateTranscription, { isLoading: isValidatingTranscription, error: transcriptionValidationError }] = useValidateTranscriptionMutation()
     const toast = useToast()
-    const [text, setText] = useState('')
     const [isActionButtonDisabled, setIsActionButtonDisabled] = useState(true)
-    const [isAudioBuffering, setIsAudioBuffering] = useState(true)
+    const [isTranscriptionBuffering, setIsTranscriptionBuffering] = useState(true)
 
-    let currentAudio = response["audio"]
-    if (audioFetchingError) {
+    let currentTranscription = response["transcription"]
+    if (transcriptionFetchingError) {
         toast({
             position: 'top-center',
-            title: `An error occurred: ${audioFetchingError.originalStatus}`,
-            description: audioFetchingError.status,
+            title: `An error occurred: ${transcriptionFetchingError.originalStatus}`,
+            description: transcriptionFetchingError.status,
             status: 'error',
             duration: 2000,
             isClosable: true,
         })
     }
 
-    const handleLoadNewAudio = () => {
-        // Loading audio
-        setIsAudioBuffering(true)
+    const handleLoadNewTranscription = () => {
+        // Loading transcription
+        setIsTranscriptionBuffering(true)
         setIsActionButtonDisabled(true)
-        setIndex(index + 1)
-        setText('')
+        setOffset(offset + 1)
     }
 
-    const handleValidate = async () => {
-        if (isValidatingAudio) return
+    const handleValidate = async (status) => {
+        if (isValidatingTranscription) return
 
-        const body = { audio_id: 1, text }
-        const response = await validateAudio(body).unwrap()
+        const body = { id: currentTranscription?.id || -1, status }
+        const response = await validateTranscription(body).unwrap()
         if (response['message'] != null) {
             toast({
                 position: 'top-center',
@@ -50,49 +51,57 @@ function TranscriptionValidation() {
                 isClosable: true,
             })
         }
-        // Next audio
-        handleLoadNewAudio()
+        // Next transcription
+        handleLoadNewTranscription()
     }
 
-    if (audioValidationError) {
+    if (transcriptionValidationError) {
         toast({
             position: 'top-center',
-            title: `An error occurred: ${audioValidationError.originalStatus}`,
-            description: audioValidationError.status,
+            title: `An error occurred: ${transcriptionValidationError.originalStatus}`,
+            description: transcriptionValidationError.status,
             status: 'error',
             duration: 2000,
             isClosable: true,
         })
     }
 
-    const handleAudioEnded = () => {
+    const handleTranscriptionEnded = () => {
         setIsActionButtonDisabled(false)
     }
 
     return (
         <section className='image-validation'>
-            <div className="my-5 d-flex justify-content-center position-relative">
-                <p>Please verify whether the text is a word-for-word transcription of the audio..</p>
-            </div>
-
-            {currentAudio === undefined ?
-                <div className="my-5 d-flex justify-content-center align-items-center">
-                    <h2>No audios to validate</h2>
+            {currentTranscription === undefined || currentTranscription === null ?
+                <div className="my-5">
+                    <p className='text-warning text-center'><b>No more audios to validate</b></p>
+                    <p className='text-center my-3'><button className='btn btn-primary' onClick={() => setOffset(-1)}>
+                        {isFetchingTranscription && <Spinner />}
+                        Reload
+                    </button></p>
                 </div> : null
             }
 
-            <div className="col-md-10 mx-auto transcription-box">
-                <p className="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, quas.</p>
-            </div>
+            {currentTranscription &&
+                <div className="my-5 d-flex justify-content-center position-relative">
+                    <p>Please verify whether the text is a word-for-word transcription of the transcription..</p>
+                </div>
+            }
 
-            {currentAudio &&
-                <div className='my-3 position-relative d-flex justify-content-center'>
+            {currentTranscription &&
+                <div className="col-md-10 mx-auto transcription-box">
+                    <p className="text-center">{currentTranscription.text}</p>
+                </div>
+            }
+
+            {currentTranscription &&
+                <div className='my-3 position-relative d-flex justify-content-center align-items-center'>
                     <AudioPlayer
-                        src={currentAudio["audio_url"]}
-                        onEnded={handleAudioEnded}
-                        setIsAudioBuffering={setIsAudioBuffering} />
+                        src={currentTranscription.audio.audio_url}
+                        onEnded={handleTranscriptionEnded}
+                        setIsAudioBuffering={setIsTranscriptionBuffering} />
 
-                    {(isAudioBuffering | isFetchingAudio) ? <Spinner
+                    {(isTranscriptionBuffering | isFetchingTranscription) ? <Spinner
                         thickness='4px'
                         speed='0.65s'
                         emptyColor='gray.200'
@@ -102,45 +111,31 @@ function TranscriptionValidation() {
                 </div>
             }
 
-            <div className="d-flex justify-content-center my-5 p-2 page-actions">
-                <button
-                    className="btn btn-outline-danger me-2 px-3"
-                    disabled={isValidatingAudio || isActionButtonDisabled}
-                    onClick={() => handleValidate("rejected")}>
-                    {isValidatingAudio ? <Spinner size="sm" /> :
-                        <span><i className="bi bi-hand-thumbs-down me-1"></i>Reject</span>
-                    }
-                </button>
-                <button
-                    className="btn btn-outline-primary mx-3 px-3"
-                    disabled={isValidatingAudio}
-                    onClick={() => setIndex(index + 1)}>
-                    <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
-                </button>
-                <button className="btn btn-outline-success me-2 px-3"
-                    disabled={isValidatingAudio || isActionButtonDisabled}
-                    onClick={() => handleValidate("accepted")}>
-                    {isValidatingAudio ? <Spinner size="sm" /> :
-                        <span><i className="bi bi-hand-thumbs-up me-1"></i>Accept</span>
-                    }
-                </button>
-            </div>
-
-            {/* <div className="d-flex justify-content-center my-5 p-2 page-actions">
-                <button
-                    className="btn btn-outline-primary mx-3 px-3"
-                    disabled={isValidatingAudio}
-                    onClick={() => setIndex(index + 1)}>
-                    <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
-                </button>
-                <button className="btn btn-outline-success me-2 px-3"
-                    disabled={isValidatingAudio || isActionButtonDisabled || text.length === 0}
-                    onClick={() => handleSubmitTranscription("accepted")}>
-                    {isValidatingAudio ? <Spinner size="sm" /> :
-                        <span><i className="bi bi-hand-thumbs-up me-1"></i>Accept</span>
-                    }
-                </button>
-            </div> */}
+            {currentTranscription &&
+                <div className="d-flex justify-content-center my-5 p-2 page-actions">
+                    <button
+                        className="btn btn-outline-danger me-2 px-3"
+                        disabled={isValidatingTranscription || isActionButtonDisabled}
+                        onClick={() => handleValidate("rejected")}>
+                        {isValidatingTranscription ? <Spinner size="sm" /> :
+                            <span><i className="bi bi-hand-thumbs-down me-1"></i>Reject</span>
+                        }
+                    </button>
+                    <button
+                        className="btn btn-outline-primary mx-3 px-3"
+                        disabled={isValidatingTranscription}
+                        onClick={() => setOffset(currentTranscription?.id || -1)}>
+                        <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
+                    </button>
+                    <button className="btn btn-outline-success me-2 px-3"
+                        disabled={isValidatingTranscription || isActionButtonDisabled}
+                        onClick={() => handleValidate("accepted")}>
+                        {isValidatingTranscription ? <Spinner size="sm" /> :
+                            <span><i className="bi bi-hand-thumbs-up me-1"></i>Accept</span>
+                        }
+                    </button>
+                </div>
+            }
         </section>
     );
 }

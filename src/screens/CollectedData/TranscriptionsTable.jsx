@@ -3,8 +3,8 @@ import TableView from '../../components/Table';
 import { Fragment, useRef, useState, useEffect } from 'react';
 import { Modal } from 'bootstrap';
 import {
-    useDeleteAudiosMutation,
-    useUpdateAudiosMutation,
+    useDeleteTranscriptionsMutation,
+    useUpdateTranscriptionsMutation,
 } from '../../features/resources/resources-api-slice';
 import { Spinner, useToast } from '@chakra-ui/react';
 import TextOverflow from '../../components/TextOverflow';
@@ -13,28 +13,28 @@ import { BASE_API_URI } from '../../utils/constants';
 import AudioPlayer from "../../components/AudioPlayer";
 
 
-function AudiosTable() {
-    const [deleteAudio, { isLoading: isDeletingAudio, error: errorDeletingAudio }] = useDeleteAudiosMutation()
-    const [putAudio, { isLoading: isPuttingAudio, isSuccess: successPuttingAudio, error: errorPuttingAudio }] = useUpdateAudiosMutation()
+function TranscriptionsTable() {
+    const [deleteTranscription, { isLoading: isDeletingTranscription, error: errorDeletingTranscription }] = useDeleteTranscriptionsMutation()
+    const [putTranscription, { isLoading: isPuttingTranscription, isSuccess: successPuttingTranscription, error: errorPuttingTranscription }] = useUpdateTranscriptionsMutation()
 
     const deletionModalRef = useRef(null);
-    const editAudioModalRef = useRef(null);
+    const editTranscriptionModalRef = useRef(null);
     const toast = useToast()
 
-    const [selectedAudio, setSelectedAudio] = useState(null);
+    const [selectedTranscription, setSelectedTranscription] = useState(null);
     const [deleteAlertModal, setDeleteAlertModal] = useState(null);
-    const [editAudioModal, setEditAudioModal] = useState(null);
+    const [editTranscriptionModal, setEditTranscriptionModal] = useState(null);
     const [newUpdate, setNewUpdate] = useState(null);
-    const [isAudioBuffering, setIsAudioBuffering] = useState(true)
+    const [isTranscriptionBuffering, setIsTranscriptionBuffering] = useState(true)
 
     // Form input
     const [name, setName] = useState('');
     const [isAccepted, setIsAccepted] = useState(false);
 
     useEffect(() => {
-        if (editAudioModalRef.current !== null && editAudioModal === null) {
-            const modal = new Modal(editAudioModalRef.current)
-            setEditAudioModal(modal)
+        if (editTranscriptionModalRef.current !== null && editTranscriptionModal === null) {
+            const modal = new Modal(editTranscriptionModalRef.current)
+            setEditTranscriptionModal(modal)
         }
         if (deletionModalRef.current !== null && deleteAlertModal === null) {
             const modal = new Modal(deletionModalRef.current)
@@ -42,18 +42,18 @@ function AudiosTable() {
         }
     }, [])
 
-    const handleDeleteAudio = async () => {
-        if (selectedAudio === null) {
+    const handleDeleteTranscription = async () => {
+        if (selectedTranscription === null) {
             return
         }
-        const response = await deleteAudio({ id: selectedAudio.id }).unwrap()
+        const response = await deleteTranscription({ id: selectedTranscription.id }).unwrap()
         const errorMessage = response["error_message"]
         if (errorMessage !== undefined || errorMessage !== null) {
-            setNewUpdate({ item: selectedAudio, action: "remove" })
+            setNewUpdate({ item: selectedTranscription, action: "remove" })
             toast({
                 position: 'top-center',
                 title: `Success`,
-                description: "Audio deleted successfully",
+                description: "Transcription deleted successfully",
                 status: 'success',
                 duration: 2000,
                 isClosable: true,
@@ -71,42 +71,42 @@ function AudiosTable() {
         deleteAlertModal?.hide()
     }
 
-    const showEditAudioModal = (image) => {
-        setSelectedAudio(image)
-        editAudioModal?.show()
+    const showEditTranscriptionModal = (image) => {
+        setSelectedTranscription(image)
+        editTranscriptionModal?.show()
     }
 
-    const showDeleteAudioModal = (image) => {
-        setSelectedAudio(image)
+    const showDeleteTranscriptionModal = (image) => {
+        setSelectedTranscription(image)
         deleteAlertModal?.show()
     }
 
     useEffect(() => {
-        if (selectedAudio) {
-            setName(selectedAudio.name)
-            setIsAccepted(selectedAudio.is_accepted)
+        if (selectedTranscription) {
+            setName(selectedTranscription.name)
+            setIsAccepted(selectedTranscription.is_accepted)
         }
-    }, [selectedAudio])
+    }, [selectedTranscription])
 
     const handleSubmission = async () => {
-        if (selectedAudio === null) {
+        if (selectedTranscription === null) {
             return
         }
         const body = {
             name,
-            id: selectedAudio.id,
+            id: selectedTranscription?.id || -1,
             is_accepted: isAccepted,
         }
-        const response = await putAudio(body).unwrap()
-        if (response?.audio !== undefined) {
-            setNewUpdate({ item: response.audio, action: "update" })
+        const response = await putTranscription(body).unwrap()
+        if (response?.transcription !== undefined) {
+            setNewUpdate({ item: response.transcription, action: "update" })
         }
     }
 
     useEffect(() => {
-        if (errorPuttingAudio) {
+        if (errorPuttingTranscription) {
             toast({
-                title: `Error: ${errorPuttingAudio.status}`,
+                title: `Error: ${errorPuttingTranscription.status}`,
                 description: "An error occurred while updating the image",
                 status: "error",
                 position: "top-center",
@@ -114,9 +114,9 @@ function AudiosTable() {
                 isClosable: true,
             })
         }
-        if (errorDeletingAudio) {
+        if (errorDeletingTranscription) {
             toast({
-                title: `Error: ${errorDeletingAudio.status}`,
+                title: `Error: ${errorDeletingTranscription.status}`,
                 description: "An error occurred while deleting the image",
                 position: "top-center",
                 status: "error",
@@ -124,21 +124,21 @@ function AudiosTable() {
                 isClosable: true,
             })
         }
-    }, [errorPuttingAudio, errorDeletingAudio])
+    }, [errorPuttingTranscription, errorDeletingTranscription])
 
     useEffect(() => {
-        if (successPuttingAudio) {
+        if (successPuttingTranscription) {
             toast({
                 title: "Success",
-                description: "Audio updated successfully",
+                description: "Transcription updated successfully",
                 position: "top-center",
                 status: "success",
                 duration: 2000,
                 isClosable: true,
             })
-            editAudioModal?.hide()
+            editTranscriptionModal?.hide()
         }
-    }, [successPuttingAudio])
+    }, [successPuttingTranscription])
 
 
     return (
@@ -148,7 +148,7 @@ function AudiosTable() {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">
-                                Delete Audio - '{selectedAudio?.name}'
+                                Delete Transcription - '{selectedTranscription?.audio.name}'
                             </h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -160,52 +160,69 @@ function AudiosTable() {
                                 </div>
                             </div>
                             <p className="text-center mb-3">
-                                {isDeletingAudio && <Spinner />}
+                                {isDeletingTranscription && <Spinner />}
                             </p>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-outline-danger" onClick={() => handleDeleteAudio(selectedAudio)} >Yes, continue</button>
+                            <button type="button" className="btn btn-outline-danger" onClick={() => handleDeleteTranscription(selectedTranscription)} >Yes, continue</button>
                             <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div ref={editAudioModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div ref={editTranscriptionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-xl">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">
-                                {selectedAudio ? "Edit Audio" : "New Audio"}
+                                {selectedTranscription ? "Edit Transcription" : "New Transcription"}
                             </h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body row">
                             <div className="col-md-6 mx-auto">
                                 <div className="d-flex justify-content-center align-items-center">
-                                    <img src={selectedAudio?.image_url} alt={selectedAudio?.name} />
+                                    <img src={selectedTranscription?.audio.image_url} alt={selectedTranscription?.audio.name} />
                                 </div>
                             </div>
 
                             <div className="col-md-6 mx-auto">
                                 <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Name</b></label>
-                                    <input type="text" className="form-control" id="name" value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
+                                    <label htmlFor="name" className="form-label"><b>Text</b></label>
+                                    <p className="text-justify">{selectedTranscription?.text}</p>
                                 </div>
 
-                                <AudioPlayer
-                                    src={selectedAudio?.file}
-                                    setIsAudioBuffering={setIsAudioBuffering} />
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Locale</b></label>
+                                    <p className="text-justify">{selectedTranscription?.audio.locale}</p>
+                                </div>
 
-                                {selectedAudio && isAudioBuffering && <Spinner
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    size="xl"
-                                    color='purple.500'
-                                />}
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Audio</b></label>
+                                    <div className="d-flex justify-content-center align-items-center">
+                                        <AudioPlayer
+                                            src={selectedTranscription?.audio.audio_url}
+                                            setIsAudioBuffering={setIsTranscriptionBuffering} />
+
+                                        {selectedTranscription && isTranscriptionBuffering && <Spinner
+                                            thickness='4px'
+                                            speed='0.65s'
+                                            emptyColor='gray.200'
+                                            size="lg"
+                                            color='purple.500'
+                                        />}
+                                    </div>
+                                </div>
+
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Validations</b></label>
+                                    <div>
+                                        {selectedTranscription?.validations?.map((validation, valIndex) => (
+                                            <span key={valIndex} className={validation.is_valid ? 'badge bg-primary' : 'badge bg-warning'}>{validation.user}</span>
+                                        ))}
+                                    </div>
+                                </div>
 
                                 <div className="my-3">
                                     <label htmlFor="name" className="form-label me-2">Accepted</label>
@@ -216,8 +233,8 @@ function AudiosTable() {
 
                                 <div className="my-3 d-flex justify-content-end">
                                     <button className="btn btn-primary btn-sm"
-                                        disabled={isPuttingAudio}
-                                        onClick={handleSubmission}>{isPuttingAudio && <Spinner />} Save Changes</button>
+                                        disabled={isPuttingTranscription}
+                                        onClick={handleSubmission}>{isPuttingTranscription && <Spinner />} Save Changes</button>
                                 </div>
                             </div>
 
@@ -232,44 +249,38 @@ function AudiosTable() {
 
             <div className="my-5 overflow-scroll">
                 <TableView
-                    responseDataAttribute="audios"
-                    dataSourceUrl={`${BASE_API_URI}/collected-audios/`}
+                    responseDataAttribute="transcriptions"
+                    dataSourceUrl={`${BASE_API_URI}/collected-transcriptions/`}
                     newUpdate={newUpdate}
                     filters={[{ key: "is_accepted:1", value: "Accepted" }, { key: "is_accepted:0", value: "Pending" }]}
                     headers={[{
-                        key: "name", value: "Name", render: (item) => {
+                        key: "name", value: "Audio", render: (item) => {
                             return (
                                 <div className="d-flex align-items-center">
-                                    <TextOverflow text={item.name} width={30} />
+                                    <TextOverflow text={item.audio.name} width={30} />
                                     {item.is_accepted ?
-                                        <ToolTip title="Add Audio" header={
+                                        <ToolTip title="Add Transcription" header={
                                             (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
                                         }>
-                                            This audio is ready for description. Click on more to view more details.
+                                            Transcription has be approved. Click on more to view more details.
                                         </ToolTip>
                                         :
-                                        <ToolTip title="Add Audio" header={
+                                        <ToolTip title="Add Transcription" header={
                                             (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>)
                                         }>
-                                            This audio is pending approval. Click on more to view more details.
+                                            This transcription is pending approval. Click on more to view more details.
                                         </ToolTip>
                                     }
                                 </div>
                             )
                         }
                     }, {
-                        key: "locale", value: "Locale"
-                    }, {
-                        key: "environment", value: "Environment"
-                    }, {
-                        key: "device_id", value: "Device"
-                    }, {
                         key: "submitted_by", value: "User"
                     }, {
                         key: "image_url", value: "Image", render: (item) => {
                             return (
                                 <div>
-                                    <img src={item.thumbnail} alt={item.name} className="profile-image" onClick={() => showEditAudioModal(item)} />
+                                    <img src={item.audio.thumbnail} alt={item.audio.name} className="profile-image" onClick={() => showEditTranscriptionModal(item)} />
                                 </div>
                             )
                         }
@@ -287,11 +298,11 @@ function AudiosTable() {
                         value: "Actions", render: (item) => {
                             return (
                                 <div className="d-flex">
-                                    <button className="btn btn-sm btn-primary me-1 d-flex" onClick={() => showEditAudioModal(item)}>
+                                    <button className="btn btn-sm btn-primary me-1 d-flex" onClick={() => showEditTranscriptionModal(item)}>
                                         <i className="bi bi-list me-1"></i>
                                         More
                                     </button>
-                                    <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showDeleteAudioModal(item)}>
+                                    <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showDeleteTranscriptionModal(item)}>
                                         <i className="bi bi-trash me-1"></i>
                                         Delete
                                     </button>
@@ -306,4 +317,4 @@ function AudiosTable() {
     );
 }
 
-export default AudiosTable;
+export default TranscriptionsTable;

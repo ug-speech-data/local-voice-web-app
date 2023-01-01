@@ -13,18 +13,13 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
     // Filter inputs
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('');
+    const [pageSize, setPageSize] = useState(10);
 
     // Pagination
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [nextPage, setNextPage] = useState(null);
     const [previousPage, setPreviousPage] = useState(null);
-
-    useEffect(() => {
-        console.log("displayedData", displayedData)
-        console.log("originalData", originalData)
-    }, [displayedData])
-
 
     useEffect(() => {
         if (responseData) {
@@ -42,15 +37,15 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
     }, [responseData])
 
     useEffect(() => {
-        trigger(`${dataSourceUrl}?page=${page}&filters=${filter}`)
-    }, [page, filter])
+        trigger(`${dataSourceUrl}?page=${page}&page_size=${pageSize}&filters=${filter}`)
+    }, [page, filter, pageSize])
 
     useEffect(() => {
-        trigger(`${dataSourceUrl}?page=${page}&filters=${filter}`)
+        trigger(`${dataSourceUrl}?page=${page}&page_size=${pageSize}&filters=${filter}`)
     }, [])
 
     const reloadData = () => {
-        trigger(`${dataSourceUrl}?page=${page}&filters=${filter}`)
+        trigger(`${dataSourceUrl}?page=${page}&page_size=${pageSize}&filters=${filter}`)
     }
 
     useEffect(() => {
@@ -91,8 +86,8 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
 
     return (
         <Fragment>
-            <div className="card-body">
-                <div className="d-flex justify-content-between mb-3">
+            <div className="card-body" style={{ maxHeight: "60vh", overflowY: "auto" }}>
+                <div className="d-flex justify-content-between mb-3" style={{ position: "sticky", top: "0", background: "white" }}>
                     <div className="d-flex">
                         <div className="d-flex align-items-center">
                             <label htmlFor="search" className="form-label me-2">Search</label>
@@ -100,6 +95,15 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search"
                                 value={search} />
+                        </div>
+                        <div className="d-flex align-items-center">
+                            <select className="form-control" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)}>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="100">300</option>
+                            </select>
                         </div>
                         <div className="d-flex align-items-center mx-3">
                             <button className="btn btn-sm btn-primary"
@@ -141,7 +145,6 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                             Refresh
                         </button>
                     </div>
-
                 </div>
 
                 <table className="table">
