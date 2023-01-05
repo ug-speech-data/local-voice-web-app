@@ -4,11 +4,14 @@ import useAxios from '../../app/hooks/useAxios';
 
 import { Spinner } from '@chakra-ui/react';
 
-function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, newUpdate = null, filters = null }) {
+function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, newUpdate = null, filters = null, bulkActions = [] }) {
     const [originalData, setOriginalData] = useState([])
     const [displayedData, setDisplayedData] = useState([])
     const { trigger, data: responseData, error, isLoading } = useAxios()
     const [filter, setFilter] = useState("")
+
+    const [bulkSelected, setBulkSelected] = useState([])
+    const [selectedBulkActionIndex, setSelectedBulkActionIndex] = useState(0)
 
     // Filter inputs
     const [search, setSearch] = useState('');
@@ -32,20 +35,21 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
 
             setTotalPages(responseData.total_pages)
             setNextPage(responseData.next_page)
+            setPage(responseData?.page || 1)
             setPreviousPage(responseData.previous_page)
         }
     }, [responseData])
 
     useEffect(() => {
-        trigger(`${dataSourceUrl}?page=${page}&page_size=${pageSize}&filters=${filter}`)
+        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
     }, [page, filter, pageSize])
 
     useEffect(() => {
-        trigger(`${dataSourceUrl}?page=${page}&page_size=${pageSize}&filters=${filter}`)
+        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
     }, [])
 
     const reloadData = () => {
-        trigger(`${dataSourceUrl}?page=${page}&page_size=${pageSize}&filters=${filter}`)
+        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
     }
 
     useEffect(() => {
@@ -91,7 +95,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                     <div className="d-flex">
                         <div className="d-flex align-items-center">
                             <label htmlFor="search" className="form-label me-2">Search</label>
-                            <input type="text" className="form-control" id="search" aria-describedby="search"
+                            <input type="search" className="form-control" id="search" aria-describedby="search"
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search"
                                 value={search} />
@@ -120,12 +124,25 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                 <i className="bi bi-skip-forward"></i>
                             </button>
                         </div>
-
                     </div>
+
                     <div className="d-flex align-items-center justify-content-end">
+                        {bulkActions?.length > 0 &&
+                            <div className="d-flex align-items-center mx-3">
+                                <select className="form form-select" onChange={e => setSelectedBulkActionIndex(e.target.value)}>
+                                    {bulkActions.map((action, index) => {
+                                        return (
+                                            <option key={index} value={index}>{action.name}</option>
+                                        )
+                                    })}
+                                </select>
+                                <button className="btn btn-light" onClick={bulkActions[selectedBulkActionIndex]?.action}>Go</button>
+                            </div>
+                        }
+
                         <div className="d-flex align-items-center mx-3">
                             <label htmlFor="filter" className="form-label me-2">Filters</label>
-                            <select className="form-control"
+                            <select className="form form-select"
                                 id="filter"
                                 onChange={(e) => setFilter(e.target.value)}>
                                 <option value="">None</option>
@@ -142,7 +159,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                             onClick={reloadData}
                         >
                             <i className="bi bi-arrow-clockwise me-2"></i>
-                            Refresh
+                            Reload
                         </button>
                     </div>
                 </div>
@@ -150,6 +167,18 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                 <table className="table">
                     <thead>
                         <tr>
+                            {bulkActions?.length > 0 && <th>
+                                <input type="checkbox" className="form-check-input" id="bulk_select"
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setBulkSelected(displayedData.map(c => c.id))
+                                        } else {
+                                            setBulkSelected([])
+                                        }
+                                    }}
+                                    checked={bulkSelected.length == displayedData.length}
+                                /> </th>}
+
                             {headers?.map(({ key, value }, index) => {
                                 return (
                                     <th key={index} onClick={(e) => setSort(key)}>
@@ -172,11 +201,24 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                         {(!isLoading && displayedData?.length == 0) && <tr><td colSpan={headers?.length || 7}>
                             <p className="text-center">No data to display</p>
                         </td></tr>}
-                        {error && <tr><td colSpan="2">Error: {error}</td></tr>}
+                        {!isLoading && error && <tr><td colSpan="2">Error: {error}</td></tr>}
 
                         {displayedData?.map((item, index) => {
                             return (
                                 <tr key={index}>
+                                    {bulkActions?.length > 0 && <td>
+                                        <input type="checkbox" className="form-check-input" id="bulk_select"
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    setBulkSelected([...bulkSelected, item.id])
+                                                } else {
+                                                    setBulkSelected(bulkSelected.filter(c => c != item.id))
+                                                }
+                                            }}
+                                            checked={bulkSelected.includes(item.id)}
+                                        />
+                                    </td>}
+
                                     {headers?.map(({ key, render }, headerIndex) => {
                                         return (
                                             <td key={headerIndex}>

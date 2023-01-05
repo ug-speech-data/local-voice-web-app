@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import axios from "axios";
 
 
-const useAxios = (mainUrl = null, method = "GET", payload = {}) => {
+const useAxios = (mainUrl = null, method = "GET", mainPayload = {}) => {
     const [data, setData] = useState(null);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -12,11 +12,11 @@ const useAxios = (mainUrl = null, method = "GET", payload = {}) => {
         controllerRef.current.abort();
     };
 
-    const trigger = async (url = mainUrl) => {
+    const trigger = async (url = mainUrl, body = mainPayload) => {
         try {
             setIsLoading(true);
             const response = await axios.request({
-                data: payload,
+                data: body,
                 signal: controllerRef.current.signal,
                 headers: {
                     "Content-Type": "application/json",

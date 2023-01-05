@@ -1,11 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-const BASE_URL = 'http://127.0.0.1:8000/api';
+import { BASE_API_URI } from '../../utils/constants';
 
 export const resourceApiSlice = createApi({
     reducerPath: 'resources-api',
     baseQuery: fetchBaseQuery({
-        baseUrl: BASE_URL,
+        baseUrl: BASE_API_URI,
         prepareHeaders(headers) {
             headers.set('Authorization', `Token ${localStorage.getItem('token')}`);
             return headers;
@@ -261,6 +260,27 @@ export const resourceApiSlice = createApi({
                 },
             }),
 
+            // Participants
+            updateParticipants: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/collected-participants/`,
+                        method: 'POST',
+                        body,
+                    }
+                },
+            }),
+
+            deleteParticipants: builder.mutation({
+                query(body) {
+                    return {
+                        url: `/collected-participants/`,
+                        method: 'DELETE',
+                        body,
+                    }
+                },
+            }),
+
         };
     },
 });
@@ -308,7 +328,12 @@ export const { useGetImageToValidateQuery,
     useDeleteAudiosMutation,
     useUpdateAudiosMutation,
 
+    // Transcriptions
     useDeleteTranscriptionsMutation,
     useUpdateTranscriptionsMutation,
+
+    // Participants
+    useDeleteParticipantsMutation,
+    useUpdateParticipantsMutation,
 
 } = resourceApiSlice;

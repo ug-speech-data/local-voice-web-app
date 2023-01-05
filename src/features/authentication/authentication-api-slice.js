@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createSlice } from '@reduxjs/toolkit';
-
-const BASE_URL = 'http://127.0.0.1:8000/api';
+import { BASE_API_URI } from '../../utils/constants';
 
 // Retrieve the user permissions from local storage
 let userPermissions = localStorage.getItem('user_permissions')
@@ -42,7 +41,7 @@ export default authenticationSlice.reducer;
 export const apiSlice = createApi({
     reducerPath: 'auth-api',
     baseQuery: fetchBaseQuery({
-        baseUrl: BASE_URL
+        baseUrl: BASE_API_URI
     }),
     endpoints(builder) {
         return {

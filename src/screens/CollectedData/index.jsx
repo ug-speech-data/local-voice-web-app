@@ -5,6 +5,7 @@ import AudiosTable from "./AudiosTable";
 import ImagesTable from "./ImagesTable";
 import { Fragment } from "react";
 import TranscriptionsTable from "./TranscriptionsTable";
+import ParticipantsTable from "./ParticipantsTable";
 
 function CollectedData() {
     return (
@@ -17,7 +18,7 @@ function CollectedData() {
                     <ImagesTable />
                     <AudiosTable />
                     <TranscriptionsTable />
-                    <AudiosTable />
+                    <ParticipantsTable />
                 </TabLayout>
             </div>
             <Footer />

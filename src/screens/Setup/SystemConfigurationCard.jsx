@@ -7,6 +7,8 @@ import { useToast, Spinner } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { setConfigurations } from '../../features/global/global-slice';
 import { useDispatch } from 'react-redux';
+import { BASE_API_URI } from '../../utils/constants';
+import useAxios from '../../app/hooks/useAxios';
 
 function SystemConfigurationCard() {
     const configurations = useSelector((state) => state.global.configurations);
@@ -20,6 +22,35 @@ function SystemConfigurationCard() {
     const [requiredAudioValidationCount, setRequiredAudioValidationCount] = useState(0);
     const [requiredImageDescriptionCount, setRequiredImageDescriptionCount] = useState(0);
     const [requiredTranscriptionValidationCount, setRequiredTranscriptionValidationCount] = useState(0);
+    const [numberOfBatches, setNumberOfBatches] = useState(0);
+
+    const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios(`${BASE_API_URI}/reshuffle-images/`, "POST")
+
+    useEffect(() => {
+        if (shufflingResponseData) {
+            toast({
+                position: 'top-center',
+                title: shufflingResponseData.message,
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [shufflingResponseData])
+
+    useEffect(() => {
+        if (errorReshuffling) {
+            toast({
+                position: 'top-center',
+                title: `An error occurred`,
+                description: errorReshuffling,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [errorReshuffling])
+
 
     const [demoVideo, setDemoVideo] = useState("")
 
@@ -33,6 +64,7 @@ function SystemConfigurationCard() {
         formData.append("required_image_description_count", requiredImageDescriptionCount);
         formData.append("required_audio_validation_count", requiredAudioValidationCount);
         formData.append("required_transcription_validation_count", requiredTranscriptionValidationCount);
+        formData.append("number_of_batches", numberOfBatches);
         formData.append("demo_video", demoVideo);
 
         const response = await putConfigurations(formData).unwrap()
@@ -74,6 +106,7 @@ function SystemConfigurationCard() {
             setRequiredImageDescriptionCount(configurations?.required_image_description_count || 0);
             setRequiredAudioValidationCount(configurations?.required_audio_validation_count || 0);
             setRequiredTranscriptionValidationCount(configurations?.required_transcription_validation_count || 0);
+            setNumberOfBatches(configurations?.number_of_batches || 0);
         }
     }, [configurations])
 
@@ -149,6 +182,7 @@ function SystemConfigurationCard() {
                             onChange={(e) => setRequiredAudioValidationCount(e.target.value)}
                             min={1} max={100} step={1} />
                     </div>
+
                     <div className="form-group my-3">
                         <p><b>Transcription Validation Count</b></p>
                         <small>Required number of validation for each transcription.</small>
@@ -156,6 +190,24 @@ function SystemConfigurationCard() {
                             value={requiredTranscriptionValidationCount}
                             type="number"
                             onChange={(e) => setRequiredTranscriptionValidationCount(e.target.value)}
+                            min={1} max={100} step={1} />
+                    </div>
+
+
+                    <div className="form-group my-3">
+                        <p><b>Number of batches</b></p>
+                        <small>Number of batches into which to put images for enumerators.
+                            <button className="btn btn-sm btn-outline-primary"
+                                disabled={isReshuffling}
+                                onClick={(e) => reshuffleImageIntoBatches()}>
+                                {isReshuffling && <Spinner size="sm" />}
+                                Reshuffle
+                            </button>
+                        </small>
+                        <input className="form-control"
+                            value={numberOfBatches}
+                            type="number"
+                            onChange={(e) => setNumberOfBatches(e.target.value)}
                             min={1} max={100} step={1} />
                     </div>
                 </div>
