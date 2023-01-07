@@ -21,6 +21,8 @@ logs
 node_modules
 **node_modules
 **/node_modules
+**/build
+**/dist
 **/uploads
 web/media
 web/static/CACHE
@@ -29,7 +31,6 @@ Dockerfile
 Dockerfile.prod
 docker*
 Docker*
-nginx
 README.md
 db.sqlite3
 
