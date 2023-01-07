@@ -9,6 +9,7 @@ import { useToast, Spinner } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import TagInput from '../../components/TagInput';
 import PasswordInput from '../../components/PasswordInput';
+import SelectInput from '../../components/SelectInput';
 
 function UsersCard() {
     const [getUsers, { data: response = [], isFetching, error }] = useLazyGetUsersQuery()
@@ -32,6 +33,8 @@ function UsersCard() {
     const [phone, setPhone] = useState('');
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
+    const [locale, setLocale] = useState('');
+    const [assignedImageBatch, setAssignedImageBatch] = useState('');
 
     // Filter inputs
     const [search, setSearch] = useState('');
@@ -83,6 +86,8 @@ function UsersCard() {
         setOtherNames(user.other_names || "")
         setPhone(user.phone || "")
         setEmailAddress(user.email_address || "")
+        setLocale(user.locale || "")
+        setAssignedImageBatch(user.assigned_image_batch || "")
         setPassword("")
         modal?.show()
     }
@@ -93,6 +98,8 @@ function UsersCard() {
         setOtherNames("")
         setPhone("")
         setEmailAddress("")
+        setLocale("")
+        setAssignedImageBatch("")
         setPassword("")
         modal?.show()
     }
@@ -130,7 +137,7 @@ function UsersCard() {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault()
-        const body = { surname, other_names: otherNames, phone, email_address: emailAddress, groups: selectedGroups, password: password }
+        const body = { surname, other_names: otherNames, phone, email_address: emailAddress, groups: selectedGroups, locale: locale, assigned_image_batch: assignedImageBatch, password: password }
         if (selectedUser) {
             body['id'] = selectedUser.id
         }
@@ -274,6 +281,29 @@ function UsersCard() {
                                         onChange={(e) => setEmailAddress(e.target.value)}
                                         placeholder="Enter email address"
                                         value={emailAddress} />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="locale" className="form-label">Locale</label>
+                                    <SelectInput
+                                        onChange={(e) => setLocale(e.target.value)}
+                                        value={locale}
+                                        options={[
+                                            { value: 'dag', label: 'Dagbani' },
+                                            { value: 'dga', label: 'Dagare' },
+                                            { value: 'ee', label: 'Ewe' },
+                                            { value: 'kpo', label: 'Kposo' },
+                                            { value: 'tw', label: 'Twi' },
+                                        ]}
+                                    />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="assigned_image_batch" className="form-label">Assigned Image Batch</label>
+                                    <input type="number" className="form-control" id="assigned_image_batch" aria-describedby="assigned_image_batch"
+                                        onChange={(e) => setAssignedImageBatch(e.target.value)}
+                                        placeholder="Assigned Image Batch"
+                                        value={assignedImageBatch} />
                                 </div>
 
                                 <div className="mt-5">

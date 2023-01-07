@@ -1,6 +1,7 @@
 import './style.scss';
 import {
     usePutConfigurationsMutation,
+    useLazyGetGroupsQuery,
 } from '../../features/resources/resources-api-slice';
 import { Fragment, useState, useEffect } from 'react';
 import { useToast, Spinner } from '@chakra-ui/react';
@@ -9,11 +10,14 @@ import { setConfigurations } from '../../features/global/global-slice';
 import { useDispatch } from 'react-redux';
 import { BASE_API_URI } from '../../utils/constants';
 import useAxios from '../../app/hooks/useAxios';
+import SelectInput from '../../components/SelectInput';
 
 function SystemConfigurationCard() {
+    const [getGroups, { data: groupsResponse = [], isFetching, error }] = useLazyGetGroupsQuery()
     const configurations = useSelector((state) => state.global.configurations);
     const dispatch = useDispatch();
     const [putConfigurations, { isLoading: isPuttingGroup, isSuccess: successPuttingConfigurations, error: errorPuttingConfigurations }] = usePutConfigurationsMutation()
+    const toast = useToast()
 
     // Form input
     const [maxBackgroundNoiseLevel, setMaxBackgroundNoiseLevel] = useState(0);
@@ -23,20 +27,52 @@ function SystemConfigurationCard() {
     const [requiredImageDescriptionCount, setRequiredImageDescriptionCount] = useState(0);
     const [requiredTranscriptionValidationCount, setRequiredTranscriptionValidationCount] = useState(0);
     const [numberOfBatches, setNumberOfBatches] = useState(0);
+    const [groups, setGroups] = useState([])
+    const [enumeratorsGroup, setEnumeratorsGroup] = useState(null)
+    const [demoVideo, setDemoVideo] = useState("")
 
     const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios(`${BASE_API_URI}/reshuffle-images/`, "POST")
+    const { trigger: assignImageBatch, data: assignmentResponse, error: errorAssigning, isLoading: isAssigning } = useAxios(`${BASE_API_URI}/assign-images-batch-to-user/`, "POST")
+
 
     useEffect(() => {
         if (shufflingResponseData) {
             toast({
                 position: 'top-center',
                 title: shufflingResponseData.message,
-                status: 'success',
+                status: 'info',
                 duration: 2000,
                 isClosable: true,
             })
         }
     }, [shufflingResponseData])
+
+
+    useEffect(() => {
+        if (errorAssigning) {
+            toast({
+                position: 'top-center',
+                title: errorAssigning,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [errorAssigning])
+
+    useEffect(() => {
+        if (assignmentResponse) {
+            toast({
+                position: 'top-center',
+                title: assignmentResponse.message,
+                status: 'info',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [assignmentResponse])
+
+
 
     useEffect(() => {
         if (errorReshuffling) {
@@ -51,10 +87,16 @@ function SystemConfigurationCard() {
         }
     }, [errorReshuffling])
 
+    useEffect(() => {
+        getGroups()
+    }, [])
 
-    const [demoVideo, setDemoVideo] = useState("")
+    useEffect(() => {
+        if (groupsResponse.groups) {
+            setGroups(groupsResponse.groups)
+        }
+    }, [groupsResponse])
 
-    const toast = useToast()
 
     const handleSave = async () => {
         const formData = new FormData();
@@ -65,6 +107,7 @@ function SystemConfigurationCard() {
         formData.append("required_audio_validation_count", requiredAudioValidationCount);
         formData.append("required_transcription_validation_count", requiredTranscriptionValidationCount);
         formData.append("number_of_batches", numberOfBatches);
+        formData.append("enumerators_group_name", enumeratorsGroup);
         formData.append("demo_video", demoVideo);
 
         const response = await putConfigurations(formData).unwrap()
@@ -107,13 +150,14 @@ function SystemConfigurationCard() {
             setRequiredAudioValidationCount(configurations?.required_audio_validation_count || 0);
             setRequiredTranscriptionValidationCount(configurations?.required_transcription_validation_count || 0);
             setNumberOfBatches(configurations?.number_of_batches || 0);
+            setEnumeratorsGroup(configurations?.enumerators_group?.name || "");
         }
     }, [configurations])
 
     return (
         <Fragment>
             <div className="card">
-                <div className="card-header d-flex justify-content-between">
+                <div className="card-header d-flex justify-content-between" style={{ "position": "sticky", "top": "-1em", "zIndex": "1", "background": "white" }}>
                     <h1>GLOBAL CONFIGURATIONS</h1>
                     <div className="d-flex card-options justify-content-end">
                         <button className="btn btn-primary btn-sm"
@@ -125,7 +169,7 @@ function SystemConfigurationCard() {
                         </button>
                     </div>
                 </div>
-                <div className="card-body">
+                <div className="card-body overflow-scroll">
                     <div className="form-group my-3">
                         <p><b>Maximum Category for Image</b></p>
                         <small>What is the maximum number of categories an image can belong to?</small>
@@ -193,7 +237,6 @@ function SystemConfigurationCard() {
                             min={1} max={100} step={1} />
                     </div>
 
-
                     <div className="form-group my-3">
                         <p><b>Number of batches</b></p>
                         <small>Number of batches into which to put images for enumerators.
@@ -210,9 +253,27 @@ function SystemConfigurationCard() {
                             onChange={(e) => setNumberOfBatches(e.target.value)}
                             min={1} max={100} step={1} />
                     </div>
+
+                    <div className="form-group my-3">
+                        <p><b>Enumerators Group</b></p>
+                        <small>
+                            The group/role for enumerators. All users in this group will be assigned a batch of images.
+                            <button className="btn btn-sm btn-outline-primary"
+                                disabled={isAssigning}
+                                onClick={(e) => assignImageBatch()}>
+                                {isAssigning && <Spinner size="sm" />}
+                                Assign Batches
+                            </button>
+                        </small>
+                        <SelectInput
+                            onChange={(e) => setEnumeratorsGroup(e.target.value)}
+                            value={enumeratorsGroup}
+                            options={groups.map((group) => ({ value: group.name, label: group.name }))}
+                        />
+                    </div>
                 </div>
             </div>
-        </Fragment>
+        </Fragment >
     );
 }
 
