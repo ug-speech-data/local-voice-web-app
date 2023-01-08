@@ -23,7 +23,7 @@ function HomeScreen() {
         <div className="home-page">
             <div className="content">
                 <h1 className='text-center h1'>LOCAL VOICE PROJECT</h1>
-                <p className='text-center'>Our website is under construction. Below are helpful some resources for the meantime.</p>
+                <p className='text-center'>Our website is under construction. Below are some helpful resources for the meantime.</p>
 
                 <div className='text-center my-4 d-flex mx-auto justify-content-center align-items-center flex-wrap'>
                     <Link to={'/login'} className="mx-4 my-2">
