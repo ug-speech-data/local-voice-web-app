@@ -24,6 +24,7 @@ function ImageValidation() {
     const toast = useToast()
     const modalRef = useRef(null);
     const [selectedTags, setSelectedTags] = useState([]);
+    const [currentImage, setCurrentImage] = useState(null);
 
     useEffect(() => {
         if (categoryResponse["categories"] !== undefined) {
@@ -36,21 +37,23 @@ function ImageValidation() {
         setCurrentImageLoading(false)
     }, [])
 
-    let currentImage = null;
-    if (error) {
-        toast({
-            position: 'top-center',
-            title: `An error occurred: ${error.originalStatus}`,
-            description: error.status,
-            status: 'error',
-            duration: 2000,
-            isClosable: true,
-        })
-    } else {
-        if (response["image"] !== undefined) {
-            currentImage = response["image"]
+    useEffect(() => {
+        if (error) {
+            toast({
+                position: 'top-center',
+                title: `An error occurred: ${error.originalStatus}`,
+                description: error.status,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        } else {
+            if (response["image"] !== undefined) {
+                setCurrentImage(response["image"])
+                setCurrentImageLoading(true)
+            }
         }
-    }
+    }, [isFetchingImages])
 
     const handleImageChange = () => {
         // Reset selected tags
