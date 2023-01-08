@@ -101,7 +101,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                 value={search} />
                         </div>
                         <div className="d-flex align-items-center">
-                            <select className="form-control" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)}>
+                            <select className="form-control" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)} defaultValue={page}>
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="50">50</option>
@@ -129,7 +129,9 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                     <div className="d-flex align-items-center justify-content-end">
                         {bulkActions?.length > 0 &&
                             <div className="d-flex align-items-center mx-3">
-                                <select className="form form-select" onChange={e => setSelectedBulkActionIndex(e.target.value)}>
+                                <select className="form form-select" 
+                                defaultValue={selectedBulkActionIndex}
+                                onChange={e => setSelectedBulkActionIndex(e.target.value)}>
                                     {bulkActions.map((action, index) => {
                                         return (
                                             <option key={index} value={index}>{action.name}</option>
@@ -144,7 +146,9 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                             <label htmlFor="filter" className="form-label me-2">Filters</label>
                             <select className="form form-select"
                                 id="filter"
-                                onChange={(e) => setFilter(e.target.value)}>
+                                defaultValue={filter}
+                                onChange={(e) => setFilter(e.target.value)}
+                                >
                                 <option value="">None</option>
                                 {filters?.map(({ key, value }, index) => {
                                     return (

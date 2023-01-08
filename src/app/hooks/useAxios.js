@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import axios from "axios";
 
 
-const useAxios = (mainUrl = null, method = "GET", mainPayload = {}) => {
+const useAxios = ({ mainUrl = null, method = "GET", mainPayload = {}, useAuthorisation = true }={}) => {
     const [data, setData] = useState(null);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -12,6 +12,8 @@ const useAxios = (mainUrl = null, method = "GET", mainPayload = {}) => {
         controllerRef.current.abort();
     };
 
+    const authorisation = useAuthorisation ? `Token ${localStorage.getItem('token')}` : null
+
     const trigger = async (url = mainUrl, body = mainPayload) => {
         try {
             setIsLoading(true);
@@ -20,7 +22,7 @@ const useAxios = (mainUrl = null, method = "GET", mainPayload = {}) => {
                 signal: controllerRef.current.signal,
                 headers: {
                     "Content-Type": "application/json",
-                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'Authorization': authorisation,
                 },
                 method,
                 url,

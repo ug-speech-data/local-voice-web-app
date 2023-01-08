@@ -202,11 +202,12 @@ function ParticipantsTable() {
 
                                 <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Network</b></label>
-                                    <select name="" id="" className="form form-select" value={network} onChange={(e) => setNetwork(e.target.value)}>
+                                    <select name="" id="" className="form form-select"
+                                        value={network} onChange={(e) => setNetwork(e.target.value)}>
                                         <option value="">None</option>
-                                        <option value="MTN" selected={network === "MTN"}>MTN</option>
-                                        <option value="VOD" selected={network === "VOD"}>VODAFONE</option>
-                                        <option value="TIG" selected={network === "TIG"}>AIRTEL TIGO</option>
+                                        <option value="MTN" >MTN</option>
+                                        <option value="VOD" >VODAFONE</option>
+                                        <option value="TIG" >AIRTEL TIGO</option>
                                     </select>
                                 </div>
 

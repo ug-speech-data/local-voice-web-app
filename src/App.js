@@ -13,43 +13,10 @@ import Setup from "./screens/Setup";
 import ProtectedRoute from "./components/Common/ProtectedRoute";
 import Permissions from "./utils/permissions";
 import Error404Screen from "./screens/ErrorScreens/Error404";
-import {
-  useLazyGetConfigurationsQuery,
-} from './features/resources/resources-api-slice';
-import { useEffect } from "react";
-import { useToast } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
-import { setConfigurations } from './features/global/global-slice';
 import HomeScreen from "./screens/Home";
 
 
 function App() {
-  const [getConfigurations, { error }] = useLazyGetConfigurationsQuery()
-  const toast = useToast();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    (async () => {
-      const response = await getConfigurations().unwrap()
-      if (response?.configurations) {
-        dispatch(setConfigurations(response.configurations))
-      }
-    })()
-  }, [])
-
-  useEffect(() => {
-    if (error) {
-      toast({
-        position: "top-center",
-        title: `Error: ${error.originalStatus}`,
-        description: "Could not fetch configurations.",
-        status: "error",
-        duration: 1000,
-        isClosable: true,
-      })
-    }
-  }, [error])
-
   return (
     <Router>
       <Routes>
