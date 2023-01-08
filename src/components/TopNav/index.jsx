@@ -7,6 +7,7 @@ import { useToast, Spinner } from '@chakra-ui/react'
 import PermissionUpdate from '../PermissionUpdate';
 import Permissions from "../../utils/permissions";
 import { useEffect } from 'react';
+import logo from "../../assets/images/logo.png";
 
 function TopNav() {
     const userPermissions = useSelector((state) => new Set(state.authentication.userPermissions));
@@ -52,8 +53,32 @@ function TopNav() {
         dispatch(setActiveNavMenu(menu));
     }
 
+    useEffect(() => {
+        const overlay = document.querySelector('.overlay');
+        overlay.addEventListener('click', toggleMenu);
+    }, [])
+
+    const toggleMenu = () => {
+        const menu = document.querySelector('.nav-left');
+        const overlay = document.querySelector('.overlay');
+        menu.classList.toggle('open');
+        overlay.classList.toggle('open');
+    }
+
     return (
         <header className="top-nav d-flex justify-content-between align-items-center">
+            <div className='d-flex align-items-center'>
+                <div className='d-md-none'>
+                    <button className="btn btn-light" onClick={toggleMenu}><i className="bi bi-list"></i></button>
+                </div>
+                <div className="d-flex">
+                    <Link to="/" className='logo'>
+                        <img className='logo' src={logo} alt="logo" />
+                    </Link>
+                    <p style={{ fontWeight: "800" }}>Local Voice</p>
+                </div>
+            </div>
+            <div className="d-md-none overlay"></div>
             <div className='nav-left'>
                 <Link to="/" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>HOME</Link>
                 <Link to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>

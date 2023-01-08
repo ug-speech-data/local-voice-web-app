@@ -111,14 +111,14 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                         </div>
                         <div className="d-flex align-items-center mx-3">
                             <button className="btn btn-sm btn-primary"
-                                disabled={previousPage == null || isLoading}
+                                disabled={previousPage === null || isLoading}
                                 onClick={() => setPage(page - 1)}
                             >
                                 <i className="bi bi-skip-backward"></i>
                             </button>
                             <span className="mx-2 badge bg-primary">page {page} of {totalPages}</span>
                             <button className="btn btn-sm btn-primary"
-                                disabled={nextPage == null || isLoading}
+                                disabled={nextPage === null || isLoading}
                                 onClick={() => setPage(page + 1)}
                             >
                                 <i className="bi bi-skip-forward"></i>
@@ -180,7 +180,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                             setBulkSelected([])
                                         }
                                     }}
-                                    checked={bulkSelected.length == displayedData.length}
+                                    checked={bulkSelected.length === displayedData.length}
                                 /> </th>}
 
                             {headers?.map(({ key, value }, index) => {
@@ -202,7 +202,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                 Loading...
                             </span>
                         </td></tr>}
-                        {(!isLoading && displayedData?.length == 0) && <tr><td colSpan={headers?.length || 7}>
+                        {(!isLoading && displayedData?.length === 0) && <tr><td colSpan={headers?.length || 7}>
                             <p className="text-center">No data to display</p>
                         </td></tr>}
                         {!isLoading && error && <tr><td colSpan="2">Error: {error}</td></tr>}
