@@ -33,10 +33,10 @@ function ImageValidation() {
 
     useEffect(() => {
         getCategories()
+        setCurrentImageLoading(false)
     }, [])
 
     let currentImage = null;
-    setCurrentImageLoading(false)
     if (error) {
         toast({
             position: 'top-center',
@@ -49,7 +49,6 @@ function ImageValidation() {
     } else {
         if (response["image"] !== undefined) {
             currentImage = response["image"]
-            setCurrentImageLoading(true)
         }
     }
 

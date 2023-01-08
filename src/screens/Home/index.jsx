@@ -29,7 +29,7 @@ function HomeScreen() {
                     <Link to={'/login'} className="mx-4 my-2">
                         <button className="btn btn-outline-primary">Login</button>
                     </Link>
-                    {webConfigurations && <a href={webConfigurations.android_apk_url} className="mx-4 my-2">
+                    {webConfigurations?.android_apk_url && <a href={webConfigurations.android_apk_url} className="mx-4 my-2">
                         <button className="btn btn-primary">Get Our APK</button>
                     </a>}
                 </div>

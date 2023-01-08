@@ -75,7 +75,7 @@ function LoginScreen() {
                         <img className='app-logo' src={logo} alt="logo" />
                     </div>
 
-                    <h1 className='text-center my-5'>LOGIN</h1>
+                    <h1 className='text-center h1 my-5'>LOGIN</h1>
                     <div className="d-flex justify-content-center">
                         {isLoading && <Spinner
                             thickness='4px'
