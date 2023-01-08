@@ -36,6 +36,7 @@ function ImageValidation() {
     }, [])
 
     let currentImage = null;
+    setCurrentImageLoading(false)
     if (error) {
         toast({
             position: 'top-center',
@@ -48,6 +49,7 @@ function ImageValidation() {
     } else {
         if (response["image"] !== undefined) {
             currentImage = response["image"]
+            setCurrentImageLoading(true)
         }
     }
 
@@ -131,7 +133,6 @@ function ImageValidation() {
                                     color='purple.500'
                                 />}
                                 <img onClick={showModal}
-                                    onLoad={() => setCurrentImageLoading(false)}
                                     className="image"
                                     style={{ "opacity": (currentImageLoading || isFetchingImages) ? "0.5" : "1" }}
                                     src={currentImage.image_url}

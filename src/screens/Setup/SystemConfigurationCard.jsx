@@ -30,6 +30,7 @@ function SystemConfigurationCard() {
     const [groups, setGroups] = useState([])
     const [enumeratorsGroup, setEnumeratorsGroup] = useState(null)
     const [demoVideo, setDemoVideo] = useState("")
+    const [androidAPK, setAndroidAPK] = useState("")
 
     const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios(`${BASE_API_URI}/reshuffle-images/`, "POST")
     const { trigger: assignImageBatch, data: assignmentResponse, error: errorAssigning, isLoading: isAssigning } = useAxios(`${BASE_API_URI}/assign-images-batch-to-user/`, "POST")
@@ -109,6 +110,7 @@ function SystemConfigurationCard() {
         formData.append("number_of_batches", numberOfBatches);
         formData.append("enumerators_group_name", enumeratorsGroup);
         formData.append("demo_video", demoVideo);
+        formData.append("android_apk", androidAPK);
 
         const response = await putConfigurations(formData).unwrap()
         if (response?.configurations) {
@@ -269,6 +271,18 @@ function SystemConfigurationCard() {
                             onChange={(e) => setEnumeratorsGroup(e.target.value)}
                             value={enumeratorsGroup}
                             options={groups.map((group) => ({ value: group.name, label: group.name }))}
+                        />
+                    </div>
+
+                    <div className="form-group my-3">
+                        <p><b>Android APK</b></p>
+                        <small>The APK File to be downloaded.</small>
+                        {configurations?.android_apk
+                            && <p><a className='badge bg-primary' href={configurations.android_apk}>Currently: {configurations.android_apk}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setAndroidAPK(e.target.files[0])}
+                            type="file"
                         />
                     </div>
                 </div>

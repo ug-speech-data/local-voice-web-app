@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { useToast } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { setConfigurations } from './features/global/global-slice';
+import HomeScreen from "./screens/Home";
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route exact path="/home" element={<HomeScreen />} />
         <Route exact path="/login" element={<LoginScreen />} />
         <Route exact path="/register" element={<RegisterScreen />} />
 
