@@ -32,8 +32,8 @@ function SystemConfigurationCard() {
     const [demoVideo, setDemoVideo] = useState("")
     const [androidAPK, setAndroidAPK] = useState("")
 
-    const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios(`${BASE_API_URI}/reshuffle-images/`, "POST")
-    const { trigger: assignImageBatch, data: assignmentResponse, error: errorAssigning, isLoading: isAssigning } = useAxios(`${BASE_API_URI}/assign-images-batch-to-user/`, "POST")
+    const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios({ mainUrl: `${BASE_API_URI}/reshuffle-images/`, method: "POST" })
+    const { trigger: assignImageBatch, data: assignmentResponse, error: errorAssigning, isLoading: isAssigning } = useAxios({ mainUrl: `${BASE_API_URI}/assign-images-batch-to-user/`, method: "POST" })
 
 
     useEffect(() => {
