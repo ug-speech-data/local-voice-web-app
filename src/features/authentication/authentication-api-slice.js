@@ -8,6 +8,8 @@ if (userPermissions === null || userPermissions === 'undefined') {
     userPermissions = "[]"
 }
 
+console.log("BASE_API_URI", BASE_API_URI)
+
 export const authenticationSlice = createSlice({
     name: "authentication",
     initialState: {
