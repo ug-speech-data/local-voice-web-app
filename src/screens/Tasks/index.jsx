@@ -21,9 +21,6 @@ function Tasks() {
     if (userPermissions.has(Permissions.TRANSCRIBE_AUDIO))
         tabs.push("Transcription")
 
-    if (userPermissions.has(Permissions.VALIDATE_TRANSCRIPTION))
-        tabs.push("Transcription Validation")
-
     return (
         <Fragment>
             <TopNav />
@@ -34,7 +31,6 @@ function Tasks() {
                     {userPermissions.has(Permissions.VALIDATE_IMAGE) && <ImageValidation />}
                     {userPermissions.has(Permissions.VALIDATE_AUDIO) && <AudioValidation />}
                     {userPermissions.has(Permissions.TRANSCRIBE_AUDIO) && <Transcription />}
-                    {userPermissions.has(Permissions.VALIDATE_TRANSCRIPTION) && <TranscriptionValidation />}
                 </TabLayout>
             </div>
 

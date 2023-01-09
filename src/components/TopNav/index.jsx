@@ -90,16 +90,16 @@ function TopNav() {
                 <div className='d-md-none'>
                     <button className="btn btn-light" onClick={toggleMenu}><i className="bi bi-list"></i></button>
                 </div>
-                <div className="d-flex">
-                    <Link to="/" className='logo'>
+                <Link to="/home" className='logo'>
+                    <div className="d-flex">
                         <img className='logo' src={logo} alt="logo" />
-                    </Link>
-                    <p style={{ fontWeight: "800" }}>Local Voice</p>
-                </div>
+                        <p style={{ fontWeight: "800" }}>Local Voice</p>
+                    </div>
+                </Link>
             </div>
             <div className="d-md-none overlay"></div>
             <div className='nav-left'>
-                <Link to="/" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>HOME</Link>
+                <Link to="/" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
                 <Link to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>
                 {userPermissions.has(Permissions.MANAGE_COLLECTED_DATA) &&
                     <Link to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>COLLECTED DATA</Link>
@@ -114,7 +114,7 @@ function TopNav() {
                         <button className="btn btn-light btn-sm mx-2"
                             disabled={isLoadingNotifications}
                             onClick={handleGetNotifications}>
-                            {isLoadingNotifications ? <span className='mx-1'><Spinner size="sm" /></span>  : <i className="bi bi-bell mx-1"></i>}
+                            {isLoadingNotifications ? <span className='mx-1'><Spinner size="sm" /></span> : <i className="bi bi-bell mx-1"></i>}
                         </button>
                     </div>
 

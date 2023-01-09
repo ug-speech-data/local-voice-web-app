@@ -405,8 +405,8 @@ function UsersCard() {
                             {users && users?.map((user, index) => (
                                 <tr key={index}>
                                     <td><img src={user.photo_url} alt="" className="profile-image" /></td>
-                                    <td>{user.other_names}</td>
                                     <td>{user.surname}</td>
+                                    <td>{user.other_names}</td>
                                     <td>{user.phone}</td>
                                     <td>{user.email_address}</td>
                                     <td>{user.groups?.map((group, index) => {
