@@ -6,17 +6,32 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useToast, Spinner } from '@chakra-ui/react'
 import PermissionUpdate from '../PermissionUpdate';
 import Permissions from "../../utils/permissions";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import logo from "../../assets/images/logo.png";
+import { BASE_API_URI } from '../../utils/constants';
+import useAxios from '../../app/hooks/useAxios';
 
 function TopNav() {
     const userPermissions = useSelector((state) => new Set(state.authentication.userPermissions));
     const activeMenu = useSelector((state) => state.global.activeTopNavMenu);
     const user = useSelector((state) => state.authentication.user);
+    const [notifications, setNotifications] = useState([]);
+
+    const { trigger: getNotifications, data: responseData, error, isLoading: isLoadingNotifications } = useAxios({ mainUrl: `${BASE_API_URI}/notifications/` })
 
     const [logOutUser, { isLoading }] = useLogOutUserMutation()
     const dispatch = useDispatch();
     const toast = useToast()
+
+    useEffect(() => {
+        getNotifications()
+    }, [])
+
+    useEffect(() => {
+        if (responseData?.notifications) {
+            setNotifications(responseData.notifications)
+        }
+    }, [responseData])
 
     const handleLogout = async () => {
         try {
@@ -90,6 +105,31 @@ function TopNav() {
                 }
             </div>
             <div className='nav-right d-flex align-items-center position-relative'>
+                <div className="drop-container position-relative">
+                    <div className="d-flex align-items-center">
+                        <button className="btn btn-light btn-sm"
+                            disabled={isLoadingNotifications}
+                            onClick={getNotifications}>
+                            {isLoadingNotifications ? <Spinner size="sm" /> : <i className="bi bi-bell mx-3"></i>}
+                        </button>
+                    </div>
+
+                    <div className="drop-down">
+                        {notifications.map((notification, index) => {
+                            return <div className='drop-down-item'>
+                                <p className='text-bold'>{notification.title}</p>
+                                <p className="text-muted">
+                                    {notification.message}
+                                </p>
+                                <div>
+                                    <p className="my-2"><a href={notification.url}>{notification.url}</a></p>
+                                    <p className="mt-2"><small className="text-muted">{notification.minutes_ago}</small></p>
+                                </div>
+                            </div>
+                        })}
+
+                    </div>
+                </div>
 
                 <div className="drop-container position-relative">
                     <div className="d-flex align-items-center">

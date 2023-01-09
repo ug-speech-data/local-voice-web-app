@@ -1,9 +1,8 @@
 import './style.scss';
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef,useEffect } from 'react'
 import { Link } from "react-router-dom";
 import { useGetImageToValidateQuery, useLazyGetCategoriesQuery, useValidateImageMutation } from '../../features/resources/resources-api-slice';
 import { useToast, Spinner } from '@chakra-ui/react'
-import { useEffect } from 'react';
 import { Modal } from 'bootstrap';
 import TagInput from '../../components/TagInput';
 import { useSelector } from 'react-redux';
