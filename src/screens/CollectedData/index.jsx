@@ -34,7 +34,7 @@ function CollectedData() {
                 position: "top-center",
                 description: responseData.message,
                 status: "success",
-                duration: 1000,
+                duration: 3000,
                 isClosable: true,
             })
             exportModal?.hide()
@@ -49,7 +49,7 @@ function CollectedData() {
                 position: "top-center",
                 description: error,
                 status: "error",
-                duration: 1000,
+                duration: 3000,
                 isClosable: true,
             })
         }

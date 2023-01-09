@@ -24,8 +24,12 @@ function TopNav() {
     const toast = useToast()
 
     useEffect(() => {
-        getNotifications()
+        handleGetNotifications()
     }, [])
+
+    const handleGetNotifications = () => {
+        getNotifications()
+    }
 
     useEffect(() => {
         if (responseData?.notifications) {
@@ -107,10 +111,10 @@ function TopNav() {
             <div className='nav-right d-flex align-items-center position-relative'>
                 <div className="drop-container position-relative">
                     <div className="d-flex align-items-center">
-                        <button className="btn btn-light btn-sm"
+                        <button className="btn btn-light btn-sm mx-2"
                             disabled={isLoadingNotifications}
-                            onClick={getNotifications}>
-                            {isLoadingNotifications ? <Spinner size="sm" /> : <i className="bi bi-bell mx-3"></i>}
+                            onClick={handleGetNotifications}>
+                            {isLoadingNotifications ? <span className='mx-1'><Spinner size="sm" /></span>  : <i className="bi bi-bell mx-1"></i>}
                         </button>
                     </div>
 
@@ -123,7 +127,7 @@ function TopNav() {
                                 </p>
                                 <div>
                                     <p className="my-2"><a href={notification.url}>{notification.url}</a></p>
-                                    <p className="mt-2"><small className="text-muted">{notification.minutes_ago}</small></p>
+                                    <p className="mt-2"><small className="text-muted">{notification.time_ago}</small></p>
                                 </div>
                             </div>
                         })}
