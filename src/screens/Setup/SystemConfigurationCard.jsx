@@ -27,6 +27,7 @@ function SystemConfigurationCard() {
     const [requiredImageDescriptionCount, setRequiredImageDescriptionCount] = useState(0);
     const [requiredTranscriptionValidationCount, setRequiredTranscriptionValidationCount] = useState(0);
     const [numberOfBatches, setNumberOfBatches] = useState(0);
+    const [amountPerAudio, setAmountPerAudio] = useState(0);
     const [groups, setGroups] = useState([])
     const [enumeratorsGroup, setEnumeratorsGroup] = useState(null)
     const [demoVideo, setDemoVideo] = useState("")
@@ -111,6 +112,7 @@ function SystemConfigurationCard() {
         formData.append("enumerators_group_name", enumeratorsGroup);
         formData.append("demo_video", demoVideo);
         formData.append("android_apk", androidAPK);
+        formData.append("amount_per_audio", amountPerAudio);
 
         const response = await putConfigurations(formData).unwrap()
         if (response?.configurations) {
@@ -153,6 +155,7 @@ function SystemConfigurationCard() {
             setRequiredTranscriptionValidationCount(configurations?.required_transcription_validation_count || 0);
             setNumberOfBatches(configurations?.number_of_batches || 0);
             setEnumeratorsGroup(configurations?.enumerators_group?.name || "");
+            setAmountPerAudio(configurations?.amount_per_audio || 0);
         }
     }, [configurations])
 
@@ -237,6 +240,17 @@ function SystemConfigurationCard() {
                             type="number"
                             onChange={(e) => setRequiredTranscriptionValidationCount(e.target.value)}
                             min={1} max={100} step={1} />
+                    </div>
+
+                    <div className="form-group my-3">
+                        <p><b>Amount Per Audio</b></p>
+                        <small>An amount of money that a participant has to be paid per audio file.</small>
+                        <input className="form-control"
+                            value={amountPerAudio}
+                            type="number"
+                            min={0}
+                            step={0.01}
+                            onChange={(e) => setAmountPerAudio(e.target.value)} />
                     </div>
 
                     <div className="form-group my-3">

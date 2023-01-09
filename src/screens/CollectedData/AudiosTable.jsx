@@ -240,7 +240,7 @@ function AudiosTable() {
                         key: "name", value: "Name", render: (item) => {
                             return (
                                 <div className="d-flex align-items-center">
-                                    <TextOverflow text={item.name} width={30} />
+                                    <TextOverflow text={item.name} width={20} />
                                     {item.is_accepted ?
                                         <ToolTip title="Add Audio" header={
                                             (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
@@ -257,6 +257,8 @@ function AudiosTable() {
                                 </div>
                             )
                         }
+                    }, {
+                        key: "duration", value: "Duration"
                     }, {
                         key: "locale", value: "Locale"
                     }, {

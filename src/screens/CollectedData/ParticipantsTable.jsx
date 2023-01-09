@@ -253,7 +253,9 @@ function ParticipantsTable() {
                     }, {
                         key: "gender", value: "Gender"
                     }, {
-                        key: "audio_duration_in_seconds", value: "Audio Duration (secs)"
+                        key: "audio_count", value: "Audios"
+                    }, {
+                        key: "amount", value: "Amount (GHC)"
                     }, {
                         key: "paid", value: "Paid", render: (item) => {
                             return (

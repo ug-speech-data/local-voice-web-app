@@ -385,8 +385,8 @@ function UsersCard() {
                         <thead>
                             <tr>
                                 <th>Photo</th>
-                                <th>Other Names</th>
                                 <th>Surname</th>
+                                <th>Other Names</th>
                                 <th>Number</th>
                                 <th>Email Address</th>
                                 <th>Groups</th>
