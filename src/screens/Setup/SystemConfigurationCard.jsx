@@ -32,6 +32,7 @@ function SystemConfigurationCard() {
     const [enumeratorsGroup, setEnumeratorsGroup] = useState(null)
     const [demoVideo, setDemoVideo] = useState("")
     const [androidAPK, setAndroidAPK] = useState("")
+    const [participantPrivacyStatement, setParticipantPrivacyStatement] = useState("")
 
     const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios({ mainUrl: `${BASE_API_URI}/reshuffle-images/`, method: "POST" })
     const { trigger: assignImageBatch, data: assignmentResponse, error: errorAssigning, isLoading: isAssigning } = useAxios({ mainUrl: `${BASE_API_URI}/assign-images-batch-to-user/`, method: "POST" })
@@ -113,6 +114,7 @@ function SystemConfigurationCard() {
         formData.append("demo_video", demoVideo);
         formData.append("android_apk", androidAPK);
         formData.append("amount_per_audio", amountPerAudio);
+        formData.append("participant_privacy_statement", participantPrivacyStatement);
 
         const response = await putConfigurations(formData).unwrap()
         if (response?.configurations) {
@@ -156,6 +158,7 @@ function SystemConfigurationCard() {
             setNumberOfBatches(configurations?.number_of_batches || 0);
             setEnumeratorsGroup(configurations?.enumerators_group?.name || "");
             setAmountPerAudio(configurations?.amount_per_audio || 0);
+            setParticipantPrivacyStatement(configurations?.participant_privacy_statement || "");
         }
     }, [configurations])
 
@@ -299,6 +302,15 @@ function SystemConfigurationCard() {
                             type="file"
                         />
                     </div>
+
+                    <div className="form-group my-3">
+                        <p><b>Participant Privacy Statement</b></p>
+                        <small>Privacy statement to be accepted by participants when recording audio.</small>
+                        <textarea className="form-control"
+                            value={participantPrivacyStatement}
+                            onChange={(e) => setParticipantPrivacyStatement(e.target.value)} />
+                    </div>
+
                 </div>
             </div>
         </Fragment >
