@@ -10,7 +10,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
     const { trigger, data: responseData, error, isLoading } = useAxios()
     const [filter, setFilter] = useState("")
 
-    const [bulkSelected, setBulkSelected] = useState([])
+    const [bulkSelectedIds, setBulkSelectedIds] = useState([])
     const [selectedBulkActionIndex, setSelectedBulkActionIndex] = useState(0)
 
     // Filter inputs
@@ -55,11 +55,8 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
     useEffect(() => {
         const filtered = originalData.filter(c => {
             for (const { key } of headers) {
-                if (c[key] && typeof c[key] !== 'object' && c[key]?.toLowerCase()?.includes(search?.toLowerCase())) {
-                    return true
-                }
+                return c[key] !== null && typeof c[key] !== 'object' && c[key].toString().toLowerCase()?.includes(search?.toLowerCase())
             }
-            return false
         })
         setDisplayedData(filtered)
     }, [search])
@@ -129,16 +126,17 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                     <div className="d-flex align-items-center justify-content-end">
                         {bulkActions?.length > 0 &&
                             <div className="d-flex align-items-center mx-3">
-                                <select className="form form-select" 
-                                defaultValue={selectedBulkActionIndex}
-                                onChange={e => setSelectedBulkActionIndex(e.target.value)}>
+                                <select className="form form-select"
+                                    defaultValue={selectedBulkActionIndex}
+                                    onChange={e => setSelectedBulkActionIndex(e.target.value)}>
                                     {bulkActions.map((action, index) => {
                                         return (
                                             <option key={index} value={index}>{action.name}</option>
                                         )
                                     })}
                                 </select>
-                                <button className="btn btn-light" onClick={bulkActions[selectedBulkActionIndex]?.action}>Go</button>
+                                <button className="btn btn-primary"
+                                    onClick={() => bulkActions[selectedBulkActionIndex]?.action(bulkSelectedIds)}>Go</button>
                             </div>
                         }
 
@@ -148,7 +146,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                 id="filter"
                                 defaultValue={filter}
                                 onChange={(e) => setFilter(e.target.value)}
-                                >
+                            >
                                 <option value="">None</option>
                                 {filters?.map(({ key, value }, index) => {
                                     return (
@@ -175,12 +173,12 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                 <input type="checkbox" className="form-check-input" id="bulk_select"
                                     onChange={(e) => {
                                         if (e.target.checked) {
-                                            setBulkSelected(displayedData.map(c => c.id))
+                                            setBulkSelectedIds(displayedData.map(c => c.id))
                                         } else {
-                                            setBulkSelected([])
+                                            setBulkSelectedIds([])
                                         }
                                     }}
-                                    checked={bulkSelected.length === displayedData.length}
+                                    checked={bulkSelectedIds.length === displayedData.length}
                                 /> </th>}
 
                             {headers?.map(({ key, value }, index) => {
@@ -205,7 +203,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                         {(!isLoading && displayedData?.length === 0) && <tr><td colSpan={headers?.length || 7}>
                             <p className="text-center">No data to display</p>
                         </td></tr>}
-                        {!isLoading && error && <tr><td colSpan="2">Error: {error}</td></tr>}
+                        {!isLoading && error && <tr><td colSpan={headers?.length || 7}><p className="text-center text-warning">Error: {error}</p> </td></tr>}
 
                         {displayedData?.map((item, index) => {
                             return (
@@ -214,12 +212,12 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                         <input type="checkbox" className="form-check-input" id="bulk_select"
                                             onChange={(e) => {
                                                 if (e.target.checked) {
-                                                    setBulkSelected([...bulkSelected, item.id])
+                                                    setBulkSelectedIds([...bulkSelectedIds, item.id])
                                                 } else {
-                                                    setBulkSelected(bulkSelected.filter(c => c != item.id))
+                                                    setBulkSelectedIds(bulkSelectedIds.filter(c => c != item.id))
                                                 }
                                             }}
-                                            checked={bulkSelected.includes(item.id)}
+                                            checked={bulkSelectedIds.includes(item.id)}
                                         />
                                     </td>}
 

@@ -28,6 +28,7 @@ const useAxios = ({ mainUrl = null, method = "GET", mainPayload = {}, useAuthori
                 url,
             });
             setData(response.data);
+            setError(null)
         } catch (error) {
             setError(error.message);
         } finally {

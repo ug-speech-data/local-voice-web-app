@@ -11,6 +11,8 @@ import TextOverflow from '../../components/TextOverflow';
 import ToolTip from '../../components/ToolTip';
 import { BASE_API_URI } from '../../utils/constants';
 import AudioPlayer from "../../components/AudioPlayer";
+import useAxios from '../../app/hooks/useAxios';
+import PageMeta from '../../components/PageMeta';
 
 
 function AudiosTable() {
@@ -141,8 +143,56 @@ function AudiosTable() {
     }, [successPuttingAudio])
 
 
+    // Bulk actions
+    const { trigger: executeBulAudioAction, data: bulkActionResponseData, error: bulkActionError, isLoading: isSubmittingBulkAction } = useAxios({ method: "POST" })
+    function handleBulImageAction(ids, action) {
+        toast({
+            id: "submitting",
+            title: `Executing actions for ${ids.length} audios`,
+            status: "info",
+            position: "top-center",
+            isClosable: true,
+        })
+        executeBulAudioAction(
+            `${BASE_API_URI}/audios-bulk-actions/`,
+            { ids: ids, action: action }
+        )
+    }
+
+    useEffect(() => {
+        toast.close("submitting")
+        if (bulkActionResponseData?.message) {
+            toast({
+                title: `Info`,
+                description: bulkActionResponseData?.message,
+                status: "info",
+                position: "top-center",
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [bulkActionResponseData])
+
+
+    useEffect(() => {
+        toast.close("submitting")
+        if (bulkActionError) {
+            toast({
+                title: `Error`,
+                description: bulkActionError,
+                status: "error",
+                position: "top-center",
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [bulkActionError])
+
+
     return (
         <Fragment>
+            <PageMeta title="Collected Audios | Local Voice" />
+
             <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-md">
                     <div className="modal-content">
@@ -236,6 +286,10 @@ function AudiosTable() {
                     dataSourceUrl={`${BASE_API_URI}/collected-audios/`}
                     newUpdate={newUpdate}
                     filters={[{ key: "is_accepted:1", value: "Accepted" }, { key: "is_accepted:0", value: "Pending" }]}
+                    bulkActions={[
+                        { name: "Approve Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
+                        { name: "Reject Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
+                    ]}
                     headers={[{
                         key: "name", value: "Name", render: (item) => {
                             return (

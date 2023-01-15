@@ -6,12 +6,15 @@ import CategoryCard from './CategoriesCard';
 import GroupsCard from './GroupsCard';
 import UsersCard from './UsersCard';
 import SystemConfigurationCard from './SystemConfigurationCard';
+import PageMeta from '../../components/PageMeta';
 
 
-function Tasks() {
+function Setup() {
 
     return (
         <Fragment>
+            <PageMeta title="Setup | Local Voice" />
+
             <TopNav />
             <div className="my-3 mx-auto col-md-10 col-11 setup-page">
                 <h4><b>Setup</b></h4>
@@ -43,4 +46,4 @@ function Tasks() {
     );
 }
 
-export default Tasks;
+export default Setup;

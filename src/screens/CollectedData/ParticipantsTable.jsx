@@ -8,12 +8,13 @@ import {
 } from '../../features/resources/resources-api-slice';
 import { Spinner, useToast } from '@chakra-ui/react';
 import { BASE_API_URI } from '../../utils/constants';
+import useAxios from '../../app/hooks/useAxios';
+import PageMeta from '../../components/PageMeta';
 
 
 function ParticipantsTable() {
     const [deleteParticipant, { isLoading: isDeletingParticipant, error: errorDeletingParticipant }] = useDeleteParticipantsMutation()
     const [putParticipant, { isLoading: isPuttingParticipant, isSuccess: successPuttingParticipant, error: errorPuttingParticipant }] = useUpdateParticipantsMutation()
-
 
     const deletionModalRef = useRef(null);
     const editParticipantModalRef = useRef(null);
@@ -143,9 +144,56 @@ function ParticipantsTable() {
         }
     }, [successPuttingParticipant])
 
+    // Bulk actions
+    const { trigger: executeBulkParticipantAction, data: bulkActionResponseData, error: bulkActionError, isLoading: isSubmittingBulkAction } = useAxios({ method: "POST" })
+    function handleBulkParticipantAction(ids, action) {
+        toast({
+            id: "submitting",
+            title: `Executing actions for ${ids.length} audios`,
+            status: "info",
+            position: "top-center",
+            isClosable: true,
+        })
+        executeBulkParticipantAction(
+            `${BASE_API_URI}/participants-bulk-actions/`,
+            { ids: ids, action: action }
+        )
+    }
+
+    useEffect(() => {
+        if (bulkActionResponseData?.message) {
+            toast({
+                title: `Submitted`,
+                description: bulkActionResponseData?.message,
+                status: "info",
+                position: "top-center",
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+
+    }, [bulkActionResponseData])
+
+
+    useEffect(() => {
+        toast.close("submitting")
+        if (bulkActionError) {
+            toast({
+                title: `Error`,
+                description: bulkActionError,
+                status: "error",
+                position: "top-center",
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [bulkActionError])
+
 
     return (
         <Fragment>
+            <PageMeta title="Collected Participants | Local Voice" />
+
             <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-md">
                     <div className="modal-content">
@@ -242,8 +290,8 @@ function ParticipantsTable() {
                     newUpdate={newUpdate}
                     filters={[{ key: "paid:0", value: "Not paid" }, { key: "paid:1", value: "Paid" }]}
                     bulkActions={[
-                        { name: "Pay selected", action: () => alert("paid") },
-                        { name: "Check Status of selected", action: () => alert("paid") },
+                        { name: "Pay selected", action: (bulkSelectedIds) => handleBulkParticipantAction(bulkSelectedIds, "pay") },
+                        { name: "Check Status of selected", action: (bulkSelectedIds) => handleBulkParticipantAction(bulkSelectedIds, "payment_status_check") },
                     ]}
                     headers={[{
                         key: "fullname", value: "Name",
