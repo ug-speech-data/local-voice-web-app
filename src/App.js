@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/Common/ProtectedRoute";
 import Permissions from "./utils/permissions";
 import Error404Screen from "./screens/ErrorScreens/Error404";
 import HomeScreen from "./screens/Home";
+import Payment from "./screens/Payment";
 
 
 function App() {
@@ -45,6 +46,12 @@ function App() {
         <Route path="/setup" element={
           <ProtectedRoute permissions={[Permissions.MANAGE_SETUP]}>
             <Setup />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/payment" element={
+          <ProtectedRoute permissions={[Permissions.MANAGE_SETUP]}>
+            <Payment />
           </ProtectedRoute>
         } />
 

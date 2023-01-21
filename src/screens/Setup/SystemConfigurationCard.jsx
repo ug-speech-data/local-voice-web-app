@@ -177,8 +177,8 @@ function SystemConfigurationCard() {
                         </button>
                     </div>
                 </div>
-                <div className="card-body overflow-scroll">
-                    <div className="form-group my-3">
+                <div className="card-body overflow-scroll" style={{background:"rgb(240,240,240)"}}>
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Maximum Category for Image</b></p>
                         <small>What is the maximum number of categories an image can belong to?</small>
                         <input
@@ -187,7 +187,7 @@ function SystemConfigurationCard() {
                             onChange={(e) => setMaxCategoryForImage(e.target.value)}
                             type="number" min={1} max={10} />
                     </div>
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Demo Video</b></p>
                         <small>This video will be shown to users before recording starts.</small>
                         {configurations?.demo_video_url
@@ -198,7 +198,7 @@ function SystemConfigurationCard() {
                             type="file"
                         />
                     </div>
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Accepted Background Noise Level</b></p>
                         <small>Accepted minimum amplitude of background noise before recording start.</small>
                         <input className="form-control"
@@ -207,7 +207,7 @@ function SystemConfigurationCard() {
                             onChange={(e) => setMaxBackgroundNoiseLevel(e.target.value)}
                             min={0} max={1000} step={1} />
                     </div>
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Image Validation Count</b></p>
                         <small>Required number of validation for each image.</small>
                         <input className="form-control"
@@ -216,7 +216,7 @@ function SystemConfigurationCard() {
                             onChange={(e) => setRequiredImageValidationCount(e.target.value)}
                             min={1} max={100} step={1} />
                     </div>
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Image Description Count</b></p>
                         <small>Required number of description for each image.</small>
                         <input className="form-control"
@@ -225,7 +225,7 @@ function SystemConfigurationCard() {
                             onChange={(e) => setRequiredImageDescriptionCount(e.target.value)}
                             min={1} max={100} step={1} />
                     </div>
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Audio Validation Count</b></p>
                         <small>Required number of validation for each audio file.</small>
                         <input className="form-control"
@@ -235,7 +235,7 @@ function SystemConfigurationCard() {
                             min={1} max={100} step={1} />
                     </div>
 
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Transcription Validation Count</b></p>
                         <small>Required number of validation for each transcription.</small>
                         <input className="form-control"
@@ -245,7 +245,7 @@ function SystemConfigurationCard() {
                             min={1} max={100} step={1} />
                     </div>
 
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Amount Per Audio</b></p>
                         <small>An amount of money that a participant has to be paid per audio file.</small>
                         <input className="form-control"
@@ -256,7 +256,7 @@ function SystemConfigurationCard() {
                             onChange={(e) => setAmountPerAudio(e.target.value)} />
                     </div>
 
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Number of batches</b></p>
                         <small>Number of batches into which to put images for enumerators.
                             <button className="btn btn-sm btn-outline-primary"
@@ -273,7 +273,7 @@ function SystemConfigurationCard() {
                             min={1} max={100} step={1} />
                     </div>
 
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Enumerators Group</b></p>
                         <small>
                             The group/role for enumerators. All users in this group will be assigned a batch of images.
@@ -291,7 +291,7 @@ function SystemConfigurationCard() {
                         />
                     </div>
 
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Android APK</b></p>
                         <small>The APK File to be downloaded.</small>
                         {configurations?.android_apk
@@ -303,7 +303,7 @@ function SystemConfigurationCard() {
                         />
                     </div>
 
-                    <div className="form-group my-3">
+                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Participant Privacy Statement</b></p>
                         <small>Privacy statement to be accepted by participants when recording audio.</small>
                         <textarea className="form-control"

@@ -1,6 +1,6 @@
 import './style.scss';
 import TableView from '../../components/Table';
-import { Fragment, useRef, useState, useEffect, memo } from 'react';
+import { Fragment, useRef, useState, useEffect } from 'react';
 import { Modal } from 'bootstrap';
 import {
     useDeleteParticipantsMutation,
@@ -17,13 +17,16 @@ function ParticipantsTable() {
     const [putParticipant, { isLoading: isPuttingParticipant, isSuccess: successPuttingParticipant, error: errorPuttingParticipant }] = useUpdateParticipantsMutation()
 
     const deletionModalRef = useRef(null);
+    const confirmationModalRef = useRef(null);
     const editParticipantModalRef = useRef(null);
     const toast = useToast()
 
     const [selectedParticipant, setSelectedParticipant] = useState(null);
     const [deleteAlertModal, setDeleteAlertModal] = useState(null);
+    const [confirmationModal, setConfirmationModal] = useState(null);
     const [editParticipantModal, setEditParticipantModal] = useState(null);
     const [newUpdate, setNewUpdate] = useState(null);
+    const [selectedIds, setSelectedIds] = useState([])
 
     // Form input
     const [fullname, setFullname] = useState('');
@@ -39,6 +42,10 @@ function ParticipantsTable() {
         if (deletionModalRef.current !== null && deleteAlertModal === null) {
             const modal = new Modal(deletionModalRef.current)
             setDeleteAlertModal(modal)
+        }
+        if (confirmationModalRef.current !== null && confirmationModal === null) {
+            const modal = new Modal(confirmationModalRef.current)
+            setConfirmationModal(modal)
         }
     }, [])
 
@@ -146,18 +153,24 @@ function ParticipantsTable() {
 
     // Bulk actions
     const { trigger: executeBulkParticipantAction, data: bulkActionResponseData, error: bulkActionError, isLoading: isSubmittingBulkAction } = useAxios({ method: "POST" })
-    function handleBulkParticipantAction(ids, action) {
+    function handleBulkParticipantAction(action) {
         toast({
             id: "submitting",
-            title: `Executing actions for ${ids.length} audios`,
+            title: `Executing actions for ${selectedIds.length} audios`,
             status: "info",
             position: "top-center",
+            duration: 1000,
             isClosable: true,
         })
         executeBulkParticipantAction(
             `${BASE_API_URI}/participants-bulk-actions/`,
-            { ids: ids, action: action }
+            { ids: selectedIds, action: action }
         )
+    }
+
+    function showBulkPayConfirmationModal(bulkSelectedIds) {
+        setSelectedIds(bulkSelectedIds)
+        confirmationModal?.show()
     }
 
     useEffect(() => {
@@ -170,6 +183,7 @@ function ParticipantsTable() {
                 duration: 2000,
                 isClosable: true,
             })
+            confirmationModal?.hide()
         }
 
     }, [bulkActionResponseData])
@@ -193,6 +207,36 @@ function ParticipantsTable() {
     return (
         <Fragment>
             <PageMeta title="Collected Participants | Local Voice" />
+
+            <div ref={confirmationModalRef} className="modal fade" tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-mg">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">
+                                Pay all selected users
+                            </h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="form-group my-3">
+                                <p className='h6 text-center'>Continue to pay every selected user?</p>
+                                <div className="my-3 d-flex justify-content-center">
+                                    <button className="btn btn-primary"
+                                        disabled={isSubmittingBulkAction}
+                                        onClick={() => handleBulkParticipantAction("pay")}
+                                    >
+                                        {isSubmittingBulkAction && <span className="mx-2"><Spinner /></span>}
+                                        Yes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-md">
@@ -290,8 +334,8 @@ function ParticipantsTable() {
                     newUpdate={newUpdate}
                     filters={[{ key: "paid:0", value: "Not paid" }, { key: "paid:1", value: "Paid" }]}
                     bulkActions={[
-                        { name: "Pay selected", action: (bulkSelectedIds) => handleBulkParticipantAction(bulkSelectedIds, "pay") },
-                        { name: "Check Status of selected", action: (bulkSelectedIds) => handleBulkParticipantAction(bulkSelectedIds, "payment_status_check") },
+                        { name: "Pay selected", action: (bulkSelectedIds) => showBulkPayConfirmationModal(bulkSelectedIds) },
+                        { name: "Check Status of selected", action: (bulkSelectedIds) => handleBulkParticipantAction("payment_status_check") },
                     ]}
                     headers={[{
                         key: "fullname", value: "Name",

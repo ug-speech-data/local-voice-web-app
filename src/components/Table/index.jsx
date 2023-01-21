@@ -11,7 +11,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
     const [filter, setFilter] = useState("")
 
     const [bulkSelectedIds, setBulkSelectedIds] = useState([])
-    const [selectedBulkActionIndex, setSelectedBulkActionIndex] = useState(0)
+    const [selectedBulkActionIndex, setSelectedBulkActionIndex] = useState(-1)
 
     // Filter inputs
     const [search, setSearch] = useState('');
@@ -129,6 +129,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                 <select className="form form-select"
                                     defaultValue={selectedBulkActionIndex}
                                     onChange={e => setSelectedBulkActionIndex(e.target.value)}>
+                                    <option key={-1} value={-1}>Choose action</option>
                                     {bulkActions.map((action, index) => {
                                         return (
                                             <option key={index} value={index}>{action.name}</option>
@@ -136,6 +137,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                     })}
                                 </select>
                                 <button className="btn btn-primary"
+                                    disabled={selectedBulkActionIndex < 0 || bulkSelectedIds.length === 0}
                                     onClick={() => bulkActions[selectedBulkActionIndex]?.action(bulkSelectedIds)}>Go</button>
                             </div>
                         }

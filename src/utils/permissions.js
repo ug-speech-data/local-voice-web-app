@@ -5,6 +5,7 @@ const Permissions = {
     TRANSCRIBE_AUDIO: "transcribe_audio",
     VALIDATE_TRANSCRIPTION: "validate_transcription",
     MANAGE_SETUP: "manage_setup",
+    MANAGE_PAYMENT: "manage_payment",
 }
 
 export default Permissions;

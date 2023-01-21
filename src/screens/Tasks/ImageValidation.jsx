@@ -37,7 +37,7 @@ function ImageValidation() {
     }, [])
 
     useEffect(() => {
-        if (error) {
+        if (error && !isFetchingImages) {
             toast({
                 position: 'top-center',
                 title: `An error occurred: ${error.originalStatus}`,
@@ -91,7 +91,7 @@ function ImageValidation() {
         handleImageChange()
     }
 
-    if (imageValidationError) {
+    if (imageValidationError & !isFetchingImages) {
         toast({
             position: 'top-center',
             title: `An error occurred: ${imageValidationError.originalStatus}`,

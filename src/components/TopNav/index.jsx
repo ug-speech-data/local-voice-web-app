@@ -104,6 +104,9 @@ function TopNav() {
                 {userPermissions.has(Permissions.MANAGE_COLLECTED_DATA) &&
                     <Link to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>COLLECTED DATA</Link>
                 }
+                {userPermissions.has(Permissions.MANAGE_PAYMENT) &&
+                    <Link to="/payment" className={`nav-menu-item ${activeMenu === 'payment' ? 'active' : ''}`} onClick={() => setActiveMenu("payment")}>PAYMENT</Link>
+                }
                 {userPermissions.has(Permissions.MANAGE_SETUP) &&
                     <Link to="/setup" className={`nav-menu-item ${activeMenu === 'setup' ? 'active' : ''}`} onClick={() => setActiveMenu("setup")}>SETUP</Link>
                 }
