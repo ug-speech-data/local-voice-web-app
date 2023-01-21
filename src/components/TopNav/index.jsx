@@ -99,16 +99,16 @@ function TopNav() {
             </div>
             <div className="d-md-none overlay"></div>
             <div className='nav-left'>
-                <Link to="/" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
-                <Link to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>
+                <Link key="/" to="/" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
+                <Link key="/tasks" to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>
                 {userPermissions.has(Permissions.MANAGE_COLLECTED_DATA) &&
-                    <Link to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>COLLECTED DATA</Link>
+                    <Link key="/collected-data" to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>COLLECTED DATA</Link>
                 }
                 {userPermissions.has(Permissions.MANAGE_PAYMENT) &&
-                    <Link to="/payment" className={`nav-menu-item ${activeMenu === 'payment' ? 'active' : ''}`} onClick={() => setActiveMenu("payment")}>PAYMENT</Link>
+                    <Link key="/payment" to="/payment" className={`nav-menu-item ${activeMenu === 'payment' ? 'active' : ''}`} onClick={() => setActiveMenu("payment")}>PAYMENT</Link>
                 }
                 {userPermissions.has(Permissions.MANAGE_SETUP) &&
-                    <Link to="/setup" className={`nav-menu-item ${activeMenu === 'setup' ? 'active' : ''}`} onClick={() => setActiveMenu("setup")}>SETUP</Link>
+                    <Link key="/setup" to="/setup" className={`nav-menu-item ${activeMenu === 'setup' ? 'active' : ''}`} onClick={() => setActiveMenu("setup")}>SETUP</Link>
                 }
             </div>
             <div className='nav-right d-flex align-items-center position-relative'>
@@ -123,7 +123,7 @@ function TopNav() {
 
                     <div className="drop-down">
                         {notifications.map((notification, index) => {
-                            return <div className='drop-down-item'>
+                            return <div key={notification.id} className='drop-down-item'>
                                 <p className='text-bold'>{notification.title}</p>
                                 <p className="text-muted">
                                     {notification.message}

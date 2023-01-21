@@ -245,17 +245,19 @@ function AudiosTable() {
                                     />
                                 </div>
 
-                                <AudioPlayer
-                                    src={selectedAudio?.file}
-                                    setIsAudioBuffering={setIsAudioBuffering} />
+                                <div className="d-flex align-items-center">
+                                    <AudioPlayer
+                                        src={selectedAudio?.file}
+                                        setIsAudioBuffering={setIsAudioBuffering} />
 
-                                {selectedAudio && isAudioBuffering && <Spinner
-                                    thickness='4px'
-                                    speed='0.65s'
-                                    emptyColor='gray.200'
-                                    size="xl"
-                                    color='purple.500'
-                                />}
+                                    {selectedAudio && isAudioBuffering && <Spinner
+                                        thickness='4px'
+                                        speed='0.65s'
+                                        emptyColor='gray.200'
+                                        size="md"
+                                        color='purple.500'
+                                    />}
+                                </div>
 
                                 <div className="my-3">
                                     <label htmlFor="name" className="form-label me-2">Accepted</label>

@@ -1,0 +1,70 @@
+@import '../../theme-variables.scss';
+
+.audio-player {
+  background-color: rgb(240, 240, 240);
+  display: flex;
+  width: fit-content;
+  padding: 0.3em;
+  border-radius: 0.2em;
+
+  .controls {
+    display: flex;
+    align-items: center;
+  }
+
+  .play-button {
+    padding: 0.4em;
+    background-color: rgb(240, 240, 240);
+    border-radius: 50%;
+    width: 2.3em;
+    height: 2.3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    max-width: 150px;
+    margin: auto 0.2em;
+  }
+
+  input[type='range']::-webkit-slider-runnable-track {
+    background: #053a5f;
+    height: 0.5rem;
+  }
+
+  /******** Firefox ********/
+  input[type='range']::-moz-range-track {
+    background: #053a5f;
+    height: 0.5rem;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    margin-top: -12px; /* Centers thumb on the track */
+    background-color: $primary-color;
+    height: 2rem;
+    width: 1rem;
+  }
+
+  /***** Thumb Styles *****/
+  /***** Firefox *****/
+  input[type='range']::-moz-range-thumb {
+    border: none; /*Removes extra border that FF applies*/
+    border-radius: 0; /*Removes default border-radius that FF applies*/
+    background-color: $primary-color;
+    height: 2rem;
+    width: 1rem;
+  }
+
+  /***** Focus Styles *****/
+  /* Removes default focus */
+  input[type='range']:focus {
+    outline: none;
+  }
+}
