@@ -159,7 +159,7 @@ function ParticipantsTable() {
             title: `Executing actions for ${selectedIds.length} audios`,
             status: "info",
             position: "top-center",
-            duration: 1000,
+            duration: null,
             isClosable: true,
         })
         executeBulkParticipantAction(
@@ -185,7 +185,7 @@ function ParticipantsTable() {
             })
             confirmationModal?.hide()
         }
-
+        toast.close("submitting")
     }, [bulkActionResponseData])
 
 

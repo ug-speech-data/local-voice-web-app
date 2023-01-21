@@ -37,6 +37,9 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
             setNextPage(responseData.next_page)
             setPage(responseData?.page || 1)
             setPreviousPage(responseData.previous_page)
+
+            // Reset selection
+            setBulkSelectedIds([])
         }
     }, [responseData])
 
@@ -98,7 +101,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                 value={search} />
                         </div>
                         <div className="d-flex align-items-center">
-                            <select className="form-control" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)} defaultValue={page}>
+                            <select className="form-select" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)} defaultValue={page}>
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="50">50</option>
@@ -126,7 +129,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                     <div className="d-flex align-items-center justify-content-end">
                         {bulkActions?.length > 0 &&
                             <div className="d-flex align-items-center mx-3">
-                                <select className="form form-select"
+                                <select className="form-select"
                                     defaultValue={selectedBulkActionIndex}
                                     onChange={e => setSelectedBulkActionIndex(e.target.value)}>
                                     <option key={-1} value={-1}>Choose action</option>
@@ -144,7 +147,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
 
                         <div className="d-flex align-items-center mx-3">
                             <label htmlFor="filter" className="form-label me-2">Filters</label>
-                            <select className="form form-select"
+                            <select className="form-select"
                                 id="filter"
                                 defaultValue={filter}
                                 onChange={(e) => setFilter(e.target.value)}
@@ -158,7 +161,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                             </select>
                         </div>
 
-                        <button className="btn btn-sm btn-light d-flex align-items-center"
+                        <button className="btn btn-sm btn-outline-primary d-flex align-items-center"
                             disabled={isLoading}
                             onClick={reloadData}
                         >
