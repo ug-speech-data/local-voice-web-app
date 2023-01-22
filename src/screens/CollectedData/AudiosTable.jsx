@@ -244,6 +244,10 @@ function AudiosTable() {
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Batch Number</b></label>
+                                    <p>{selectedAudio?.image_batch_number}</p>
+                                </div>
 
                                 <div className="d-flex align-items-center">
                                     <AudioPlayer

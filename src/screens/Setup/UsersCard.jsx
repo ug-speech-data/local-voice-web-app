@@ -31,10 +31,12 @@ function UsersCard() {
     const [surname, setSurname] = useState('');
     const [otherNames, setOtherNames] = useState('');
     const [phone, setPhone] = useState('');
+    const [phoneNetwork, setPhoneNetwork] = useState('');
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
     const [locale, setLocale] = useState('');
     const [assignedImageBatch, setAssignedImageBatch] = useState('');
+    const [assignedAudioBatch, setAssignedAudioBatch] = useState('');
 
     // Filter inputs
     const [search, setSearch] = useState('');
@@ -85,9 +87,11 @@ function UsersCard() {
         setSurname(user.surname || "")
         setOtherNames(user.other_names || "")
         setPhone(user.phone || "")
+        setPhoneNetwork(user.phone_network || "")
         setEmailAddress(user.email_address || "")
         setLocale(user.locale || "")
         setAssignedImageBatch(user.assigned_image_batch || "")
+        setAssignedAudioBatch(user.assigned_audio_batch || "")
         setPassword("")
         modal?.show()
     }
@@ -97,9 +101,11 @@ function UsersCard() {
         setSurname("")
         setOtherNames("")
         setPhone("")
+        setPhoneNetwork("")
         setEmailAddress("")
         setLocale("")
         setAssignedImageBatch("")
+        setAssignedAudioBatch("")
         setPassword("")
         modal?.show()
     }
@@ -136,8 +142,23 @@ function UsersCard() {
     }
 
     const handleFormSubmit = async (e) => {
+        if (!(surname && otherNames, phone, phoneNetwork, emailAddress, locale)) {
+            alert("Choose complete all fields.")
+        }
+
         e.preventDefault()
-        const body = { surname, other_names: otherNames, phone, email_address: emailAddress, groups: selectedGroups, locale: locale, assigned_image_batch: assignedImageBatch, password: password }
+        const body = {
+            surname,
+            other_names: otherNames,
+            phone,
+            phone_network: phoneNetwork,
+            email_address: emailAddress,
+            groups: selectedGroups,
+            locale: locale,
+            assigned_image_batch: assignedImageBatch,
+            assigned_audio_batch: assignedAudioBatch,
+            password: password
+        }
         if (selectedUser) {
             body['id'] = selectedUser.id
         }
@@ -190,6 +211,7 @@ function UsersCard() {
             return c.surname.toLowerCase().includes(search.toLowerCase())
                 || c.other_names.toLowerCase().includes(search.toLowerCase())
                 || c.phone.toLowerCase().includes(search.toLowerCase())
+                || c.phone_network.toLowerCase().includes(search.toLowerCase())
                 || c.email_address.toLowerCase().includes(search.toLowerCase())
         })
         setUsers(users)
@@ -256,6 +278,7 @@ function UsersCard() {
                                     <input type="text" className="form-control" id="surname" aria-describedby="surname"
                                         onChange={(e) => setSurname(e.target.value)}
                                         placeholder="Enter surname"
+                                        required
                                         value={surname} />
                                 </div>
 
@@ -264,6 +287,7 @@ function UsersCard() {
                                     <input type="text" className="form-control" id="other-names" aria-describedby="other-names"
                                         onChange={(e) => setOtherNames(e.target.value)}
                                         placeholder="Enter other names"
+                                        required
                                         value={otherNames} />
                                 </div>
 
@@ -272,7 +296,23 @@ function UsersCard() {
                                     <input type="text" className="form-control" id="phone" aria-describedby="phone"
                                         onChange={(e) => setPhone(e.target.value)}
                                         placeholder="Enter momo number"
+                                        required
                                         value={phone} />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="phone_network" className="form-label">Phone Network</label>
+                                    <SelectInput
+                                        onChange={(e) => setPhoneNetwork(e.target.value)}
+                                        required={true}
+                                        value={phoneNetwork}
+                                        options={[
+                                            { value: "", label: 'Choose network' },
+                                            { value: 'MTN', label: 'MTN' },
+                                            { value: 'VODAFONE', label: 'VODAFONE' },
+                                            { value: 'AIRTELTIGO', label: 'AIRTELTIGO' },
+                                        ]}
+                                    />
                                 </div>
 
                                 <div className="mb-3">
@@ -280,6 +320,7 @@ function UsersCard() {
                                     <input type="email" className="form-control" id="email_address" aria-describedby="email_address"
                                         onChange={(e) => setEmailAddress(e.target.value)}
                                         placeholder="Enter email address"
+                                        required
                                         value={emailAddress} />
                                 </div>
 
@@ -288,12 +329,14 @@ function UsersCard() {
                                     <SelectInput
                                         onChange={(e) => setLocale(e.target.value)}
                                         value={locale}
+                                        required
                                         options={[
+                                            { value: '', label: 'Choose locale' },
                                             { value: 'dag', label: 'Dagbani' },
                                             { value: 'dga', label: 'Dagare' },
-                                            { value: 'ee', label: 'Ewe' },
+                                            { value: 'ee_gh', label: 'Ewe' },
                                             { value: 'kpo', label: 'Kposo' },
-                                            { value: 'tw', label: 'Twi' },
+                                            { value: 'ak_gh', label: 'Twi' },
                                         ]}
                                     />
                                 </div>
@@ -305,6 +348,16 @@ function UsersCard() {
                                         placeholder="Assigned Image Batch"
                                         value={assignedImageBatch} />
                                 </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="assigned_audio_batch" className="form-label">Assigned Audio Batch</label>
+                                    <p className='m-0 p-0'><small>This user will validate all audio description of images belong to this batch.</small></p>
+                                    <input type="number" className="form-control" id="assigned_audio_batch" aria-describedby="assigned_audio_batch"
+                                        onChange={(e) => setAssignedAudioBatch(e.target.value)}
+                                        placeholder="Assigned Audio Batch"
+                                        value={assignedAudioBatch} />
+                                </div>
+
 
                                 <div className="mt-5">
                                     <h1><b>GROUPS</b></h1>

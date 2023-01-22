@@ -30,6 +30,7 @@ function SystemConfigurationCard() {
     const [amountPerAudio, setAmountPerAudio] = useState(0);
     const [groups, setGroups] = useState([])
     const [enumeratorsGroup, setEnumeratorsGroup] = useState(null)
+    const [validatorsGroup, setValidatorsGroup] = useState(null)
     const [demoVideo, setDemoVideo] = useState("")
     const [androidAPK, setAndroidAPK] = useState("")
     const [participantPrivacyStatement, setParticipantPrivacyStatement] = useState("")
@@ -111,6 +112,7 @@ function SystemConfigurationCard() {
         formData.append("required_transcription_validation_count", requiredTranscriptionValidationCount);
         formData.append("number_of_batches", numberOfBatches);
         formData.append("enumerators_group_name", enumeratorsGroup);
+        formData.append("validators_group_name", validatorsGroup);
         formData.append("demo_video", demoVideo);
         formData.append("android_apk", androidAPK);
         formData.append("amount_per_audio", amountPerAudio);
@@ -157,6 +159,7 @@ function SystemConfigurationCard() {
             setRequiredTranscriptionValidationCount(configurations?.required_transcription_validation_count || 0);
             setNumberOfBatches(configurations?.number_of_batches || 0);
             setEnumeratorsGroup(configurations?.enumerators_group?.name || "");
+            setValidatorsGroup(configurations?.validators_group?.name || "");
             setAmountPerAudio(configurations?.amount_per_audio || 0);
             setParticipantPrivacyStatement(configurations?.participant_privacy_statement || "");
         }
@@ -248,6 +251,7 @@ function SystemConfigurationCard() {
                     <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Amount Per Audio</b></p>
                         <small>An amount of money that a participant has to be paid per audio file.</small>
+                        {((configurations?.amount_per_audio || "") !== amountPerAudio) && <p className="mx-2 text-danger">Save *</p>}
                         <input className="form-control"
                             value={amountPerAudio}
                             type="number"
@@ -260,12 +264,13 @@ function SystemConfigurationCard() {
                         <p><b>Number of batches</b></p>
                         <small>Number of batches into which to put images for enumerators.
                             <button className="btn btn-sm btn-outline-primary"
-                                disabled={isReshuffling}
+                                disabled={isReshuffling || ((configurations?.number_of_batches || "") !== numberOfBatches)}
                                 onClick={(e) => reshuffleImageIntoBatches()}>
                                 {isReshuffling && <Spinner size="sm" />}
                                 Reshuffle
                             </button>
                         </small>
+                        {((configurations?.number_of_batches || "") !== numberOfBatches) && <p className="mx-2 text-danger">Save *</p>}
                         <input className="form-control"
                             value={numberOfBatches}
                             type="number"
@@ -278,15 +283,29 @@ function SystemConfigurationCard() {
                         <small>
                             The group/role for enumerators. All users in this group will be assigned a batch of images.
                             <button className="btn btn-sm btn-outline-primary"
-                                disabled={isAssigning}
+                                disabled={isAssigning || !Boolean(configurations?.validators_group) || ((configurations?.enumerators_group?.name || "") !== enumeratorsGroup)}
                                 onClick={(e) => assignImageBatch()}>
                                 {isAssigning && <Spinner size="sm" />}
                                 Assign Batches
                             </button>
+                            {((configurations?.enumerators_group?.name || "") !== enumeratorsGroup) && <span className="mx-2 text-danger">Save *</span>}
                         </small>
                         <SelectInput
                             onChange={(e) => setEnumeratorsGroup(e.target.value)}
                             value={enumeratorsGroup}
+                            options={groups.map((group) => ({ value: group.name, label: group.name }))}
+                        />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Validators Group</b></p>
+                        <small>
+                            The group/role for validators. All users in this group will be assigned a batch of audios to validate.
+                        </small>
+                        {((configurations?.validators_group?.name || "") !== validatorsGroup) && <p className="mx-2 text-danger">Save *</p>}
+                        <SelectInput
+                            onChange={(e) => setValidatorsGroup(e.target.value)}
+                            value={validatorsGroup}
                             options={groups.map((group) => ({ value: group.name, label: group.name }))}
                         />
                     </div>
@@ -306,6 +325,7 @@ function SystemConfigurationCard() {
                     <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Participant Privacy Statement</b></p>
                         <small>Privacy statement to be accepted by participants when recording audio.</small>
+                        {((configurations?.participant_privacy_statement || "") !== participantPrivacyStatement) && <p className="mx-2 text-danger">Save *</p>}
                         <textarea className="form-control"
                             value={participantPrivacyStatement}
                             onChange={(e) => setParticipantPrivacyStatement(e.target.value)} />

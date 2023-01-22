@@ -149,6 +149,7 @@ function ParticipantsTable() {
             })
             editParticipantModal?.hide()
         }
+        toast.close("submitting")
     }, [successPuttingParticipant])
 
     // Bulk actions
@@ -183,15 +184,15 @@ function ParticipantsTable() {
                 duration: 2000,
                 isClosable: true,
             })
-            confirmationModal?.hide()
         }
         toast.close("submitting")
+        confirmationModal?.hide()
     }, [bulkActionResponseData])
 
 
     useEffect(() => {
         toast.close("submitting")
-        if (bulkActionError) {
+        if (bulkActionError && !isSubmittingBulkAction) {
             toast({
                 title: `Error`,
                 description: bulkActionError,
@@ -201,7 +202,7 @@ function ParticipantsTable() {
                 isClosable: true,
             })
         }
-    }, [bulkActionError])
+    }, [bulkActionError, isSubmittingBulkAction])
 
 
     return (

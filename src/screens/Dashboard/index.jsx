@@ -1,7 +1,6 @@
 import TopNav from "../../components/TopNav";
 import DashboardCard from "../../components/DashboardCard";
 import Footer from "../../components/Footer";
-import AudioPlayer from "../../components/AudioPlayer";
 
 
 function Dashboard() {
@@ -50,11 +49,6 @@ function Dashboard() {
                         </div>
                     </DashboardCard>
                 </div>
-
-
-                <AudioPlayer
-                    src={"http://127.0.0.1:8000/assets/audios/test.wav"}
-                    setIsAudioBuffering={() => null} />
             </div>
             <Footer />
         </>
