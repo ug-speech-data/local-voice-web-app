@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import './style.scss';
 import { useToast } from '@chakra-ui/react'
+import { useMemo } from 'react';
 import { useEffect } from 'react';
 
 function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => null, className = '' }) {
-    const [audioPlayer, setAudioPlayer] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [fullyPlayed, setFullyPlayed] = useState(false);
 
     const toast = useToast()
@@ -16,17 +17,6 @@ function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => nu
         setFullyPlayed(true);
         onEnded();
     }
-
-    useEffect(() => {
-        const audioPlayer = new Audio()
-        audioPlayer.preload = "auto"
-        audioPlayer.ontimeupdate = handleTimeupdate
-        audioPlayer.oncanplay = function () { setIsAudioBuffering(false) }
-        audioPlayer.oncanplaythrough = onLoaded
-        audioPlayer.onended = finishedPlaying
-        audioPlayer.src = src
-        setAudioPlayer(audioPlayer)
-    }, [])
 
     const onSeek = (event) => {
         if (audioPlayer === null)
@@ -71,20 +61,53 @@ function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => nu
     }
 
     function playPause() {
-        if (!audioPlayer?.paused) {
+        if (audioPlayer?.paused == false) {
             audioPlayer?.pause()
+            setIsPlaying(false)
         }
-        else {
+        else if (audioPlayer?.paused == true) {
             audioPlayer?.play()
+            setIsPlaying(true)
         }
     }
+
+    const audioPlayer = useMemo(() => {
+        const player = new Audio()
+        player.preload = "auto"
+        player.ontimeupdate = handleTimeupdate
+        player.oncanplay = function () { setIsAudioBuffering(false) }
+        player.onloadedmetadata = onLoaded
+        player.onended = finishedPlaying
+        player.src = src
+        player.currentTime = 0
+        return player
+    }, [])
+
+    useEffect(() => {
+        setPlayerPosition(0)
+        setPlayerDuration("00:00")
+        audioPlayer?.pause()
+        setIsPlaying(false)
+        if (audioPlayer != null) {
+            audioPlayer.currentTime = 0
+            audioPlayer.src = src
+        }
+    }, [src])
+
+
+    // Component will unmount
+    useEffect(() => {
+        return () => {
+            audioPlayer?.pause()
+        }
+    }, [])
 
     return (
         <div className='audio-player'>
             <div className="controls">
                 <button className="play-button" onClick={playPause}>
-                    {audioPlayer?.paused == true && <i className="bi bi-play-fill"></i>}
-                    {(!audioPlayer?.paused) == true && <i className="bi bi-pause-fill"></i>}
+                    {!isPlaying && <i className="bi bi-play-fill"></i>}
+                    {isPlaying && <i className="bi bi-pause-fill"></i>}
                 </button>
                 <input id='progress-bar' type="range" value={playerPosition} onChange={onSeek} />
                 <span id='timer'>{playerDuration}/{totalDuration}</span>
