@@ -15,6 +15,7 @@ function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => nu
 
     const finishedPlaying = (event) => {
         setFullyPlayed(true);
+        setIsPlaying(false)
         onEnded();
     }
 
@@ -23,9 +24,11 @@ function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => nu
             return
         if (!fullyPlayed) {
             event.preventDefault()
+            toast.close("seeking-error")
             toast({
+                id: "seeking-error",
                 position: 'top-center',
-                title: `Can't seek forward`,
+                title: `Cannot seek until done playing`,
                 description: "Please you can only seek after the audio has finished playing",
                 status: 'info',
                 duration: 2000,
@@ -80,6 +83,15 @@ function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => nu
         player.onended = finishedPlaying
         player.src = src
         player.currentTime = 0
+
+        player.addEventListener('progress', function () {
+            // do something, eg:
+            var timeRanges = player.buffered;
+            if (timeRanges && timeRanges.length > 0) {
+                console.log(timeRanges);
+                // do something with the TimeRanges object
+            }
+        })
         return player
     }, [])
 

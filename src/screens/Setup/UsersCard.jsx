@@ -332,10 +332,10 @@ function UsersCard() {
                                         required
                                         options={[
                                             { value: '', label: 'Choose locale' },
-                                            { value: 'dag', label: 'Dagbani' },
-                                            { value: 'dga', label: 'Dagare' },
+                                            { value: 'dag_gh', label: 'Dagbani' },
+                                            { value: 'dga_gh', label: 'Dagaare' },
                                             { value: 'ee_gh', label: 'Ewe' },
-                                            { value: 'kpo', label: 'Kposo' },
+                                            { value: 'kpo_gh', label: 'Kposo' },
                                             { value: 'ak_gh', label: 'Twi' },
                                         ]}
                                     />

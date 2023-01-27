@@ -184,8 +184,10 @@ function ImagesTable() {
 
     useEffect(() => {
         toast.close("submitting")
+        toast.close("error")
         if (bulkActionError) {
             toast({
+                id: "error",
                 title: `Error`,
                 description: bulkActionError,
                 status: "error",
