@@ -28,6 +28,9 @@ function SystemConfigurationCard() {
     const [requiredTranscriptionValidationCount, setRequiredTranscriptionValidationCount] = useState(0);
     const [numberOfBatches, setNumberOfBatches] = useState(0);
     const [amountPerAudio, setAmountPerAudio] = useState(0);
+    const [amountPerAudioValidation, setAmountPerAudioValidation] = useState(0)
+    const [audioAggregatorsAmountPerAudio, setAudioAggregatorsAmountPerAudio] = useState(0)
+    const [individualAudioAggregatorsAmountPerAudio, setIndividualAudioAggregatorsAmountPerAudio] = useState(0)
     const [groups, setGroups] = useState([])
     const [enumeratorsGroup, setEnumeratorsGroup] = useState(null)
     const [validatorsGroup, setValidatorsGroup] = useState(null)
@@ -116,6 +119,9 @@ function SystemConfigurationCard() {
         formData.append("demo_video", demoVideo);
         formData.append("android_apk", androidAPK);
         formData.append("participant_amount_per_audio", amountPerAudio);
+        formData.append("amount_per_audio_validation", amountPerAudioValidation);
+        formData.append("audio_aggregators_amount_per_audio", audioAggregatorsAmountPerAudio);
+        formData.append("individual_audio_aggregators_amount_per_audio", individualAudioAggregatorsAmountPerAudio);
         formData.append("participant_privacy_statement", participantPrivacyStatement);
 
         const response = await putConfigurations(formData).unwrap()
@@ -161,6 +167,9 @@ function SystemConfigurationCard() {
             setEnumeratorsGroup(configurations?.enumerators_group?.name || "");
             setValidatorsGroup(configurations?.validators_group?.name || "");
             setAmountPerAudio(configurations?.participant_amount_per_audio || 0);
+            setAmountPerAudioValidation(configurations?.amount_per_audio_validation || 0);
+            setAudioAggregatorsAmountPerAudio(configurations?.audio_aggregators_amount_per_audio || 0);
+            setIndividualAudioAggregatorsAmountPerAudio(configurations?.individual_audio_aggregators_amount_per_audio || 0);
             setParticipantPrivacyStatement(configurations?.participant_privacy_statement || "");
         }
     }, [configurations])
@@ -180,7 +189,7 @@ function SystemConfigurationCard() {
                         </button>
                     </div>
                 </div>
-                <div className="card-body overflow-scroll" style={{background:"rgb(240,240,240)"}}>
+                <div className="card-body overflow-scroll" style={{ background: "rgb(240,240,240)" }}>
                     <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Maximum Category for Image</b></p>
                         <small>What is the maximum number of categories an image can belong to?</small>
@@ -319,7 +328,6 @@ function SystemConfigurationCard() {
                             onChange={(e) => setParticipantPrivacyStatement(e.target.value)} />
                     </div>
 
-                    
                     <h4 className="h4 mt-3">Compensation</h4>
                     <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Participant Amount Per Audio</b></p>
@@ -331,6 +339,42 @@ function SystemConfigurationCard() {
                             min={0}
                             step={0.01}
                             onChange={(e) => setAmountPerAudio(e.target.value)} />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Amount Per Audio Validation</b></p>
+                        <small>An amount of money that a validator has to be paid per audio file.</small>
+                        {((configurations?.amount_per_audio_validation || "") !== amountPerAudioValidation) && <p className="mx-2 text-danger">Save *</p>}
+                        <input className="form-control"
+                            value={amountPerAudioValidation}
+                            type="number"
+                            min={0}
+                            step={0.01}
+                            onChange={(e) => setAmountPerAudioValidation(e.target.value)} />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Aggregators Amount Per Audio</b></p>
+                        <small>An amount of money that an aggregator has to be paid per audio file.</small>
+                        {((configurations?.audio_aggregators_amount_per_audio || "") !== audioAggregatorsAmountPerAudio) && <p className="mx-2 text-danger">Save *</p>}
+                        <input className="form-control"
+                            value={audioAggregatorsAmountPerAudio}
+                            type="number"
+                            min={0}
+                            step={0.01}
+                            onChange={(e) => setAudioAggregatorsAmountPerAudio(e.target.value)} />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Individual Audio Aggregators Amount Per Audio</b></p>
+                        <small>An amount of money that an individual aggregator has to be paid per audio file.</small>
+                        {((configurations?.individual_audio_aggregators_amount_per_audio || "") !== individualAudioAggregatorsAmountPerAudio) && <p className="mx-2 text-danger">Save *</p>}
+                        <input className="form-control"
+                            value={individualAudioAggregatorsAmountPerAudio}
+                            type="number"
+                            min={0}
+                            step={0.01}
+                            onChange={(e) => setIndividualAudioAggregatorsAmountPerAudio(e.target.value)} />
                     </div>
 
                 </div>
