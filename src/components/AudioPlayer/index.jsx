@@ -83,15 +83,6 @@ function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => nu
         player.onended = finishedPlaying
         player.src = src
         player.currentTime = 0
-
-        player.addEventListener('progress', function () {
-            // do something, eg:
-            var timeRanges = player.buffered;
-            if (timeRanges && timeRanges.length > 0) {
-                console.log(timeRanges);
-                // do something with the TimeRanges object
-            }
-        })
         return player
     }, [])
 
@@ -100,6 +91,7 @@ function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => nu
         setPlayerDuration("00:00")
         audioPlayer?.pause()
         setIsPlaying(false)
+        setFullyPlayed(false);
         if (audioPlayer != null) {
             audioPlayer.currentTime = 0
             audioPlayer.src = src

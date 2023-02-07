@@ -115,7 +115,7 @@ function SystemConfigurationCard() {
         formData.append("validators_group_name", validatorsGroup);
         formData.append("demo_video", demoVideo);
         formData.append("android_apk", androidAPK);
-        formData.append("amount_per_audio", amountPerAudio);
+        formData.append("participant_amount_per_audio", amountPerAudio);
         formData.append("participant_privacy_statement", participantPrivacyStatement);
 
         const response = await putConfigurations(formData).unwrap()
@@ -160,7 +160,7 @@ function SystemConfigurationCard() {
             setNumberOfBatches(configurations?.number_of_batches || 0);
             setEnumeratorsGroup(configurations?.enumerators_group?.name || "");
             setValidatorsGroup(configurations?.validators_group?.name || "");
-            setAmountPerAudio(configurations?.amount_per_audio || 0);
+            setAmountPerAudio(configurations?.participant_amount_per_audio || 0);
             setParticipantPrivacyStatement(configurations?.participant_privacy_statement || "");
         }
     }, [configurations])
@@ -249,18 +249,6 @@ function SystemConfigurationCard() {
                     </div>
 
                     <div className="form-group my-3 py-4 px-2 bg-white">
-                        <p><b>Amount Per Audio</b></p>
-                        <small>An amount of money that a participant has to be paid per audio file.</small>
-                        {((configurations?.amount_per_audio || "") !== amountPerAudio) && <p className="mx-2 text-danger">Save *</p>}
-                        <input className="form-control"
-                            value={amountPerAudio}
-                            type="number"
-                            min={0}
-                            step={0.01}
-                            onChange={(e) => setAmountPerAudio(e.target.value)} />
-                    </div>
-
-                    <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Number of batches</b></p>
                         <small>Number of batches into which to put images for enumerators.
                             <button className="btn btn-sm btn-outline-primary"
@@ -329,6 +317,20 @@ function SystemConfigurationCard() {
                         <textarea className="form-control"
                             value={participantPrivacyStatement}
                             onChange={(e) => setParticipantPrivacyStatement(e.target.value)} />
+                    </div>
+
+                    
+                    <h4 className="h4 mt-3">Compensation</h4>
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Participant Amount Per Audio</b></p>
+                        <small>An amount of money that a participant has to be paid per audio file.</small>
+                        {((configurations?.participant_amount_per_audio || "") !== amountPerAudio) && <p className="mx-2 text-danger">Save *</p>}
+                        <input className="form-control"
+                            value={amountPerAudio}
+                            type="number"
+                            min={0}
+                            step={0.01}
+                            onChange={(e) => setAmountPerAudio(e.target.value)} />
                     </div>
 
                 </div>
