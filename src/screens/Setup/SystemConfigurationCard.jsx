@@ -280,7 +280,7 @@ function SystemConfigurationCard() {
                         <small>
                             The group/role for enumerators. All users in this group will be assigned a batch of images.
                             <button className="btn btn-sm btn-outline-primary"
-                                disabled={isAssigning || !Boolean(configurations?.validators_group) || ((configurations?.enumerators_group?.name || "") !== enumeratorsGroup)}
+                                disabled={isAssigning || !Boolean(configurations?.enumerators_group) || ((configurations?.enumerators_group?.name || "") !== enumeratorsGroup)}
                                 onClick={(e) => assignImageBatch()}>
                                 {isAssigning && <Spinner size="sm" />}
                                 Assign Batches

@@ -80,7 +80,7 @@ function ImageValidation() {
         if (response['message'] != null) {
             toast({
                 position: 'top-center',
-                title: `An error occurred`,
+                title: `Success`,
                 description: response['message'],
                 status: 'success',
                 duration: 1000,
