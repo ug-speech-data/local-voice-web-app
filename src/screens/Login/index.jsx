@@ -67,7 +67,7 @@ function LoginScreen() {
     return (
         <Fragment>
             {user && (
-                <Navigate to="/" replace={true} />
+                <Navigate to="/dashboard" replace={true} />
             )}
             <div className="login-page">
                 <form className="col-md-4 col-10 mx-auto login-card" onSubmit={handleLogin}>

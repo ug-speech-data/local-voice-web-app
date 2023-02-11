@@ -37,6 +37,7 @@ function SystemConfigurationCard() {
     const [demoVideo, setDemoVideo] = useState("")
     const [androidAPK, setAndroidAPK] = useState("")
     const [participantPrivacyStatement, setParticipantPrivacyStatement] = useState("")
+    const [maxImageForValidationPerUser, setMaxImageForValidationPerUser] = useState(0)
 
     const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios({ mainUrl: `${BASE_API_URI}/reshuffle-images/`, method: "POST" })
     const { trigger: assignImageBatch, data: assignmentResponse, error: errorAssigning, isLoading: isAssigning } = useAxios({ mainUrl: `${BASE_API_URI}/assign-images-batch-to-user/`, method: "POST" })
@@ -123,6 +124,7 @@ function SystemConfigurationCard() {
         formData.append("audio_aggregators_amount_per_audio", audioAggregatorsAmountPerAudio);
         formData.append("individual_audio_aggregators_amount_per_audio", individualAudioAggregatorsAmountPerAudio);
         formData.append("participant_privacy_statement", participantPrivacyStatement);
+        formData.append("max_image_for_validation_per_user", maxImageForValidationPerUser);
 
         const response = await putConfigurations(formData).unwrap()
         if (response?.configurations) {
@@ -171,6 +173,7 @@ function SystemConfigurationCard() {
             setAudioAggregatorsAmountPerAudio(configurations?.audio_aggregators_amount_per_audio || 0);
             setIndividualAudioAggregatorsAmountPerAudio(configurations?.individual_audio_aggregators_amount_per_audio || 0);
             setParticipantPrivacyStatement(configurations?.participant_privacy_statement || "");
+            setMaxImageForValidationPerUser(configurations?.max_image_for_validation_per_user || 0)
         }
     }, [configurations])
 
@@ -190,6 +193,16 @@ function SystemConfigurationCard() {
                     </div>
                 </div>
                 <div className="card-body overflow-scroll" style={{ background: "rgb(240,240,240)" }}>
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Maximum For Validation Per User</b></p>
+                        <small>The maximum number of images a user can validate.</small>
+                        <input
+                            className="form-control"
+                            value={maxImageForValidationPerUser}
+                            onChange={(e) => setMaxImageForValidationPerUser(e.target.value)}
+                            type="number" min={1} />
+                    </div>
+
                     <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Maximum Category for Image</b></p>
                         <small>What is the maximum number of categories an image can belong to?</small>

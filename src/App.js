@@ -21,7 +21,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/home" element={<HomeScreen />} />
+        <Route exact path="/" element={<HomeScreen />} />
         <Route exact path="/login" element={<LoginScreen />} />
         <Route exact path="/register" element={<RegisterScreen />} />
 
@@ -55,7 +55,7 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="/" element={
+        <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>

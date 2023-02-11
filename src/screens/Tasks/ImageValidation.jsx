@@ -1,5 +1,5 @@
 import './style.scss';
-import React, { useState, useRef,useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Link } from "react-router-dom";
 import { useGetImageToValidateQuery, useLazyGetCategoriesQuery, useValidateImageMutation } from '../../features/resources/resources-api-slice';
 import { useToast, Spinner } from '@chakra-ui/react'
@@ -24,6 +24,7 @@ function ImageValidation() {
     const modalRef = useRef(null);
     const [selectedTags, setSelectedTags] = useState([]);
     const [currentImage, setCurrentImage] = useState(null);
+    const [responseMessage, setResponseMessage] = useState(null);
 
     useEffect(() => {
         if (categoryResponse["categories"] !== undefined) {
@@ -53,6 +54,12 @@ function ImageValidation() {
             }
         }
     }, [isFetchingImages])
+
+    useEffect(() => {
+        if (response?.message) {
+            setResponseMessage(response.message)
+        }
+    }, [response])
 
     const handleImageChange = () => {
         // Reset selected tags
@@ -107,9 +114,12 @@ function ImageValidation() {
             <p>For each image, select the appropriate category. Also, <b>reject</b> images that <b>are of low resolution or contains water marks</b></p>
 
             {Boolean(currentImage) === false ?
-                <div className="my-3">
-                    <h3 className='text-center'>No more images to validate</h3>
-                    <p className='text-center my-3'><button className='btn btn-primary' onClick={() => setOffset(-1)}>
+                <div className="my-4">
+                    <h4 className='text-center h4'>No more images to validate</h4>
+                    {responseMessage && <p className='text-center text-warning'>{responseMessage}</p>}
+                    <p className='text-center my-3'><button className='btn btn-primary'
+                        disabled={isFetchingImages}
+                        onClick={() => setOffset(-Math.abs(offset) - 1)}>
                         {isFetchingImages && <Spinner />}
                         Reload
                     </button></p>

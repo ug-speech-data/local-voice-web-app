@@ -36,19 +36,18 @@ function HomeScreen() {
 
     return (
         <div className="home-page">
-            <div className="content">
-                <h1 className='text-center h1'>LOCAL VOICE PROJECT</h1>
+            <div className="content col-11 col-md-8 mx-auto">
+                <h1 className='text-center h1'>UG SPEECH DATA</h1>
                 <p className='text-center'>Our website is under construction. Below are some helpful resources for the meantime.</p>
 
-                <div className='text-center my-4 d-flex mx-auto justify-content-center align-items-center flex-wrap'>
-                    <Link to={'/login'} className="mx-4 my-2">
-                        <button className="btn btn-outline-primary"><i className="bi bi-lock"></i> Login</button>
-                    </Link>
-                    {webConfigurations?.android_apk_url && <a href={webConfigurations.android_apk_url} className="mx-4 my-2">
-                        <button className="btn btn-primary"><i className="bi bi-android2"></i> GET APK</button>
-                    </a>}
-                    <Link to={'/'} className="mx-4 my-2">
-                        <button className="btn btn-outline-primary"><i className="bi bi-grid-fill"></i> Dashboard</button>
+                <div className='text-center my-3 d-flex mx-auto justify-content-center align-items-center flex-wrap'>
+                    {webConfigurations?.android_apk_url &&
+                        <a href={webConfigurations.android_apk_url} className="mx-4">
+                            <button className="btn btn-primary"><i className="bi bi-android2"></i> GET APK</button>
+                        </a>
+                    }
+                    <Link to={'/dashboard'} className="mx-4 my-2">
+                        <button className="btn btn-outline-primary text-white"><i className="bi bi-grid-fill"></i> Dashboard</button>
                     </Link>
                 </div>
             </div>

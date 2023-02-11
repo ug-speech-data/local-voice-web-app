@@ -93,13 +93,13 @@ function TopNav() {
                 <Link to="/home" className='logo'>
                     <div className="d-flex">
                         <img className='logo' src={logo} alt="logo" />
-                        <p style={{ fontWeight: "800" }}>Local Voice</p>
+                        <p style={{ fontWeight: "800" }}>SPEECH DATA</p>
                     </div>
                 </Link>
             </div>
             <div className="d-md-none overlay"></div>
             <div className='nav-left'>
-                <Link key="/" to="/" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
+                <Link key="/dashboard" to="/dashboard" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
                 <Link key="/tasks" to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>
                 {userPermissions.has(Permissions.MANAGE_COLLECTED_DATA) &&
                     <Link key="/collected-data" to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>COLLECTED DATA</Link>

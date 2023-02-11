@@ -198,11 +198,9 @@ function ImagesTable() {
         }
     }, [bulkActionError])
 
-
-
     return (
         <Fragment>
-            <PageMeta title="Collected Images | Local Voice" />
+            <PageMeta title="Collected Images | Speech Data" />
 
             <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-md">
@@ -242,13 +240,13 @@ function ImagesTable() {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body row">
-                            <div className="col-md-6 mx-auto">
+                            <div className="d-flex justify-content-center align-items-center col-md-8 mx-auto">
                                 <div className="d-flex justify-content-center align-items-center">
                                     <img src={selectedImage?.image_url} alt={selectedImage?.name} />
                                 </div>
                             </div>
 
-                            <div className="col-md-6 mx-auto">
+                            <div className="col-md-4 mx-auto">
                                 <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Name</b></label>
                                     <input type="text" className="form-control" id="name" value={name}
