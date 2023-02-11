@@ -202,7 +202,7 @@ function ImageValidation() {
             {currentImage &&
                 <div className='my-3'>
                     <p className='m-0 p-0'><b>Categories (Select up to {configurations?.max_category_for_image || 3})</b></p>
-                    <TagInput tags={categories} selectedTags={selectedTags} setSelectedTags={setSelectedTags} maxSelection={configurations?.max_category_for_image || 3} />
+                    <TagInput tags={categories.sort()} selectedTags={selectedTags} setSelectedTags={setSelectedTags} maxSelection={configurations?.max_category_for_image || 3} />
                 </div>
             }
 
