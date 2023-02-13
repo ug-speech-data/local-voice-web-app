@@ -186,7 +186,7 @@ function ImageValidation() {
 
                                 <div className='my-2 overflow-scroll'>
                                     <p className='m-0 p-0'><b>Source</b></p>
-                                    <Link>{currentImage.source_url}</Link>
+                                    <p>{currentImage.source_url}</p>
                                 </div>
 
                                 <div className='my-2 overflow-scroll'>
