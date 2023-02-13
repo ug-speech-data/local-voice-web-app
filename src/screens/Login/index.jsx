@@ -46,7 +46,6 @@ function LoginScreen() {
                     duration: 2000,
                     isClosable: true,
                 })
-
                 setUser(response['user'])
                 dispatch(setStoreUser(response['user']));
                 dispatch(setToken(setToken['token']));
@@ -103,7 +102,6 @@ function LoginScreen() {
                             onChange={(e) => setPassword(e.target.value)}
                             id="password" aria-describedby="emailHelp"
                             placeholder="Enter password" required />
-                        <p className="text-end"><Link>Forgot Password</Link></p>
                     </div>
                     <div className="form-group my-3">
                         <p className="text-center">

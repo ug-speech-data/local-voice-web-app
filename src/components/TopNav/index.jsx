@@ -90,7 +90,7 @@ function TopNav() {
                 <div className='d-md-none'>
                     <button className="btn btn-light" onClick={toggleMenu}><i className="bi bi-list"></i></button>
                 </div>
-                <Link to="/home" className='logo'>
+                <Link to="/" className='logo'>
                     <div className="d-flex">
                         <img className='logo' src={logo} alt="logo" />
                         <p style={{ fontWeight: "800" }}>SPEECH DATA</p>
