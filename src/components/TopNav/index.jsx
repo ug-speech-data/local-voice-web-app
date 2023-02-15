@@ -91,9 +91,9 @@ function TopNav() {
                     <button className="btn btn-light" onClick={toggleMenu}><i className="bi bi-list"></i></button>
                 </div>
                 <Link to="/" className='logo'>
-                    <div className="d-flex">
-                        <img className='logo' src={logo} alt="logo" />
-                        <p style={{ fontWeight: "800" }}>SPEECH DATA</p>
+                    <div className="d-flex align-items-center">
+                        <img className='logo me-2' src={logo} alt="logo" />
+                        <p style={{ fontWeight: "800" }}>UG SPEECH DATA</p>
                     </div>
                 </Link>
             </div>
