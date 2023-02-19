@@ -106,7 +106,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                 <option value="20">20</option>
                                 <option value="50">50</option>
                                 <option value="100">100</option>
-                                <option value="100">300</option>
+                                <option value="300">300</option>
                             </select>
                         </div>
                         <div className="d-flex align-items-center mx-3">
