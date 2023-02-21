@@ -268,7 +268,7 @@ function ImagesTable() {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <div className="d-flex align-item-center justify-content-center">
+                            <div className="d-flex align-item-center justify-content-center mb-2">
                                 <button className="btn btn-primary mx-2"
                                     disabled={imageNavigatonLoading}
                                     onClick={() => navigate("previous")}>
