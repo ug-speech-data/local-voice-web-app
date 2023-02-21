@@ -20,6 +20,7 @@ function UsersCard() {
     const [selectedUser, setSelectedUser] = useState(null);
     const toast = useToast()
     const [users, setUsers] = useState([])
+    const [hidePassowordUpdate, setHidePassowordUpdate] = useState(true);
 
     const [putUser, { isLoading: isPuttingUser, error: errorPuttingUser }] = usePutUsersMutation()
     const [deleteUser, { isLoading: isDeletingUser, error: errorDeletingUser }] = useDeleteUsersMutation()
@@ -208,11 +209,11 @@ function UsersCard() {
 
     useEffect(() => {
         const users = allUsers.filter(c => {
-            return c.surname.toLowerCase().includes(search.toLowerCase())
-                || c.other_names.toLowerCase().includes(search.toLowerCase())
-                || c.phone.toLowerCase().includes(search.toLowerCase())
-                || c.phone_network.toLowerCase().includes(search.toLowerCase())
-                || c.email_address.toLowerCase().includes(search.toLowerCase())
+            return c.surname?.toLowerCase()?.includes(search.toLowerCase())
+                || c.other_names?.toLowerCase()?.includes(search?.toLowerCase())
+                || c.phone?.toLowerCase()?.includes(search?.toLowerCase())
+                || c.phone_network?.toLowerCase()?.includes(search?.toLowerCase())
+                || c.email_address?.toLowerCase()?.includes(search.toLowerCase())
         })
         setUsers(users)
     }, [search])
@@ -336,13 +337,16 @@ function UsersCard() {
                                             { value: 'dga_gh', label: 'Dagaare' },
                                             { value: 'ee_gh', label: 'Ewe' },
                                             { value: 'kpo_gh', label: 'Kposo' },
-                                            { value: 'ak_gh', label: 'Twi' },
+                                            { value: 'ak_gh', label: 'Akan' },
                                         ]}
                                     />
                                 </div>
 
                                 <div className="mb-3">
                                     <label htmlFor="assigned_image_batch" className="form-label">Assigned Image Batch</label>
+
+                                    {(assignedAudioBatch === assignedImageBatch) && <p className="text-danger">Assigned audio batch should not be the same as assigned image batch.</p>}
+
                                     <input type="number" className="form-control" id="assigned_image_batch" aria-describedby="assigned_image_batch"
                                         onChange={(e) => setAssignedImageBatch(e.target.value)}
                                         placeholder="Assigned Image Batch"
@@ -352,6 +356,9 @@ function UsersCard() {
                                 <div className="mb-3">
                                     <label htmlFor="assigned_audio_batch" className="form-label">Assigned Audio Batch</label>
                                     <p className='m-0 p-0'><small>This user will validate all audio description of images belong to this batch.</small></p>
+
+                                    {(assignedAudioBatch === assignedImageBatch) && <p className="text-danger">Assigned audio batch should not be the same as assigned image batch.</p>}
+
                                     <input type="number" className="form-control" id="assigned_audio_batch" aria-describedby="assigned_audio_batch"
                                         onChange={(e) => setAssignedAudioBatch(e.target.value)}
                                         placeholder="Assigned Audio Batch"
@@ -365,16 +372,28 @@ function UsersCard() {
                                 </div>
 
                                 <div className="my-5">
-                                    <h1><b>PASSWORD</b></h1>
-                                    {selectedUser && <p className="text-muted">Leave blank to keep current password</p>}
-                                    <PasswordInput value={password} setValue={setPassword} required={selectedUser == null} />
+                                    <div className="d-flex justify-content-between">
+                                        <h1><b>PASSWORD</b></h1>
+                                        <button className="btn btn-light"
+                                            type='button'
+                                            onClick={() => setHidePassowordUpdate(!hidePassowordUpdate)}>
+                                            {hidePassowordUpdate && "show"}
+                                            {!hidePassowordUpdate && "hide"}
+                                        </button>
+                                    </div>
+                                    {!hidePassowordUpdate &&
+                                        <div>
+                                            {selectedUser && <p className="text-muted">Leave blank to keep current password</p>}
+                                            <PasswordInput value={password} setValue={setPassword} required={selectedUser == null} />
+                                        </div>
+                                    }
                                 </div>
 
                                 <div className="mb-3">
                                     <p className="text-end">
                                         <button
                                             className='btn btn-sm btn-primary d-flex align-items-center'
-                                            disabled={isPuttingUser}>
+                                            disabled={isPuttingUser || (assignedAudioBatch === assignedImageBatch)}>
                                             {isPuttingUser && <Spinner />}
                                             Submit
                                         </button>
