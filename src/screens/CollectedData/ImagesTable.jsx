@@ -267,11 +267,23 @@ function ImagesTable() {
                             </h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div className="modal-body row">
+                        <div className="modal-body">
+                            <div className="d-flex align-item-center justify-content-center">
+                                <button className="btn btn-primary mx-2"
+                                    disabled={imageNavigatonLoading}
+                                    onClick={() => navigate("previous")}>
+                                    <i className="bi bi-arrow-left"></i> Previous
+                                </button>
+                                <button className="btn btn-primary mx-2"
+                                    disabled={imageNavigatonLoading}
+                                    onClick={() => navigate("next")}>
+                                    Next <i className="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
                             <div className="row">
                                 <div className="d-flex justify-content-center align-items-center col-md-8 mx-auto">
                                     <div className="d-flex justify-content-center align-items-center">
-                                        {imageNavigatonLoading && <Spinner />}
+                                        {imageNavigatonLoading && <p className='my-2'> <Spinner /></p>}
                                         {!imageNavigatonLoading && <img src={selectedImage?.image_url} alt={selectedImage?.name} />}
                                     </div>
                                 </div>
@@ -329,18 +341,6 @@ function ImagesTable() {
                                         </div>
                                     </div>
                                 }
-                            </div>
-                            <div className="d-flex align-item-center justify-content-center my-3">
-                                <button className="btn btn-primary mx-2"
-                                    disabled={imageNavigatonLoading}
-                                    onClick={() => navigate("previous")}>
-                                    <i className="bi bi-arrow-left"></i> Previous
-                                </button>
-                                <button className="btn btn-primary mx-2"
-                                    disabled={imageNavigatonLoading}
-                                    onClick={() => navigate("next")}>
-                                    Next <i className="bi bi-arrow-right"></i>
-                                </button>
                             </div>
                         </div>
                         <div className="modal-footer">
