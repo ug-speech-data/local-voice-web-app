@@ -198,6 +198,34 @@ function ImagesTable() {
         }
     }, [bulkActionError])
 
+    // Image navigation
+    const { trigger: navigateImage, data: imageNavigationResponse, error: imageNavigationError, isLoading: imageNavigatonLoading } = useAxios()
+    function navigate(direction) {
+        navigateImage(
+            `${BASE_API_URI}/image-preview-navigation?direction=${direction}&current_image_id=${selectedImage.id}`,
+        )
+    }
+
+    useEffect(() => {
+        if (imageNavigationResponse?.image != null) {
+            setSelectedImage(imageNavigationResponse.image)
+        }
+    }, [imageNavigationResponse])
+
+    useEffect(() => {
+        if (imageNavigationError) {
+            toast({
+                id: "error",
+                title: `Error`,
+                description: imageNavigationError,
+                status: "error",
+                position: "top-center",
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [imageNavigationError])
+
     return (
         <Fragment>
             <PageMeta title="Collected Images | Speech Data" />
@@ -240,64 +268,80 @@ function ImagesTable() {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body row">
-                            <div className="d-flex justify-content-center align-items-center col-md-8 mx-auto">
-                                <div className="d-flex justify-content-center align-items-center">
-                                    <img src={selectedImage?.image_url} alt={selectedImage?.name} />
+                            <div className="row">
+                                <div className="d-flex justify-content-center align-items-center col-md-8 mx-auto">
+                                    <div className="d-flex justify-content-center align-items-center">
+                                        {imageNavigatonLoading && <Spinner />}
+                                        {!imageNavigatonLoading && <img src={selectedImage?.image_url} alt={selectedImage?.name} />}
+                                    </div>
                                 </div>
+
+                                {!imageNavigatonLoading &&
+                                    <div className="col-md-4 mx-auto">
+                                        <div className="my-3">
+                                            <label htmlFor="name" className="form-label"><b>Name</b></label>
+                                            <input type="text" className="form-control" id="name" value={name}
+                                                onChange={(e) => setName(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div className="my-3">
+                                            <label htmlFor="name" className="form-label"><b>Source</b></label>
+                                            <input type="text" className="form-control" id="name"
+                                                onChange={(e) => setSource(e.target.value)}
+                                                value={source} />
+                                        </div>
+
+                                        <div className="my-3">
+                                            <label htmlFor="name" className="form-label"><b>Size</b></label>
+                                            <p>{selectedImage?.height} x {selectedImage?.width}</p>
+                                        </div>
+
+
+                                        <div className="my-5">
+                                            <label htmlFor="name" className="form-label"><b>Categories</b></label>
+                                            <TagInput
+                                                tags={selectedImage?.categories.map(category => category.name)}
+                                                heading="Click to remove"
+                                                selectedTags={selectedCategories}
+                                                setSelectedTags={setSelectedCategories}
+                                            />
+                                        </div>
+
+                                        <div className="my-3">
+                                            <label htmlFor="name" className="form-label me-2">Accepted</label>
+                                            <input type="checkbox" className="form-check-input"
+                                                onChange={() => setIsAccepted(!isAccepted)}
+                                                checked={isAccepted} />
+                                        </div>
+
+                                        <div className="my-3">
+                                            <label htmlFor="name" className="form-label me-2">Image Downloaded</label>
+                                            <input type="checkbox" className="form-check-input"
+                                                onChange={() => setIsDownloaded(!isDownloaded)}
+                                                checked={isDownloaded} />
+                                        </div>
+
+                                        <div className="my-3 d-flex justify-content-end">
+                                            <button className="btn btn-outline-primary btn-sm"
+                                                disabled={isPuttingImage || imageNavigatonLoading}
+                                                onClick={handleSubmission}>{isPuttingImage && <Spinner />} Save Changes</button>
+                                        </div>
+                                    </div>
+                                }
                             </div>
-
-                            <div className="col-md-4 mx-auto">
-                                <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Name</b></label>
-                                    <input type="text" className="form-control" id="name" value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Source</b></label>
-                                    <input type="text" className="form-control" id="name"
-                                        onChange={(e) => setSource(e.target.value)}
-                                        value={source} />
-                                </div>
-
-                                <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Size</b></label>
-                                    <p>{selectedImage?.height} x {selectedImage?.width}</p>
-                                </div>
-
-
-                                <div className="my-5">
-                                    <label htmlFor="name" className="form-label"><b>Categories</b></label>
-                                    <TagInput
-                                        tags={selectedImage?.categories.map(category => category.name)}
-                                        heading="Click to remove"
-                                        selectedTags={selectedCategories}
-                                        setSelectedTags={setSelectedCategories}
-                                    />
-                                </div>
-
-                                <div className="my-3">
-                                    <label htmlFor="name" className="form-label me-2">Accepted</label>
-                                    <input type="checkbox" className="form-check-input"
-                                        onChange={() => setIsAccepted(!isAccepted)}
-                                        checked={isAccepted} />
-                                </div>
-
-                                <div className="my-3">
-                                    <label htmlFor="name" className="form-label me-2">Image Downloaded</label>
-                                    <input type="checkbox" className="form-check-input"
-                                        onChange={() => setIsDownloaded(!isDownloaded)}
-                                        checked={isDownloaded} />
-                                </div>
-
-                                <div className="my-3 d-flex justify-content-end">
-                                    <button className="btn btn-primary btn-sm"
-                                        disabled={isPuttingImage}
-                                        onClick={handleSubmission}>{isPuttingImage && <Spinner />} Save Changes</button>
-                                </div>
+                            <div className="d-flex align-item-center justify-content-center my-3">
+                                <button className="btn btn-primary mx-2"
+                                    disabled={imageNavigatonLoading}
+                                    onClick={() => navigate("previous")}>
+                                    <i className="bi bi-arrow-left"></i> Previous
+                                </button>
+                                <button className="btn btn-primary mx-2"
+                                    disabled={imageNavigatonLoading}
+                                    onClick={() => navigate("next")}>
+                                    Next <i className="bi bi-arrow-right"></i>
+                                </button>
                             </div>
-
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -305,7 +349,6 @@ function ImagesTable() {
                     </div>
                 </div>
             </div>
-
 
             <div className="my-5 overflow-scroll">
                 <TableView
