@@ -336,7 +336,7 @@ function UsersCard() {
                                             { value: 'dag_gh', label: 'Dagbani' },
                                             { value: 'dga_gh', label: 'Dagaare' },
                                             { value: 'ee_gh', label: 'Ewe' },
-                                            { value: 'kpo_gh', label: 'Kposo' },
+                                            { value: 'kpo_gh', label: 'Ikposo' },
                                             { value: 'ak_gh', label: 'Akan' },
                                         ]}
                                     />

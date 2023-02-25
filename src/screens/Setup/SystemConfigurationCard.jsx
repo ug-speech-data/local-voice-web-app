@@ -39,6 +39,13 @@ function SystemConfigurationCard() {
     const [participantPrivacyStatement, setParticipantPrivacyStatement] = useState("")
     const [maxImageForValidationPerUser, setMaxImageForValidationPerUser] = useState(0)
 
+    // Audios
+    const [participantPrivacyStatementAudioEwe, setParticipantPrivacyStatementAudioEwe] = useState("")
+    const [participantPrivacyStatementAudioAkan, setParticipantPrivacyStatementAudioAkan] = useState("")
+    const [participantPrivacyStatementAudioDagaare, setParticipantPrivacyStatementAudioDagaare] = useState("")
+    const [participantPrivacyStatementAudioIkposo, setParticipantPrivacyStatementAudioIkposo] = useState("")
+    const [participantPrivacyStatementAudioDagbani, setParticipantPrivacyStatementAudioDagbani] = useState("")
+
     const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios({ mainUrl: `${BASE_API_URI}/reshuffle-images/`, method: "POST" })
     const { trigger: assignImageBatch, data: assignmentResponse, error: errorAssigning, isLoading: isAssigning } = useAxios({ mainUrl: `${BASE_API_URI}/assign-images-batch-to-user/`, method: "POST" })
 
@@ -125,6 +132,14 @@ function SystemConfigurationCard() {
         formData.append("individual_audio_aggregators_amount_per_audio", individualAudioAggregatorsAmountPerAudio);
         formData.append("participant_privacy_statement", participantPrivacyStatement);
         formData.append("max_image_for_validation_per_user", maxImageForValidationPerUser);
+
+        // Audios
+        formData.append("participant_privacy_statement_audio_ewe", participantPrivacyStatementAudioEwe);
+        formData.append("participant_privacy_statement_audio_akan", participantPrivacyStatementAudioAkan);
+        formData.append("participant_privacy_statement_audio_dagaare", participantPrivacyStatementAudioDagaare);
+        formData.append("participant_privacy_statement_audio_ikposo", participantPrivacyStatementAudioIkposo);
+        formData.append("participant_privacy_statement_audio_dagbani", participantPrivacyStatementAudioDagbani);
+
 
         const response = await putConfigurations(formData).unwrap()
         if (response?.configurations) {
@@ -388,6 +403,68 @@ function SystemConfigurationCard() {
                             min={0}
                             step={0.01}
                             onChange={(e) => setIndividualAudioAggregatorsAmountPerAudio(e.target.value)} />
+                    </div>
+
+                    <h4 className="h4 mt-3">Privacy Statement Audios</h4>
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Ewe</b></p>
+                        <small>Privacy Statment for recording in Ewe</small>
+                        {configurations?.participant_privacy_statement_audio_ewe
+                            && <p><a className='badge bg-primary' href={configurations.participant_privacy_statement_audio_ewe}>Currently: {configurations.participant_privacy_statement_audio_ewe}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setParticipantPrivacyStatementAudioEwe(e.target.files[0])}
+                            type="file"
+                        />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Akan</b></p>
+                        <small>Privacy Statment for recording in Akan</small>
+                        {configurations?.participant_privacy_statement_audio_akan
+                            && <p><a className='badge bg-primary' href={configurations.participant_privacy_statement_audio_akan}>Currently: {configurations.participant_privacy_statement_audio_akan}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setParticipantPrivacyStatementAudioAkan(e.target.files[0])}
+                            type="file"
+                        />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Dagaare</b></p>
+                        <small>Privacy Statment for recording in Dagaare</small>
+                        {configurations?.participant_privacy_statement_audio_dagaare
+                            && <p><a className='badge bg-primary' href={configurations.participant_privacy_statement_audio_dagaare}>Currently: {configurations.participant_privacy_statement_audio_dagaare}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setParticipantPrivacyStatementAudioDagaare(e.target.files[0])}
+                            type="file"
+                        />
+                    </div>
+
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Ikposo</b></p>
+                        <small>Privacy Statment for recording in Ikposo</small>
+                        {configurations?.participant_privacy_statement_audio_ewe
+                            && <p><a className='badge bg-primary' href={configurations.participant_privacy_statement_audio_ewe}>Currently: {configurations.participant_privacy_statement_audio_ewe}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setParticipantPrivacyStatementAudioIkposo(e.target.files[0])}
+                            type="file"
+                        />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Dagbani</b></p>
+                        <small>Privacy Statment for recording in Dagbani</small>
+                        {configurations?.participant_privacy_statement_audio_dagbani
+                            && <p><a className='badge bg-primary' href={configurations.participant_privacy_statement_audio_dagbani}>Currently: {configurations.participant_privacy_statement_audio_dagbani}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setParticipantPrivacyStatementAudioDagbani(e.target.files[0])}
+                            type="file"
+                        />
                     </div>
 
                 </div>
