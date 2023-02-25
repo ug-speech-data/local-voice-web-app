@@ -24,6 +24,7 @@ function CollectedData() {
         "YEAR", "TRANSCRIPTION"
     ]
     const [selectedFields, setSelectedFields] = useState([...allFields])
+    const [format, setFormat] = useState("wav")
 
     const { trigger: exportAudioData, data: responseData, error, isLoading: isLoadingSubmittingExportRequest } = useAxios()
 
@@ -59,7 +60,8 @@ function CollectedData() {
         exportAudioData(
             `${BASE_API_URI}/export-audio-data/`,
             {
-                fields: selectedFields
+                fields: selectedFields,
+                format: format,
             }
         )
     }
@@ -94,6 +96,14 @@ function CollectedData() {
                                     setSelectedTags={setSelectedFields}
                                     selectedTags={selectedFields}
                                 />
+                            </div>
+
+                            <div className='form-group'>
+                                <label htmlFor="format"><b>Audio Format</b></label>
+                                <select name="format" id="format" className='form-control' onChange={(e) => setFormat(e.target.value)}>
+                                    <option value="wav">Wave</option>
+                                    <option value="mp3">MP3</option>
+                                </select>
                             </div>
 
                             <div className="form-group d-flex justify-content-center mt-5 mb-2">

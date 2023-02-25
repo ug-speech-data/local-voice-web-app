@@ -4,7 +4,7 @@ import { Fragment, useState } from 'react';
 
 function TabLayout({ children, tabs }) {
     const [activeTab, setActiveTab] = useState(0);
-
+    const bodies = children.filter((item) => Boolean(item))
     return (
         <Fragment>
             <nav className='tabs d-flex align-items-center'>
@@ -13,7 +13,7 @@ function TabLayout({ children, tabs }) {
                 ))}
             </nav>
             <div className='tab-content'>
-                {children[activeTab]}
+                {bodies[activeTab]}
             </div>
         </Fragment>
     );
