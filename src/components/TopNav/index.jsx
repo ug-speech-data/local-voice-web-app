@@ -93,7 +93,7 @@ function TopNav() {
                 <Link to="/" className='logo'>
                     <div className="d-flex align-items-center">
                         <img className='logo me-2' src={logo} alt="logo" />
-                        <p style={{ fontWeight: "800" }}>UG SPEECH DATA</p>
+                        <p style={{ fontWeight: "800" }}>SPEECHDATA</p>
                     </div>
                 </Link>
             </div>
@@ -102,7 +102,7 @@ function TopNav() {
                 <Link key="/dashboard" to="/dashboard" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
                 <Link key="/tasks" to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>
                 {userPermissions.has(Permissions.MANAGE_COLLECTED_DATA) &&
-                    <Link key="/collected-data" to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>COLLECTED DATA</Link>
+                    <Link key="/collected-data" to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>DATA</Link>
                 }
                 {userPermissions.has(Permissions.MANAGE_PAYMENT) &&
                     <Link key="/payment" to="/payment" className={`nav-menu-item ${activeMenu === 'payment' ? 'active' : ''}`} onClick={() => setActiveMenu("payment")}>PAYMENT</Link>
@@ -148,9 +148,9 @@ function TopNav() {
                     </div>
 
                     <div className="drop-down">
-                        <p className='drop-down-item'>
-                            <Link to=""><i className="bi bi-person mx-2"></i> Profile</Link>
-                        </p>
+                        <Link to="/profile" className='drop-down-item d-block'>
+                            <i className="bi bi-person mx-2"></i> Profile
+                        </Link>
                         <p className='drop-down-item'>
                             <PermissionUpdate />
                         </p>

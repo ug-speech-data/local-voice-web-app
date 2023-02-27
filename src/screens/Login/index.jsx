@@ -7,6 +7,7 @@ import logo from "../../assets/images/logo.png";
 import { Navigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { useLoginUserMutation, setUser as setStoreUser, setToken, setUserPermissions } from '../../features/authentication/authentication-api-slice';
+import PasswordInput from '../../components/PasswordInput';
 
 
 function LoginScreen() {
@@ -97,11 +98,7 @@ function LoginScreen() {
 
                     <div className="form-group my-3">
                         <label htmlFor="password">Password</label>
-                        <input type="password"
-                            className="form-control"
-                            onChange={(e) => setPassword(e.target.value)}
-                            id="password" aria-describedby="emailHelp"
-                            placeholder="Enter password" required />
+                        <PasswordInput value={password} setValue={setPassword} required />
                     </div>
                     <div className="form-group my-3">
                         <p className="text-center">

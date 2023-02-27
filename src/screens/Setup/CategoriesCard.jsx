@@ -24,9 +24,8 @@ function CategoryCard() {
     const [name, setName] = useState('');
 
     useEffect(() => {
-        setCategories(response["categories"])
+        if (!isFetching) { setCategories(response["categories"]) }
     }, [isFetching])
-
 
     useEffect(() => {
         getCategories()

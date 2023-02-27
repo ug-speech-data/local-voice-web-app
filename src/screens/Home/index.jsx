@@ -38,7 +38,29 @@ function HomeScreen() {
         <div className="home-page">
             <div className="content col-11 col-md-8 mx-auto">
                 <h1 className='text-center h1'>UG SPEECH DATA</h1>
-                <p className='text-center'>Our website is under construction. Below are some helpful resources for the meantime.</p>
+                <div className='col-md-8 mx-auto'>
+                    <h3 className="h3 text-center my-3">PROJECT AIM</h3>
+                    <p className='my-3'>
+                        <i className="bi bi-arrow-right me-3"></i>
+                        To generate parallel datasets of transcribed audio
+                        data and parallel text for Neural Machine Translation
+                        in five Ghanaian languages (Akan,
+                        Ewe,
+                        Ikposo,
+                        Dagaare and Dagbani)
+                    </p>
+                    <p className='my-3'>
+                        <i className="bi bi-arrow-right me-3"></i>
+                        To
+                        analyze
+                        and determine the most suitable
+                        techniques to scale up data collection in 100
+                        languages by the end of 2023 in an African low
+                        resource context
+                    </p>
+
+                </div>
+                <p className='text-center mt-4'>Below are some helpful resources for the meantime.</p>
 
                 <div className='text-center my-3 d-flex mx-auto justify-content-center align-items-center flex-wrap'>
                     {webConfigurations?.android_apk_url &&

@@ -467,10 +467,10 @@ function UsersCard() {
                         </thead>
                         <tbody>
                             {isFetching && <tr><td colSpan="7">
-                                <p className="text-center d-flex justify-content-center">
+                                <span className="text-center d-flex justify-content-center">
                                     <Spinner />
                                     Loading...
-                                </p>
+                                </span>
                             </td></tr>}
                             {(!isFetching && users?.length == 0) && <tr><td colSpan="7">No users</td></tr>}
                             {error && <tr><td colSpan="2">Error: {error.status}</td></tr>}

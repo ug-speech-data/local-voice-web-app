@@ -13,7 +13,7 @@ function Setup() {
 
     return (
         <Fragment>
-            <PageMeta title="Setup | Local Voice" />
+            <PageMeta title="Setup | Speech Data UG" />
 
             <TopNav />
             <div className='py-2' style={{ background: "rgb(240,240,240)" }}>

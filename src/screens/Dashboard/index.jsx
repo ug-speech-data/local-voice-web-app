@@ -1,5 +1,5 @@
 import TopNav from "../../components/TopNav";
-import DashboardCard from "../../components/DashboardCard";
+import { Link } from 'react-router-dom';
 import Footer from "../../components/Footer";
 
 
@@ -11,27 +11,12 @@ function Dashboard() {
                 <div className="mx-auto d-flex flex-wrap col-lg-8">
                     <h4>DATA SUMMARY</h4>
                 </div>
-                <div className="mx-auto d-flex flex-wrap col-lg-8">
-                    <DashboardCard >
-                        <div className="d-flex justify-content-between mb-2">
-                            <h4 className="ms-0 my-0 p-0 h4"><b>Images</b></h4>
-                            <h4 className="m-0 p-0"><b>10</b></h4>
-                        </div>
-                        <div className="d-flex justify-content-between mb-2">
-                            <p className="ms-3 my-1 p-0">Approved</p>
-                            <p className="m-0 p-0">10</p>
-                        </div>
-                    </DashboardCard>
-                    <DashboardCard>
-                        <div className="d-flex justify-content-between mb-2">
-                            <h4 className="ms-0 my-0 p-0 h4"><b>Audios</b></h4>
-                            <h4 className="m-0 p-0"><b>10</b></h4>
-                        </div>
-                        <div className="d-flex justify-content-between mb-2">
-                            <p className="ms-3 my-1 p-0">Approved</p>
-                            <p className="m-0 p-0">10</p>
-                        </div>
-                    </DashboardCard>
+                <div className="mx-auto col-lg-8">
+                    <p className="text-warning">No info here</p>
+
+                    <p className="my-4">
+                        Go to  <Link to="/profile"><button className="btn btn-sm btn-primary">Profile</button></Link>
+                    </p>
                 </div>
             </div>
             <Footer />

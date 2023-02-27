@@ -15,6 +15,7 @@ import Permissions from "./utils/permissions";
 import Error404Screen from "./screens/ErrorScreens/Error404";
 import HomeScreen from "./screens/Home";
 import Payment from "./screens/Payment";
+import ProfileScreen from "./screens/Profile";
 
 
 function App() {
@@ -58,6 +59,12 @@ function App() {
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <ProfileScreen />
           </ProtectedRoute>
         } />
 

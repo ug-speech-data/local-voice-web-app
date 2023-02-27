@@ -5,11 +5,11 @@ import { Modal } from 'bootstrap';
 import {
     useDeleteImagesMutation,
     useUpdateImagesMutation,
+    useLazyGetCategoriesQuery,
 } from '../../features/resources/resources-api-slice';
 import { Spinner, useToast } from '@chakra-ui/react';
 import TagInput from '../../components/TagInput';
 import TextOverflow from '../../components/TextOverflow';
-import ToolTip from '../../components/ToolTip';
 import { BASE_API_URI } from '../../utils/constants';
 import useAxios from '../../app/hooks/useAxios';
 import PageMeta from '../../components/PageMeta';
@@ -18,6 +18,7 @@ import PageMeta from '../../components/PageMeta';
 function ImagesTable() {
     const [deleteImage, { isLoading: isDeletingImage, error: errorDeletingImage }] = useDeleteImagesMutation()
     const [putImage, { isLoading: isPuttingImage, isSuccess: successPuttingImage, error: errorPuttingImage }] = useUpdateImagesMutation()
+    const [getCategories, { data: response = [], isFetching: isFetchingCategories, error }] = useLazyGetCategoriesQuery()
 
     const deletionModalRef = useRef(null);
     const editImageModalRef = useRef(null);
@@ -27,6 +28,8 @@ function ImagesTable() {
     const [deleteAlertModal, setDeleteAlertModal] = useState(null);
     const [editImageModal, setEditImageModal] = useState(null);
     const [newUpdate, setNewUpdate] = useState(null);
+    const [urlParams, setUrlParams] = useState("");
+    const [categories, setCategories] = useState([])
 
     // Form input
     const [selectedCategories, setSelectedCategories] = useState([]);
@@ -44,7 +47,17 @@ function ImagesTable() {
             const modal = new Modal(deletionModalRef.current)
             setDeleteAlertModal(modal)
         }
+
+        getCategories()
+
     }, [])
+
+    useEffect(() => {
+        if (!isFetchingCategories) {
+            setCategories(response["categories"])
+        }
+    }, [isFetchingCategories])
+
 
     const handleDeleteImage = async () => {
         if (selectedImage === null) {
@@ -202,7 +215,7 @@ function ImagesTable() {
     const { trigger: navigateImage, data: imageNavigationResponse, error: imageNavigationError, isLoading: imageNavigatonLoading } = useAxios()
     function navigate(direction) {
         navigateImage(
-            `${BASE_API_URI}/image-preview-navigation?direction=${direction}&current_image_id=${selectedImage.id}`,
+            `${BASE_API_URI}/image-preview-navigation${urlParams}&direction=${direction}&current_image_id=${selectedImage.id}`,
         )
     }
 
@@ -271,12 +284,12 @@ function ImagesTable() {
                             <div className="d-flex align-item-center justify-content-center mb-2">
                                 <button className="btn btn-primary mx-2"
                                     disabled={imageNavigatonLoading}
-                                    onClick={() => navigate("previous")}>
+                                    onClick={() => navigate("next")}>
                                     <i className="bi bi-arrow-left"></i> Previous
                                 </button>
                                 <button className="btn btn-primary mx-2"
                                     disabled={imageNavigatonLoading}
-                                    onClick={() => navigate("next")}>
+                                    onClick={() => navigate("previous")}>
                                     Next <i className="bi bi-arrow-right"></i>
                                 </button>
                             </div>
@@ -313,7 +326,7 @@ function ImagesTable() {
                                         <div className="my-5">
                                             <label htmlFor="name" className="form-label"><b>Categories</b></label>
                                             <TagInput
-                                                tags={selectedImage?.categories.map(category => category.name)}
+                                                tags={categories?.map((category) => category.name)}
                                                 heading="Click to remove"
                                                 selectedTags={selectedCategories}
                                                 setSelectedTags={setSelectedCategories}
@@ -354,6 +367,8 @@ function ImagesTable() {
                 <TableView
                     responseDataAttribute="images"
                     dataSourceUrl={`${BASE_API_URI}/collected-images/`}
+                    urlParams={urlParams}
+                    setUrlParams={setUrlParams}
                     newUpdate={newUpdate}
                     filters={[{ key: "is_accepted:1", value: "Accepted" }, { key: "is_accepted:0", value: "Pending" }]}
                     bulkActions={[
@@ -366,17 +381,9 @@ function ImagesTable() {
                                 <div className="d-flex align-items-center">
                                     <TextOverflow text={item.name} width={30} />
                                     {item.is_accepted ?
-                                        <ToolTip title="Add Image" header={
-                                            (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
-                                        }>
-                                            This image is ready for description. Click on more to view more details.
-                                        </ToolTip>
+                                        (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
                                         :
-                                        <ToolTip title="Add Image" header={
-                                            (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>)
-                                        }>
-                                            This image is pending approval. Click on more to view more details.
-                                        </ToolTip>
+                                        (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle" ></i></span>)
                                     }
                                 </div>
                             )

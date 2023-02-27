@@ -4,7 +4,7 @@ import useAxios from '../../app/hooks/useAxios';
 
 import { Spinner } from '@chakra-ui/react';
 
-function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, newUpdate = null, filters = null, bulkActions = [] }) {
+function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, urlParams = "", setUrlParams = () => null, newUpdate = null, filters = null, bulkActions = [] }) {
     const [originalData, setOriginalData] = useState([])
     const [displayedData, setDisplayedData] = useState([])
     const { trigger, data: responseData, error, isLoading } = useAxios()
@@ -20,7 +20,9 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
 
     // Pagination
     const [page, setPage] = useState(1);
+    const [customPage, setCustomPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
     const [nextPage, setNextPage] = useState(null);
     const [previousPage, setPreviousPage] = useState(null);
 
@@ -37,6 +39,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
             setNextPage(responseData.next_page)
             setPage(responseData?.page || 1)
             setPreviousPage(responseData.previous_page)
+            setTotalItems(responseData?.total || 0)
 
             // Reset selection
             setBulkSelectedIds([])
@@ -44,8 +47,9 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
     }, [responseData])
 
     useEffect(() => {
+        setUrlParams(`?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
         trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
-    }, [page, filter, pageSize])
+    }, [page, filter, pageSize, dataSourceUrl])
 
     useEffect(() => {
         trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
@@ -91,7 +95,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
     return (
         <Fragment>
             <div className="card-body" style={{ maxHeight: "60vh", overflowY: "auto" }}>
-                <div className="d-flex justify-content-between mb-3" style={{ position: "sticky", top: "0", background: "white" }}>
+                <div className="d-flex justify-content-between mb-3 py-3" style={{ position: "sticky", top: "0", background: "white", boxShadow: "0 0 1em 0.01em rgba(0,0,0,0.1)" }}>
                     <div className="d-flex">
                         <div className="d-flex align-items-center">
                             <label htmlFor="search" className="form-label me-2">Search</label>
@@ -116,7 +120,19 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                             >
                                 <i className="bi bi-skip-backward"></i>
                             </button>
-                            <span className="mx-2 badge bg-primary">page {page} of {totalPages}</span>
+                            <span className="mx-2">Page {page} of {totalPages}</span>
+                            {totalPages > 1 ?
+                                <span className="me-1 d-flex align-items-center">
+                                    <input type="number" className="form-control d-inline" value={customPage} onChange={(e) => {
+                                        if (e.target.value < (totalPages + 1) && !isNaN(e.target.value) && e.target.value > 0 || e.target.value == "") {
+                                            setCustomPage(e.target.value)
+                                        }
+                                    }} style={{ width: "3em" }
+                                    } min={1} max={totalPages || 1} />
+                                    {customPage != page && Boolean(customPage) ? <button className="btn btn-sm btn-outline-primary" onClick={() => setPage(customPage)}><i className="bi bi-search"></i></button> : ""}
+                                </span>
+                                : ""
+                            }
                             <button className="btn btn-sm btn-primary"
                                 disabled={nextPage === null || isLoading}
                                 onClick={() => setPage(page + 1)}
@@ -183,8 +199,14 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                             setBulkSelectedIds([])
                                         }
                                     }}
-                                    checked={bulkSelectedIds.length === displayedData.length}
+                                    checked={bulkSelectedIds.length === displayedData.length && bulkSelectedIds.length > 0}
                                 /> </th>}
+
+                            <th>
+                                <div className="d-flex">
+                                    S/N
+                                </div>
+                            </th>
 
                             {headers?.map(({ key, value }, index) => {
                                 return (
@@ -225,7 +247,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                                             checked={bulkSelectedIds.includes(item.id)}
                                         />
                                     </td>}
-
+                                    <td>{index + 1}</td>
                                     {headers?.map(({ key, render }, headerIndex) => {
                                         return (
                                             <td key={headerIndex}>
@@ -237,6 +259,13 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, n
                             )
                         })}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colSpan={(headers?.length || 7) + 2}>
+                                <b><p>{totalItems} items found</p></b>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </Fragment >
