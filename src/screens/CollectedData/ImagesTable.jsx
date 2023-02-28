@@ -319,11 +319,20 @@ function ImagesTable() {
                                                 value={source} />
                                         </div>
 
+
+
                                         <div className="my-3">
                                             <label htmlFor="name" className="form-label"><b>Size</b></label>
                                             <p>{selectedImage?.height} x {selectedImage?.width}</p>
                                         </div>
 
+
+                                        <div className="my-3">
+                                            <label htmlFor="name" className="form-label"><b>Category</b></label>
+                                            <p>
+                                                <span className="badge bg-primary me-1">{selectedImage.category}</span>
+                                            </p>
+                                        </div>
 
                                         <div className="my-5">
                                             <label htmlFor="name" className="form-label"><b>Categories</b></label>
@@ -409,7 +418,7 @@ function ImagesTable() {
                             return (
                                 <div>
                                     {item.categories?.map((category, index) => (
-                                        <span key={index} className="badge bg-primary me-1">{category.name}</span>
+                                        <span key={index + 1} className="badge bg-primary me-1">{category.name}</span>
                                     ))}
                                 </div>
                             )
