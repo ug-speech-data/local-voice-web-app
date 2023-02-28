@@ -319,8 +319,6 @@ function ImagesTable() {
                                                 value={source} />
                                         </div>
 
-
-
                                         <div className="my-3">
                                             <label htmlFor="name" className="form-label"><b>Size</b></label>
                                             <p>{selectedImage?.height} x {selectedImage?.width}</p>
@@ -330,7 +328,7 @@ function ImagesTable() {
                                         <div className="my-3">
                                             <label htmlFor="name" className="form-label"><b>Category</b></label>
                                             <p>
-                                                <span className="badge bg-primary me-1">{selectedImage.category}</span>
+                                                <span className="badge bg-primary me-1">{selectedImage?.category}</span>
                                             </p>
                                         </div>
 
