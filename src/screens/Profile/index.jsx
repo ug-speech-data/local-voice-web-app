@@ -6,7 +6,6 @@ import { useToast, Spinner } from '@chakra-ui/react';
 import Footer from '../../components/Footer';
 import TopNav from '../../components/TopNav';
 import SelectInput from '../../components/SelectInput';
-import { useSelector } from 'react-redux';
 import PasswordInput from '../../components/PasswordInput';
 import PageMeta from '../../components/PageMeta';
 
@@ -16,7 +15,6 @@ function ProfileScreen() {
     const { trigger: updateUserProfile, data: updateResponse, error: updateError, isLoading: isUpdatingUser } = useAxios({ method: "POST" });
 
     const [hidePassowordUpdate, setHidePassowordUpdate] = useState(true);
-    const groups = useSelector((state) => state.global.groups);
     const toast = useToast()
     const [currentUser, setCurrentUser] = useState(null)
 
@@ -209,7 +207,10 @@ function ProfileScreen() {
                                 <h1><b>PASSWORD</b></h1>
                                 <button className="btn btn-light"
                                     type='button'
-                                    onClick={() => setHidePassowordUpdate(!hidePassowordUpdate)}>
+                                    onClick={() => {
+                                        setPassword("")
+                                        setHidePassowordUpdate(!hidePassowordUpdate)
+                                    }}>
                                     {hidePassowordUpdate && "Change Password"}
                                     {!hidePassowordUpdate && "hide"}
                                 </button>

@@ -376,7 +376,10 @@ function UsersCard() {
                                         <h1><b>PASSWORD</b></h1>
                                         <button className="btn btn-light"
                                             type='button'
-                                            onClick={() => setHidePassowordUpdate(!hidePassowordUpdate)}>
+                                            onClick={() => {
+                                                setPassword("")
+                                                setHidePassowordUpdate(!hidePassowordUpdate)
+                                            }}>
                                             {hidePassowordUpdate && "show"}
                                             {!hidePassowordUpdate && "hide"}
                                         </button>
