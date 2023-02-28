@@ -327,7 +327,7 @@ function ImagesTable() {
                                             <label htmlFor="name" className="form-label"><b>Categories</b></label>
                                             <div id='tags-container'>
                                                 <TagInput
-                                                    tags={categories?.map((category) => category.name)}
+                                                    tags={categories?.map((category) => category.name).sort()}
                                                     heading="Click to remove"
                                                     selectedTags={selectedCategories}
                                                     setSelectedTags={setSelectedCategories}
