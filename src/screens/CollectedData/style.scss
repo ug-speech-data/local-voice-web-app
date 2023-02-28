@@ -1,14 +1,22 @@
-.image {
-  border: 1px solid rgba(0, 0, 0, 0.2);
-}
+.images-table {
+  .image {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
 
-.transcription-box {
-  textarea,
-  textarea:focus {
-    background-color: rgba(0, 0, 0, 0.05);
-    border-radius: 0.4em;
-    width: 100%;
-    margin: 0 auto;
-    text-align: center;
+  .transcription-box {
+
+    textarea,
+    textarea:focus {
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 0.4em;
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+    }
+  }
+
+  #tags-container {
+    height: 20em;
+    overflow: auto;
   }
 }

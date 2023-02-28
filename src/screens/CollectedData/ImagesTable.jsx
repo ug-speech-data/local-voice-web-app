@@ -240,7 +240,7 @@ function ImagesTable() {
     }, [imageNavigationError])
 
     return (
-        <Fragment>
+        <secion className="images-table">
             <PageMeta title="Collected Images | Speech Data" />
 
             <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -325,12 +325,14 @@ function ImagesTable() {
 
                                         <div className="my-5">
                                             <label htmlFor="name" className="form-label"><b>Categories</b></label>
-                                            <TagInput
-                                                tags={categories?.map((category) => category.name)}
-                                                heading="Click to remove"
-                                                selectedTags={selectedCategories}
-                                                setSelectedTags={setSelectedCategories}
-                                            />
+                                            <div id='tags-container'>
+                                                <TagInput
+                                                    tags={categories?.map((category) => category.name)}
+                                                    heading="Click to remove"
+                                                    selectedTags={selectedCategories}
+                                                    setSelectedTags={setSelectedCategories}
+                                                />
+                                            </div>
                                         </div>
 
                                         <div className="my-3">
@@ -441,7 +443,7 @@ function ImagesTable() {
                 >
                 </TableView>
             </div>
-        </Fragment >
+        </secion >
     );
 }
 
