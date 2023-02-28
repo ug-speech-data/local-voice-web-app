@@ -49,12 +49,14 @@ function ImagesTable() {
         }
 
         getCategories()
-
     }, [])
 
     useEffect(() => {
-        if (!isFetchingCategories) {
-            setCategories(response["categories"])
+        if (!isFetchingCategories && Boolean(response?.categories)) {
+            const cats = [...response["categories"]]
+            cats.sort((x, y) => x.name < y.name ? -1 : x.name > y.name ? 1 : 0)
+
+            setCategories(cats)
         }
     }, [isFetchingCategories])
 
@@ -240,7 +242,7 @@ function ImagesTable() {
     }, [imageNavigationError])
 
     return (
-        <secion className="images-table">
+        <section className="images-table">
             <PageMeta title="Collected Images | Speech Data" />
 
             <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -372,7 +374,11 @@ function ImagesTable() {
                     urlParams={urlParams}
                     setUrlParams={setUrlParams}
                     newUpdate={newUpdate}
-                    filters={[{ key: "is_accepted:1", value: "Accepted" }, { key: "is_accepted:0", value: "Pending" }]}
+                    filters={[
+                        { key: "is_accepted:0", value: "Pending" },
+                        { key: "is_accepted:1", value: "Accepted" },
+                        ...(categories?.map(cat => { return { key: `main_category__name__icontains:${cat.name}`, value: `In ${(cat.name || "").toLowerCase()}` } }) || []).sort()
+                    ]}
                     bulkActions={[
                         { name: "Approve Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
                         { name: "Reject Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
@@ -443,7 +449,7 @@ function ImagesTable() {
                 >
                 </TableView>
             </div>
-        </secion >
+        </section >
     );
 }
 
