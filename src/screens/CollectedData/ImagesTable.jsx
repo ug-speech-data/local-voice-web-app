@@ -377,7 +377,7 @@ function ImagesTable() {
                     filters={[
                         { key: "is_accepted:0", value: "Pending" },
                         { key: "is_accepted:1", value: "Accepted" },
-                        ...(categories?.map(cat => { return { key: `main_category__name__icontains:${cat.name}`, value: `In ${(cat.name || "").toLowerCase()}` } }) || []).sort()
+                        ...(categories?.map(cat => { return { key: `main_category__name:${cat.name}`, value: `In ${(cat.name || "").toLowerCase()}` } }) || []).sort()
                     ]}
                     bulkActions={[
                         { name: "Approve Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
