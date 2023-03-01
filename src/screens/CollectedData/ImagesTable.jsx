@@ -352,10 +352,12 @@ function ImagesTable() {
                                         </div>
 
                                         <div className="my-3">
-                                            <label htmlFor="name" className="form-label me-2">Image Downloaded</label>
-                                            <input type="checkbox" className="form-check-input"
-                                                onChange={() => setIsDownloaded(!isDownloaded)}
-                                                checked={isDownloaded} />
+                                            <button className='btn btn-sm btn-outline-danger' onClick={() => {
+                                                editImageModal?.hide()
+                                                showDeleteImageModal(selectedImage)
+                                            }
+
+                                            }>Delete image</button>
                                         </div>
 
                                         <div className="my-3 d-flex justify-content-end">
