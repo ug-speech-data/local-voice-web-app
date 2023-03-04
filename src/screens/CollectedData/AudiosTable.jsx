@@ -291,7 +291,16 @@ function AudiosTable() {
                     responseDataAttribute="audios"
                     dataSourceUrl={`${BASE_API_URI}/collected-audios/`}
                     newUpdate={newUpdate}
-                    filters={[{ key: "is_accepted:1", value: "Accepted" }, { key: "is_accepted:0", value: "Pending" }]}
+                    filters={[
+                        { key: "is_accepted:1", value: "Accepted" },
+                        { key: "is_accepted:0", value: "Not accepted" },
+                        { key: "is_accepted:0:validations", value: "Validation Conflict" },
+                        { key: "locale:ak_gh", value: "Akan" },
+                        { key: "locale:dag_gh", value: "Dagbani" },
+                        { key: "locale:dga_gh", value: "Dagaare" },
+                        { key: "locale:ee_gh", value: "Ewe" },
+                        { key: "locale:kpo_gh", value: "Ikposo" },
+                    ]}
                     bulkActions={[
                         { name: "Approve Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
                         { name: "Reject Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
