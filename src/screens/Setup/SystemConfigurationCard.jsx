@@ -34,7 +34,7 @@ function SystemConfigurationCard() {
     const [groups, setGroups] = useState([])
     const [enumeratorsGroup, setEnumeratorsGroup] = useState(null)
     const [validatorsGroup, setValidatorsGroup] = useState(null)
-    const [demoVideo, setDemoVideo] = useState("")
+    // const [demoVideo, setDemoVideo] = useState("")
     const [androidAPK, setAndroidAPK] = useState("")
     const [participantPrivacyStatement, setParticipantPrivacyStatement] = useState("")
     const [maxImageForValidationPerUser, setMaxImageForValidationPerUser] = useState(0)
@@ -45,6 +45,13 @@ function SystemConfigurationCard() {
     const [participantPrivacyStatementAudioDagaare, setParticipantPrivacyStatementAudioDagaare] = useState("")
     const [participantPrivacyStatementAudioIkposo, setParticipantPrivacyStatementAudioIkposo] = useState("")
     const [participantPrivacyStatementAudioDagbani, setParticipantPrivacyStatementAudioDagbani] = useState("")
+
+    // Demo Video
+    const [demoVideoEwe, setDemoVideoEwe] = useState("")
+    const [demoVideoAkan, setDemoVideoAkan] = useState("")
+    const [demoVideoDagaare, setDemoVideoDagaare] = useState("")
+    const [demoVideoIkposo, setDemoVideoIkposo] = useState("")
+    const [demoVideoDagbani, setDemoVideoDagbani] = useState("")
 
     const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios({ mainUrl: `${BASE_API_URI}/reshuffle-images/`, method: "POST" })
     const { trigger: assignImageBatch, data: assignmentResponse, error: errorAssigning, isLoading: isAssigning } = useAxios({ mainUrl: `${BASE_API_URI}/assign-images-batch-to-user/`, method: "POST" })
@@ -124,7 +131,6 @@ function SystemConfigurationCard() {
         formData.append("number_of_batches", numberOfBatches);
         formData.append("enumerators_group_name", enumeratorsGroup);
         formData.append("validators_group_name", validatorsGroup);
-        formData.append("demo_video", demoVideo);
         formData.append("android_apk", androidAPK);
         formData.append("participant_amount_per_audio", amountPerAudio);
         formData.append("amount_per_audio_validation", amountPerAudioValidation);
@@ -140,6 +146,12 @@ function SystemConfigurationCard() {
         formData.append("participant_privacy_statement_audio_ikposo", participantPrivacyStatementAudioIkposo);
         formData.append("participant_privacy_statement_audio_dagbani", participantPrivacyStatementAudioDagbani);
 
+        // Demo video
+        formData.append("demo_video_ewe", demoVideoEwe);
+        formData.append("demo_video_akan", demoVideoAkan);
+        formData.append("demo_video_dagaare", demoVideoDagaare);
+        formData.append("demo_video_ikposo", demoVideoIkposo);
+        formData.append("demo_video_dagbani", demoVideoDagbani);
 
         const response = await putConfigurations(formData).unwrap()
         if (response?.configurations) {
@@ -226,17 +238,6 @@ function SystemConfigurationCard() {
                             value={maxCategoryForImage}
                             onChange={(e) => setMaxCategoryForImage(e.target.value)}
                             type="number" min={1} max={10} />
-                    </div>
-                    <div className="form-group my-3 py-4 px-2 bg-white">
-                        <p><b>Demo Video</b></p>
-                        <small>This video will be shown to users before recording starts.</small>
-                        {configurations?.demo_video_url
-                            && <p><a className='badge bg-primary' href={configurations.demo_video_url}>Currently: {configurations.demo_video_url}</a></p>
-                        }
-                        <input className="form-control"
-                            onChange={(e) => setDemoVideo(e.target.files[0])}
-                            type="file"
-                        />
                     </div>
                     <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Accepted Background Noise Level</b></p>
@@ -463,6 +464,71 @@ function SystemConfigurationCard() {
                         }
                         <input className="form-control"
                             onChange={(e) => setParticipantPrivacyStatementAudioDagbani(e.target.files[0])}
+                            type="file"
+                        />
+                    </div>
+
+
+
+
+
+                    <h4 className="h4 mt-3">Demo Videos</h4>
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Ewe</b></p>
+                        <small>Demo video in Ewe</small>
+                        {configurations?.demo_video_ewe
+                            && <p><a className='badge bg-primary' href={configurations.demo_video_ewe}>Currently: {configurations.demo_video_ewe}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setDemoVideoEwe(e.target.files[0])}
+                            type="file"
+                        />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Akan</b></p>
+                        <small>Demo video in Akan</small>
+                        {configurations?.demo_video_akan
+                            && <p><a className='badge bg-primary' href={configurations.demo_video_akan}>Currently: {configurations.demo_video_akan}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setDemoVideoAkan(e.target.files[0])}
+                            type="file"
+                        />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Dagbani</b></p>
+                        <small>Demo video in Dagbani</small>
+                        {configurations?.demo_video_dagbani
+                            && <p><a className='badge bg-primary' href={configurations.demo_video_dagbani}>Currently: {configurations.demo_video_dagbani}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setDemoVideoDagbani(e.target.files[0])}
+                            type="file"
+                        />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Dagaare</b></p>
+                        <small>Demo video in Dagaare</small>
+                        {configurations?.demo_video_dagaare
+                            && <p><a className='badge bg-primary' href={configurations.demo_video_dagaare}>Currently: {configurations.demo_video_dagaare}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setDemoVideoDagaare(e.target.files[0])}
+                            type="file"
+                        />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Ikposo</b></p>
+                        <small>Demo video in Ikposo</small>
+                        {configurations?.demo_video_ikposo
+                            && <p><a className='badge bg-primary' href={configurations.demo_video_ikposo}>Currently: {configurations.demo_video_ikposo}</a></p>
+                        }
+                        <input className="form-control"
+                            onChange={(e) => setDemoVideoIkposo(e.target.files[0])}
                             type="file"
                         />
                     </div>

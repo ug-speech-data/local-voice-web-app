@@ -60,16 +60,16 @@ function UsersCard() {
         setTotalPages(response["total_pages"])
         setNextPage(response["next_page"])
         setPreviousPage(response["previous_page"])
-    }, [isFetching])
+    }, [isFetching, response])
 
 
     useEffect(() => {
         getUsers(1)
-    }, [])
+    }, [getUsers])
 
     useEffect(() => {
         getUsers(page)
-    }, [page])
+    }, [page, getUsers])
 
     useEffect(() => {
         if (modalRef.current !== null && modal === null) {
@@ -81,7 +81,7 @@ function UsersCard() {
             const modal = new Modal(deletionModalRef.current, { keyboard: false })
             setDeletionAlertModal(modal)
         }
-    }, [])
+    }, [deleteAlertModal])
 
     const showEditUserModal = (user) => {
         setSelectedUser(user)
@@ -191,7 +191,7 @@ function UsersCard() {
                 isClosable: true,
             })
         }
-    }, [errorPuttingUser])
+    }, [errorPuttingUser, toast])
 
 
     useEffect(() => {
@@ -205,7 +205,7 @@ function UsersCard() {
                 isClosable: true,
             })
         }
-    }, [errorDeletingUser])
+    }, [errorDeletingUser, toast])
 
     useEffect(() => {
         const users = allUsers.filter(c => {
@@ -387,7 +387,7 @@ function UsersCard() {
                                     {!hidePassowordUpdate &&
                                         <div>
                                             {selectedUser && <p className="text-muted">Leave blank to keep current password</p>}
-                                            <PasswordInput value={password} setValue={setPassword} required={selectedUser == null} />
+                                            <PasswordInput value={password} setValue={setPassword} required={selectedUser === null} />
                                         </div>
                                     }
                                 </div>
@@ -431,12 +431,12 @@ function UsersCard() {
                             </div>
                             <div className="d-flex align-items-center mx-3">
                                 <button className="btn btn-sm btn-primary"
-                                    disabled={previousPage == null || isFetching}
+                                    disabled={previousPage === null || isFetching}
                                     onClick={() => setPage(page - 1)}
                                 >Previous</button>
                                 <span className="mx-2 badge bg-primary">page {page} of {totalPages}</span>
                                 <button className="btn btn-sm btn-primary"
-                                    disabled={nextPage == null || isFetching}
+                                    disabled={nextPage === null || isFetching}
                                     onClick={() => setPage(page + 1)}
                                 >Next</button>
                             </div>
@@ -475,7 +475,7 @@ function UsersCard() {
                                     Loading...
                                 </span>
                             </td></tr>}
-                            {(!isFetching && users?.length == 0) && <tr><td colSpan="7">No users</td></tr>}
+                            {(!isFetching && users?.length === 0) && <tr><td colSpan="7">No users</td></tr>}
                             {error && <tr><td colSpan="2">Error: {error.status}</td></tr>}
                             {users && users?.map((user, index) => (
                                 <tr key={index}>
