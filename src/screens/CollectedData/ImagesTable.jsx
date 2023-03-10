@@ -324,11 +324,17 @@ function ImagesTable() {
                                             <p>{selectedImage?.height} x {selectedImage?.width}</p>
                                         </div>
 
-
                                         <div className="my-3">
                                             <label htmlFor="name" className="form-label"><b>Category</b></label>
                                             <p>
                                                 <span className="badge bg-primary me-1">{selectedImage?.category}</span>
+                                            </p>
+                                        </div>
+
+                                        <div className="my-3">
+                                            <label htmlFor="name" className="form-label"><b>Date</b></label>
+                                            <p>
+                                                <span className="badge bg-primary me-1">{selectedImage?.created_at}</span>
                                             </p>
                                         </div>
 
