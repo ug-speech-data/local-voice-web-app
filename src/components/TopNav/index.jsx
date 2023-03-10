@@ -87,7 +87,7 @@ function TopNav() {
     return (
         <header className="top-nav d-flex justify-content-between align-items-center">
             <div className='d-flex align-items-center'>
-                <div className='d-md-none'>
+                <div className='side-bar-toggler'>
                     <button className="btn btn-light" onClick={toggleMenu}><i className="bi bi-list"></i></button>
                 </div>
                 <Link to="/" className='logo'>
@@ -97,7 +97,7 @@ function TopNav() {
                     </div>
                 </Link>
             </div>
-            <div className="d-md-none overlay"></div>
+            <div className="overlay"></div>
             <div className='nav-left'>
                 <Link key="/dashboard" to="/dashboard" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
                 <Link key="/tasks" to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>

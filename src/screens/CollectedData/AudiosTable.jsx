@@ -311,17 +311,9 @@ function AudiosTable() {
                                 <div className="d-flex align-items-center">
                                     <TextOverflow text={item.name} width={20} />
                                     {item.is_accepted ?
-                                        <ToolTip title="Add Audio" header={
-                                            (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
-                                        }>
-                                            This audio is ready for description. Click on more to view more details.
-                                        </ToolTip>
+                                        (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
                                         :
-                                        <ToolTip title="Add Audio" header={
-                                            (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>)
-                                        }>
-                                            This audio is pending approval. Click on more to view more details.
-                                        </ToolTip>
+                                        (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle" ></i></span>)
                                     }
                                 </div>
                             )

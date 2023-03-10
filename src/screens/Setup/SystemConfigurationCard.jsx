@@ -53,10 +53,11 @@ function SystemConfigurationCard() {
     const [demoVideoIkposo, setDemoVideoIkposo] = useState("")
     const [demoVideoDagbani, setDemoVideoDagbani] = useState("")
 
-    const { trigger: reshuffleImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios({ mainUrl: `${BASE_API_URI}/reshuffle-images/`, method: "POST" })
+    const { trigger: reshuffleAllImageIntoBatches, data: shufflingResponseData, error: errorReshuffling, isLoading: isReshuffling } = useAxios({ mainUrl: `${BASE_API_URI}/reshuffle-images/`, method: "POST" })
+    const { trigger: reshuffleSelectedImageIntoBatches, data: shufflingSelectResponseData, error: errorReshufflingSelected, isLoading: isReshufflingSelected } = useAxios({ mainUrl: `${BASE_API_URI}/reshuffle-images/?is_accepted=1`, method: "POST" })
     const { trigger: assignImageBatch, data: assignmentResponse, error: errorAssigning, isLoading: isAssigning } = useAxios({ mainUrl: `${BASE_API_URI}/assign-images-batch-to-user/`, method: "POST" })
 
-
+    // Shuffling
     useEffect(() => {
         if (shufflingResponseData) {
             toast({
@@ -68,6 +69,19 @@ function SystemConfigurationCard() {
             })
         }
     }, [shufflingResponseData])
+
+    // Shuffling selected
+    useEffect(() => {
+        if (shufflingSelectResponseData) {
+            toast({
+                position: 'top-center',
+                title: shufflingSelectResponseData.message,
+                status: 'info',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [shufflingSelectResponseData])
 
 
     useEffect(() => {
@@ -95,7 +109,6 @@ function SystemConfigurationCard() {
     }, [assignmentResponse])
 
 
-
     useEffect(() => {
         if (errorReshuffling) {
             toast({
@@ -108,6 +121,20 @@ function SystemConfigurationCard() {
             })
         }
     }, [errorReshuffling])
+
+
+    useEffect(() => {
+        if (errorReshufflingSelected) {
+            toast({
+                position: 'top-center',
+                title: `An error occurred`,
+                description: errorReshufflingSelected,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [errorReshufflingSelected])
 
     useEffect(() => {
         getGroups()
@@ -221,7 +248,7 @@ function SystemConfigurationCard() {
                 </div>
                 <div className="card-body overflow-scroll" style={{ background: "rgb(240,240,240)" }}>
                     <div className="form-group my-3 py-4 px-2 bg-white">
-                        <p><b>Maximum For Validation Per User</b></p>
+                        <p><b>Maximum Validation Per User</b></p>
                         <small>The maximum number of images a user can validate.</small>
                         <input
                             className="form-control"
@@ -288,14 +315,22 @@ function SystemConfigurationCard() {
 
                     <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Number of batches</b></p>
-                        <small>Number of batches into which to put images for enumerators.
-                            <button className="btn btn-sm btn-outline-primary"
-                                disabled={isReshuffling || ((configurations?.number_of_batches || "") !== numberOfBatches)}
-                                onClick={(e) => reshuffleImageIntoBatches()}>
+                        <small>Number of batches into which to put images for enumerators.</small>
+                        <p className='my-2'>
+                            <button className="btn btn-sm btn-outline-primary me-2"
+                                disabled={isReshuffling || isReshufflingSelected || ((configurations?.number_of_batches || "") !== numberOfBatches)}
+                                onClick={(e) => reshuffleAllImageIntoBatches()}>
                                 {isReshuffling && <Spinner size="sm" />}
-                                Reshuffle
+                                Reshuffle All Images
                             </button>
-                        </small>
+
+                            <button className="btn btn-sm btn-outline-primary"
+                                disabled={isReshuffling || isReshufflingSelected || ((configurations?.number_of_batches || "") !== numberOfBatches)}
+                                onClick={(e) => reshuffleSelectedImageIntoBatches()}>
+                                {isReshuffling && <Spinner size="sm" />}
+                                Reshuffle Selected Images
+                            </button>
+                        </p>
                         {((configurations?.number_of_batches || "") !== numberOfBatches) && <p className="mx-2 text-danger">Save *</p>}
                         <input className="form-control"
                             value={numberOfBatches}

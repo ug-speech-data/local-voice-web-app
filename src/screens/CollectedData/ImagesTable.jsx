@@ -16,6 +16,8 @@ import PageMeta from '../../components/PageMeta';
 
 
 function ImagesTable() {
+    const [triggerReload, setTriggerReload] = useState(0);
+
     const [deleteImage, { isLoading: isDeletingImage, error: errorDeletingImage }] = useDeleteImagesMutation()
     const [putImage, { isLoading: isPuttingImage, isSuccess: successPuttingImage, error: errorPuttingImage }] = useUpdateImagesMutation()
     const [getCategories, { data: response = [], isFetching: isFetchingCategories, error }] = useLazyGetCategoriesQuery()
@@ -193,6 +195,7 @@ function ImagesTable() {
                 duration: 2000,
                 isClosable: true,
             })
+            setTriggerReload((triggerReload) => triggerReload + 1);
         }
     }, [bulkActionResponseData])
 
@@ -384,6 +387,7 @@ function ImagesTable() {
 
             <div className="my-5 overflow-scroll">
                 <TableView
+                    reloadTrigger={triggerReload}
                     responseDataAttribute="images"
                     dataSourceUrl={`${BASE_API_URI}/collected-images/`}
                     urlParams={urlParams}
@@ -397,6 +401,7 @@ function ImagesTable() {
                     bulkActions={[
                         { name: "Approve Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
                         { name: "Reject Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
+                        { name: "Delete Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "delete") },
                     ]}
                     headers={[{
                         key: "name", value: "Name", render: (item) => {
@@ -415,7 +420,7 @@ function ImagesTable() {
                         key: "image_url", value: "Image", render: (item) => {
                             return (
                                 <div>
-                                    <img src={item.thumbnail} alt={item.name} className="profile-image" onClick={() => showEditImageModal(item)} />
+                                    <img src={item.thumbnail} alt={item.name} onClick={() => showEditImageModal(item)} />
                                 </div>
                             )
                         }

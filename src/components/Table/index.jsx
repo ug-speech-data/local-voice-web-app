@@ -4,7 +4,7 @@ import useAxios from '../../app/hooks/useAxios';
 
 import { Spinner } from '@chakra-ui/react';
 
-function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, urlParams = "", setUrlParams = () => null, newUpdate = null, filters = null, bulkActions = [] }) {
+function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, urlParams = "", setUrlParams = () => null, newUpdate = null, filters = null, bulkActions = [], reloadTrigger = 0 }) {
     const [originalData, setOriginalData] = useState([])
     const [displayedData, setDisplayedData] = useState([])
     const { trigger, data: responseData, error, isLoading } = useAxios()
@@ -53,7 +53,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
 
     useEffect(() => {
         trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
-    }, [])
+    }, [reloadTrigger])
 
     const reloadData = () => {
         trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
@@ -95,7 +95,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
     return (
         <Fragment>
             <div className="card-body" style={{ maxHeight: "60vh", overflowY: "auto" }}>
-                <div className="d-flex justify-content-between mb-3 py-3" style={{ position: "sticky", top: "0", background: "white", boxShadow: "0 0 1em 0.01em rgba(0,0,0,0.1)" }}>
+                <div className="d-flex justify-content-between mb-3 p-3 mx-auto" style={{ position: "sticky", top: "0", background: "white", boxShadow: "0 0 1em 0.01em rgba(0,0,0,0.1)" }}>
                     <div className="d-flex">
                         <div className="d-flex align-items-center">
                             <label htmlFor="search" className="form-label me-2">Search</label>
@@ -120,7 +120,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                             >
                                 <i className="bi bi-skip-backward"></i>
                             </button>
-                            <span className="mx-2">Page {page} of {totalPages}</span>
+                            <span className="mx-2 d-flex"><span className="me-1">Page</span> <span className="me-1">{page}</span> <span className="me-1">of</span> <span className="me-1">{totalPages}</span></span>
                             {totalPages > 1 ?
                                 <span className="me-1 d-flex align-items-center">
                                     <input type="number" className="form-control d-inline" value={customPage} onChange={(e) => {
@@ -227,14 +227,14 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                 Loading...
                             </span>
                         </td></tr>}
-                        {(!isLoading && displayedData?.length === 0) && <tr><td colSpan={headers?.length || 7}>
+                        {(!isLoading && displayedData?.length === 0) && <tr><td colSpan={(headers?.length || 7) + 2}>
                             <p className="text-center">No data to display</p>
                         </td></tr>}
                         {!isLoading && error && <tr><td colSpan={headers?.length || 7}><p className="text-center text-warning">Error: {error}</p> </td></tr>}
 
                         {displayedData?.map((item, index) => {
                             return (
-                                <tr key={index}>
+                                <tr key={index} style={{ height: "5em", verticalAlign: "middle" }}>
                                     {bulkActions?.length > 0 && <td>
                                         <input type="checkbox" className="form-check-input" id="bulk_select"
                                             onChange={(e) => {
@@ -250,7 +250,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                     <td>{index + 1}</td>
                                     {headers?.map(({ key, render }, headerIndex) => {
                                         return (
-                                            <td key={headerIndex}>
+                                            <td className=" align-items-center" key={headerIndex}>
                                                 {render ? render(item) : typeof item[key] != 'object' ? <span>{item[key]}</span> : "N/A"}
                                             </td>
                                         )
