@@ -193,6 +193,11 @@ function ImageValidation() {
                                     <p className='m-0 p-0'><b>Size</b></p>
                                     <p className='m-0 p-0'>{currentImage.height} x {currentImage.width}</p>
                                 </div>
+
+                                <div className='my-2 overflow-scroll'>
+                                    <p className='m-0 p-0'><b>Date</b></p>
+                                    <p className='m-0 p-0'>{currentImage.created_at}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
