@@ -75,7 +75,7 @@ function Transcription() {
                 <div className="my-5">
                     <p className='text-warning text-center'><b>No more audios to transcribe</b></p>
                     <p className='text-center my-3'><button className='btn btn-primary' onClick={() => setOffset(-1)}>
-                        {isFetchingAudio && <Spinner />}
+                        {isFetchingAudio && <Spinner size={"sm"} />}
                         Reload
                     </button></p>
                 </div> : null

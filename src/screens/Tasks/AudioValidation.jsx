@@ -89,7 +89,7 @@ function AudioValidation() {
                 <div className="my-5">
                     <p className='text-warning text-center'><b>No more audios to validate</b></p>
                     <p className='text-center my-3'><button className='btn btn-primary' onClick={() => setOffset(-1)}>
-                        {isFetchingAudios && <Spinner />}
+                        {isFetchingAudios && <Spinner size={"sm"} />}
                         Reload
                     </button></p>
                 </div> : null

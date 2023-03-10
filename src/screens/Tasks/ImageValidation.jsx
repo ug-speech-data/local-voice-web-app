@@ -120,7 +120,7 @@ function ImageValidation() {
                     <p className='text-center my-3'><button className='btn btn-primary'
                         disabled={isFetchingImages}
                         onClick={() => setOffset(-Math.abs(offset) - 1)}>
-                        {isFetchingImages && <Spinner />}
+                        {isFetchingImages && <Spinner size={"sm"} />}
                         Reload
                     </button></p>
                 </div> : null
