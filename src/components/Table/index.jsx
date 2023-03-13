@@ -120,7 +120,8 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                             >
                                 <i className="bi bi-skip-backward"></i>
                             </button>
-                            <span className="mx-2 d-flex"><span className="me-1">Page</span> <span className="me-1">{page}</span> <span className="me-1">of</span> <span className="me-1">{totalPages}</span></span>
+                            <span className="mx-2 d-flex"><span className="me-1">Page</span> <span>{page}</span> <span className="mx-1">of</span> <span>{totalPages}</span></span>
+                            (<b><span className="me-1">{totalItems}</span><span>items</span></b>)
                             {totalPages > 1 ?
                                 <span className="me-1 d-flex align-items-center">
                                     <input type="number" className="form-control d-inline" value={customPage} onChange={(e) => {
