@@ -12,7 +12,7 @@ function Dashboard() {
 
     useEffect(() => {
         getDashboardStatics()
-    }, [getDashboardStatics])
+    }, [])
 
     useEffect(() => {
         if (Boolean(responseData?.statistics)) {

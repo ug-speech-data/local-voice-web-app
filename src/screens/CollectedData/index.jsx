@@ -6,7 +6,6 @@ import AudiosTable from "./AudiosTable";
 import ImagesTable from "./ImagesTable";
 import { Fragment } from "react";
 import TranscriptionsTable from "./TranscriptionsTable";
-import ParticipantsTable from "./ParticipantsTable";
 import { Modal } from 'bootstrap';
 import TagInput from '../../components/TagInput';
 import useAxios from '../../app/hooks/useAxios';
@@ -135,11 +134,10 @@ function CollectedData() {
                         </button>
                     </div>
                 </div>
-                <TabLayout tabs={["Images", "Audios", "Transcriptions", "Participants"]}>
+                <TabLayout tabs={["Images", "Audios", "Transcriptions"]}>
                     <ImagesTable />
                     <AudiosTable />
                     <TranscriptionsTable />
-                    <ParticipantsTable />
                 </TabLayout>
             </div>
             <Footer />

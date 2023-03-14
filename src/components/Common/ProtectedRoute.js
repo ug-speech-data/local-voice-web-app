@@ -28,19 +28,6 @@ function ProtectedRoute({ children, permissions = [] }) {
         })()
     }, [])
 
-    useEffect(() => {
-        if (error) {
-            toast({
-                position: "top-center",
-                title: `Error: ${error.originalStatus}`,
-                description: "Could not fetch configurations.",
-                status: "error",
-                duration: 1000,
-                isClosable: true,
-            })
-        }
-    }, [error])
-
     if (!hasPermission)
         return <Error401Screen />
     return user ? children : <Navigate to="/login" />;

@@ -47,10 +47,10 @@ function LoginScreen() {
                     duration: 2000,
                     isClosable: true,
                 })
-                setUser(response['user'])
                 dispatch(setStoreUser(response['user']));
                 dispatch(setToken(setToken['token']));
                 dispatch(setUserPermissions(response['user_permissions']))
+                setUser(response['user'])
             }
         } catch (err) {
             toast({

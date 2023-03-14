@@ -249,6 +249,11 @@ function AudiosTable() {
                                     <p>{selectedAudio?.image_batch_number}</p>
                                 </div>
 
+                                <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Date</b></label>
+                                    <p>{selectedAudio?.created_up}</p>
+                                </div>
+
                                 <div className="d-flex align-items-center">
                                     <AudioPlayer
                                         src={selectedAudio?.file}

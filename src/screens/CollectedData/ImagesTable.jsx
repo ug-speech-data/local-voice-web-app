@@ -466,8 +466,7 @@ function ImagesTable() {
                             )
                         }
                     }]}
-                >
-                </TableView>
+                />
             </div>
         </section >
     );

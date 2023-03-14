@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import UserPayment from './UserPayment';
 import TransactionHistory from './TransactionHistory';
 import BalanceWidget from "../../components/BalanceWidget";
+import ParticipantsTable from "./ParticipantsTable";
 
 
 function Payment() {
@@ -22,9 +23,10 @@ function Payment() {
                         <BalanceWidget />
                     </div>
                 </div>
-                <TabLayout tabs={["Users", "History"]}>
+                <TabLayout tabs={["Users", "Participants", "History"]}>
                     <UserPayment />
                     <TransactionHistory />
+                    <ParticipantsTable />
                 </TabLayout>
             </div>
             <Footer />
