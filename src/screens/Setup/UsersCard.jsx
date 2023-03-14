@@ -10,8 +10,11 @@ import { useSelector } from 'react-redux';
 import TagInput from '../../components/TagInput';
 import PasswordInput from '../../components/PasswordInput';
 import SelectInput from '../../components/SelectInput';
+import TableView from '../../components/Table';
+import { BASE_API_URI } from '../../utils/constants';
 
 function UsersCard() {
+    const [triggerReload, setTriggerReload] = useState(0);
     const [getUsers, { data: response = [], isFetching, error }] = useLazyGetUsersQuery()
     const modalRef = useRef(null);
     const deletionModalRef = useRef(null);
@@ -21,6 +24,7 @@ function UsersCard() {
     const toast = useToast()
     const [users, setUsers] = useState([])
     const [hidePassowordUpdate, setHidePassowordUpdate] = useState(true);
+    const [urlParams, setUrlParams] = useState("");
 
     const [putUser, { isLoading: isPuttingUser, error: errorPuttingUser }] = usePutUsersMutation()
     const [deleteUser, { isLoading: isDeletingUser, error: errorDeletingUser }] = useDeleteUsersMutation()
@@ -124,6 +128,7 @@ function UsersCard() {
                 duration: 2000,
                 isClosable: true,
             })
+            setTriggerReload((triggerReload) => triggerReload + 1);
         } else {
             toast({
                 position: 'top-center',
@@ -168,6 +173,7 @@ function UsersCard() {
         if (user !== undefined) {
             setUsers([user, ...users.filter(c => c.id !== user.id)])
             modal?.hide()
+            setTriggerReload((triggerReload) => triggerReload + 1);
         } else {
             toast({
                 position: 'top-center',
@@ -420,87 +426,53 @@ function UsersCard() {
                     </div>
                 </div>
                 <div className="card-body overflow-scroll">
-                    <div className="d-flex justify-content-between mb-3">
-                        <div className="d-flex">
-                            <div className="d-flex align-items-center">
-                                <label htmlFor="search" className="form-label me-2">Search</label>
-                                <input type="text" className="form-control" id="search" aria-describedby="search"
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Search"
-                                    value={search} />
-                            </div>
-                            <div className="d-flex align-items-center mx-3">
-                                <button className="btn btn-sm btn-primary"
-                                    disabled={previousPage === null || isFetching}
-                                    onClick={() => setPage(page - 1)}
-                                >Previous</button>
-                                <span className="mx-2 badge bg-primary">page {page} of {totalPages}</span>
-                                <button className="btn btn-sm btn-primary"
-                                    disabled={nextPage === null || isFetching}
-                                    onClick={() => setPage(page + 1)}
-                                >Next</button>
-                            </div>
-                        </div>
-                        <div className="d-flex">
-                            <div className="d-flex align-items-center">
-                                <label htmlFor="search" className="form-label me-2">Sort</label>
-                                <select className="form-select" aria-label="Default select example"
-                                    onChange={(e) => setSort(e.target.value)}
-                                    value={sort}>
-                                    <option value="surname">Surname</option>
-                                    <option value="other_names">Other Names</option>
-                                    <option value="phone">Phone</option>
-                                    <option value="email_address">Email Address</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                    <TableView
+                        reloadTrigger={triggerReload}
+                        responseDataAttribute="users"
+                        dataSourceUrl={`${BASE_API_URI}/users/`}
+                        urlParams={urlParams}
+                        setUrlParams={setUrlParams}
+                        filters={[
+                            ...(groups?.map(group => { return { key: `groups__name:${group.name}`, value: `In ${(group.name || "").toLowerCase()}` } }) || []).sort()
+                        ]}
+                        bulkActions={[
 
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Photo</th>
-                                <th>Surname</th>
-                                <th>Other Names</th>
-                                <th>Number</th>
-                                <th>Email Address</th>
-                                <th>Groups</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {isFetching && <tr><td colSpan="7">
-                                <span className="text-center d-flex justify-content-center">
-                                    <Spinner />
-                                    Loading...
-                                </span>
-                            </td></tr>}
-                            {(!isFetching && users?.length === 0) && <tr><td colSpan="7">No users</td></tr>}
-                            {error && <tr><td colSpan="2">Error: {error.status}</td></tr>}
-                            {users && users?.map((user, index) => (
-                                <tr key={index}>
-                                    <td><img src={user.photo_url} alt="" className="profile-image" /></td>
-                                    <td>{user.surname}</td>
-                                    <td>{user.other_names}</td>
-                                    <td>{user.phone}</td>
-                                    <td>{user.email_address}</td>
-                                    <td>{user.groups?.map((group, index) => {
-                                        return <span key={index} className="badge bg-primary">{group}</span>
-                                    })}
-                                    </td>
-                                    <td className='d-flex'>
-                                        <button className="mx-1 btn btn-outline-primary btn-sm d-flex"
-                                            onClick={() => showEditUserModal(user)}>
-                                            <i className="bi bi-pen me-1"></i> Edit
+                        ]}
+                        headers={[{
+                            key: "photo", value: "Photo"
+                        }, {
+                            key: "surname", value: "Surname"
+                        }, {
+                            key: "other_names", value: "Other Names"
+                        }, {
+                            key: "email_address", value: "Email Address"
+                        }, {
+                            key: "groups", value: "Group", render: (item) => {
+                                return (
+                                    <div>
+                                        {item.groups?.map((group, index) => (
+                                            <span key={index} className="badge bg-primary">{group}</span>
+                                        ))}
+                                    </div>
+                                )
+                            }
+                        }, {
+                            value: "Actions", render: (item) => {
+                                return (
+                                    <div className="d-flex">
+                                        <button className="btn btn-sm btn-primary me-1 d-flex" onClick={() => showEditUserModal(item)}>
+                                            <i className="bi bi-list me-1"></i>
+                                            More
                                         </button>
-                                        <button className="mx-1 btn btn-outline-primary btn-sm d-flex"
-                                            onClick={() => showDeleteUserAlert(user)}
-                                        ><i className="bi bi-trash me-1"></i> Delete</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                        <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showDeleteUserAlert(item)}>
+                                            <i className="bi bi-trash me-1"></i>
+                                            Delete
+                                        </button>
+                                    </div>
+                                )
+                            }
+                        }]}
+                    />
                 </div>
             </div>
         </Fragment >

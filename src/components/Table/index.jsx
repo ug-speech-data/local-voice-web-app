@@ -222,10 +222,10 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                         </tr>
                     </thead>
                     <tbody>
-                        {isLoading && <tr><td colSpan={headers?.length || 7}>
-                            <span className="text-center d-flex justify-content-center">
-                                <Spinner />
-                                Loading...
+                        {isLoading && <tr><td colSpan={(headers?.length || 7) + 2}>
+                            <span className="text-center d-flex justify-content-center align-items-center">
+                                <Spinner size={"sm"} />
+                                <span className="mx-2">Loading...</span>
                             </span>
                         </td></tr>}
                         {(!isLoading && displayedData?.length === 0) && <tr><td colSpan={(headers?.length || 7) + 2}>
