@@ -251,7 +251,7 @@ function AudiosTable() {
 
                                 <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Date</b></label>
-                                    <p>{selectedAudio?.created_up}</p>
+                                    <p>{selectedAudio?.created_at}</p>
                                 </div>
 
                                 <div className="d-flex align-items-center">
