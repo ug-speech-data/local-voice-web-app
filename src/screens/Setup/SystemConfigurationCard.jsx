@@ -34,10 +34,15 @@ function SystemConfigurationCard() {
     const [groups, setGroups] = useState([])
     const [enumeratorsGroup, setEnumeratorsGroup] = useState(null)
     const [validatorsGroup, setValidatorsGroup] = useState(null)
-    // const [demoVideo, setDemoVideo] = useState("")
+
+    const [allowSavingLessThanRequiredPerParticipant, setAllowSavingLessThanRequiredPerParticipant] = useState(false)
+    const [allowToRecordMoreThanRequiredPerParticipant, setAllowToRecordMoreThanRequiredPerParticipant] = useState(false)
+    const [numberofAudiosPerParticipant, setNumberofAudiosPerParticipant] = useState(0)
+
     const [androidAPK, setAndroidAPK] = useState("")
     const [participantPrivacyStatement, setParticipantPrivacyStatement] = useState("")
     const [maxImageForValidationPerUser, setMaxImageForValidationPerUser] = useState(0)
+    const [maxAudioValidationPerUser, setMaxAudioValidationPerUser] = useState(0)
 
     // Audios
     const [participantPrivacyStatementAudioEwe, setParticipantPrivacyStatementAudioEwe] = useState("")
@@ -165,6 +170,7 @@ function SystemConfigurationCard() {
         formData.append("individual_audio_aggregators_amount_per_audio", individualAudioAggregatorsAmountPerAudio);
         formData.append("participant_privacy_statement", participantPrivacyStatement);
         formData.append("max_image_for_validation_per_user", maxImageForValidationPerUser);
+        formData.append("max_audio_validation_per_user", maxAudioValidationPerUser);
 
         // Audios
         formData.append("participant_privacy_statement_audio_ewe", participantPrivacyStatementAudioEwe);
@@ -172,6 +178,10 @@ function SystemConfigurationCard() {
         formData.append("participant_privacy_statement_audio_dagaare", participantPrivacyStatementAudioDagaare);
         formData.append("participant_privacy_statement_audio_ikposo", participantPrivacyStatementAudioIkposo);
         formData.append("participant_privacy_statement_audio_dagbani", participantPrivacyStatementAudioDagbani);
+
+        formData.append("allow_saving_less_than_required_per_participant", allowSavingLessThanRequiredPerParticipant);
+        formData.append("allow_recording_more_than_required_per_participant", allowToRecordMoreThanRequiredPerParticipant);
+        formData.append("number_of_audios_per_participant", numberofAudiosPerParticipant);
 
         // Demo video
         formData.append("demo_video_ewe", demoVideoEwe);
@@ -228,6 +238,10 @@ function SystemConfigurationCard() {
             setIndividualAudioAggregatorsAmountPerAudio(configurations?.individual_audio_aggregators_amount_per_audio || 0);
             setParticipantPrivacyStatement(configurations?.participant_privacy_statement || "");
             setMaxImageForValidationPerUser(configurations?.max_image_for_validation_per_user || 0)
+            setAllowToRecordMoreThanRequiredPerParticipant(configurations?.allow_recording_more_than_required_per_participant || false)
+            setAllowSavingLessThanRequiredPerParticipant(configurations?.allow_saving_less_than_required_per_participant || false)
+            setNumberofAudiosPerParticipant(configurations?.number_of_audios_per_participant || 0)
+            setMaxAudioValidationPerUser(configurations?.max_audio_validation_per_user || 0)
         }
     }, [configurations])
 
@@ -248,12 +262,22 @@ function SystemConfigurationCard() {
                 </div>
                 <div className="card-body overflow-scroll" style={{ background: "rgb(240,240,240)" }}>
                     <div className="form-group my-3 py-4 px-2 bg-white">
-                        <p><b>Maximum Validation Per User</b></p>
+                        <p><b>Maximum Image Validation Per User</b></p>
                         <small>The maximum number of images a user can validate.</small>
                         <input
                             className="form-control"
                             value={maxImageForValidationPerUser}
                             onChange={(e) => setMaxImageForValidationPerUser(e.target.value)}
+                            type="number" min={1} />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Maximum Audioi Validation Per User</b></p>
+                        <small>The maximum number of audios a user can validate.</small>
+                        <input
+                            className="form-control"
+                            value={maxAudioValidationPerUser}
+                            onChange={(e) => setMaxAudioValidationPerUser(e.target.value)}
                             type="number" min={1} />
                     </div>
 
@@ -284,14 +308,34 @@ function SystemConfigurationCard() {
                             onChange={(e) => setRequiredImageValidationCount(e.target.value)}
                             min={1} max={100} step={1} />
                     </div>
+
                     <div className="form-group my-3 py-4 px-2 bg-white">
-                        <p><b>Image Description Count</b></p>
-                        <small>Required number of description for each image.</small>
+                        <p><b>Number of recodings per participant</b></p>
+                        <small>Number of audios description each participant is required to do.</small>
                         <input className="form-control"
-                            value={requiredImageDescriptionCount}
+                            value={numberofAudiosPerParticipant}
                             type="number"
-                            onChange={(e) => setRequiredImageDescriptionCount(e.target.value)}
-                            min={1} max={100} step={1} />
+                            onChange={(e) => setNumberofAudiosPerParticipant(e.target.value)}
+                            min={1} max={10000} step={1} />
+                    </div>
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Allow Saving Less than Required</b></p>
+                        <small>Allow participant to save recordings less than 120 per participant.</small>
+                        <br />
+                        <input className="form-check-input"
+                            checked={allowSavingLessThanRequiredPerParticipant}
+                            type="checkbox"
+                            onChange={(e) => setAllowSavingLessThanRequiredPerParticipant(e.target.checked)} />
+                    </div>
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Allow Recording More than {numberofAudiosPerParticipant}</b></p>
+                        <small>Allow participant to record more than {numberofAudiosPerParticipant} audio descriptions.</small>
+                        <br />
+                        <input className="form-check-input"
+                            checked={allowToRecordMoreThanRequiredPerParticipant}
+                            type="checkbox"
+                            onChange={(e) => setAllowToRecordMoreThanRequiredPerParticipant(e.target.checked)} />
                     </div>
                     <div className="form-group my-3 py-4 px-2 bg-white">
                         <p><b>Audio Validation Count</b></p>
@@ -502,9 +546,6 @@ function SystemConfigurationCard() {
                             type="file"
                         />
                     </div>
-
-
-
 
 
                     <h4 className="h4 mt-3">Demo Videos</h4>

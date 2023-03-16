@@ -25,8 +25,8 @@ function Payment() {
                 </div>
                 <TabLayout tabs={["Users", "Participants", "History"]}>
                     <UserPayment />
-                    <TransactionHistory />
                     <ParticipantsTable />
+                    <TransactionHistory />
                 </TabLayout>
             </div>
             <Footer />

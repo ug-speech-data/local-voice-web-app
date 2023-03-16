@@ -299,8 +299,8 @@ function ParticipantsTable() {
                                         value={network} onChange={(e) => setNetwork(e.target.value)}>
                                         <option value="">None</option>
                                         <option value="MTN" >MTN</option>
-                                        <option value="VOD" >VODAFONE</option>
-                                        <option value="TIG" >AIRTEL TIGO</option>
+                                        <option value="VODAFONE" >VODAFONE</option>
+                                        <option value="AIRTELTIGO" >AIRTELTIGO</option>
                                     </select>
                                 </div>
 
