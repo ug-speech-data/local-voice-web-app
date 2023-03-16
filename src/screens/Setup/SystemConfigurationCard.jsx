@@ -272,7 +272,7 @@ function SystemConfigurationCard() {
                     </div>
 
                     <div className="form-group my-3 py-4 px-2 bg-white">
-                        <p><b>Maximum Audioi Validation Per User</b></p>
+                        <p><b>Maximum Audios Validation Per User</b></p>
                         <small>The maximum number of audios a user can validate.</small>
                         <input
                             className="form-control"
