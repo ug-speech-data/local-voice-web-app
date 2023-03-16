@@ -301,8 +301,8 @@ function AudiosTable() {
                         { key: "is_accepted:0", value: "Not accepted" },
                         { key: "is_accepted:0:validations", value: "Validation Conflict" },
                         { key: "locale:ak_gh", value: "Akan" },
-                        { key: "locale:dag_gh", value: "Dagbani" },
-                        { key: "locale:dga_gh", value: "Dagaare" },
+                        { key: "locale:dga_gh", value: "Dagbani" },
+                        { key: "locale:dag_gh", value: "Dagaare" },
                         { key: "locale:ee_gh", value: "Ewe" },
                         { key: "locale:kpo_gh", value: "Ikposo" },
                     ]}

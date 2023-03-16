@@ -327,7 +327,6 @@ function ParticipantsTable() {
                 </div>
             </div>
 
-
             <div className="my-5 overflow-scroll">
                 <TableView
                     responseDataAttribute="participants"
