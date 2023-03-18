@@ -306,10 +306,13 @@ function ParticipantsTable() {
                                 </div>
 
                                 <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Date</b></label>
+                                    <p>{selectedParticipant?.created_at}</p>
+                                </div>
+
+                                <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Transaction ID</b></label>
-                                    <p>
-                                        {selectedParticipant?.transaction?.transaction_id}
-                                    </p>
+                                    <p>{selectedParticipant?.transaction?.transaction_id}</p>
                                 </div>
 
                                 <div className="my-3">
