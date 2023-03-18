@@ -332,7 +332,12 @@ function ParticipantsTable() {
                     responseDataAttribute="participants"
                     dataSourceUrl={`${BASE_API_URI}/collected-participants/`}
                     newUpdate={newUpdate}
-                    filters={[{ key: "paid:0", value: "Not paid" }, { key: "paid:1", value: "Paid" }]}
+                    filters={[
+                        { key: "paid:0", value: "Not paid" },
+                        { key: "transaction__status:pending", value: "Transaction pending" },
+                        { key: "transaction__status:success", value: "Transaction succeeded" },
+                        { key: "transaction__status:failed", value: "Transaction failed" },
+                    ]}
                     bulkActions={[
                         { name: "Pay selected", action: (bulkSelectedIds) => showBulkPayConfirmationModal(bulkSelectedIds) },
                         { name: "Check status of selected", action: (bulkSelectedIds) => handleBulkParticipantAction("payment_status_check") },
@@ -353,7 +358,12 @@ function ParticipantsTable() {
                             return (
                                 <span>
                                     {item?.transaction === null && <span className="badge bg-warning">No payment</span>}
-                                    <span className='badge bg-primary'>{item?.transaction?.status}</span>
+                                    {item?.transaction?.status == "pending" ?
+                                        <span className='badge bg-warning'>{item?.transaction?.status}</span> :
+                                        item?.transaction?.status == "succes" ?
+                                            <span className='badge bg-sucess'>{item?.transaction?.status}</span> :
+                                            <span className='badge bg-danger'>{item?.transaction?.status}</span>
+                                    }
                                 </span>
                             )
                         }
