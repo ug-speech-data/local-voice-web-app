@@ -154,7 +154,8 @@ function ParticipantsTable() {
 
     // Bulk actions
     const { trigger: executeBulkParticipantAction, data: bulkActionResponseData, error: bulkActionError, isLoading: isSubmittingBulkAction } = useAxios({ method: "POST" })
-    function handleBulkParticipantAction(action) {
+    function handleBulkParticipantAction(action, ids) {
+        toast.close("submitting")
         toast({
             id: "submitting",
             title: `Executing actions for ${selectedIds.length} audios`,
@@ -165,7 +166,7 @@ function ParticipantsTable() {
         })
         executeBulkParticipantAction(
             `${BASE_API_URI}/participants-bulk-actions/`,
-            { ids: selectedIds, action: action }
+            { ids: ids, action: action }
         )
     }
 
@@ -175,6 +176,7 @@ function ParticipantsTable() {
     }
 
     useEffect(() => {
+        toast.close("submitting")
         if (bulkActionResponseData?.message) {
             toast({
                 title: `Submitted`,
@@ -185,7 +187,6 @@ function ParticipantsTable() {
                 isClosable: true,
             })
         }
-        toast.close("submitting")
         confirmationModal?.hide()
     }, [bulkActionResponseData])
 
@@ -224,7 +225,7 @@ function ParticipantsTable() {
                                 <div className="my-3 d-flex justify-content-center">
                                     <button className="btn btn-primary"
                                         disabled={isSubmittingBulkAction}
-                                        onClick={() => handleBulkParticipantAction("pay")}
+                                        onClick={() => handleBulkParticipantAction("pay", selectedIds)}
                                     >
                                         {isSubmittingBulkAction && <span className="mx-2"><Spinner /></span>}
                                         Yes
@@ -347,7 +348,12 @@ function ParticipantsTable() {
                     ]}
                     bulkActions={[
                         { name: "Pay selected", action: (bulkSelectedIds) => showBulkPayConfirmationModal(bulkSelectedIds) },
-                        { name: "Check status of selected", action: (bulkSelectedIds) => handleBulkParticipantAction("payment_status_check") },
+                        {
+                            name: "Check status of selected", action: (bulkSelectedIds) => {
+                                setSelectedIds(bulkSelectedIds)
+                                handleBulkParticipantAction("payment_status_check", bulkSelectedIds)
+                            }
+                        },
                     ]}
                     headers={[{
                         key: "fullname", value: "Name",
