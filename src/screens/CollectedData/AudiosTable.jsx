@@ -8,7 +8,6 @@ import {
 } from '../../features/resources/resources-api-slice';
 import { Spinner, useToast } from '@chakra-ui/react';
 import TextOverflow from '../../components/TextOverflow';
-import ToolTip from '../../components/ToolTip';
 import { BASE_API_URI } from '../../utils/constants';
 import AudioPlayer from "../../components/AudioPlayer";
 import useAxios from '../../app/hooks/useAxios';
@@ -19,6 +18,10 @@ function AudiosTable() {
     const [deleteAudio, { isLoading: isDeletingAudio, error: errorDeletingAudio }] = useDeleteAudiosMutation()
     const [putAudio, { isLoading: isPuttingAudio, isSuccess: successPuttingAudio, error: errorPuttingAudio }] = useUpdateAudiosMutation()
 
+    const { trigger: getEnumerators, data: enumeratorResponse, error: errorGettingEnumerators, isLoading: gettingEnumerators } = useAxios({ mainUrl: BASE_API_URI + '/get-enumerators/' })
+
+
+
     const deletionModalRef = useRef(null);
     const editAudioModalRef = useRef(null);
     const toast = useToast()
@@ -28,6 +31,7 @@ function AudiosTable() {
     const [editAudioModal, setEditAudioModal] = useState(null);
     const [newUpdate, setNewUpdate] = useState(null);
     const [isAudioBuffering, setIsAudioBuffering] = useState(true)
+    const [enumerators, setEnumerators] = useState([])
 
     // Form input
     const [name, setName] = useState('');
@@ -188,6 +192,17 @@ function AudiosTable() {
         }
     }, [bulkActionError])
 
+    // Getting enumerators
+    useEffect(() => {
+        getEnumerators()
+    }, [])
+
+    useEffect(() => {
+        if (Boolean(enumeratorResponse?.enumerators)) {
+            setEnumerators(enumeratorResponse.enumerators)
+        }
+    }, [enumeratorResponse])
+
 
     return (
         <Fragment>
@@ -300,11 +315,17 @@ function AudiosTable() {
                         { key: "is_accepted:1", value: "Accepted" },
                         { key: "is_accepted:0", value: "Not accepted" },
                         { key: "is_accepted:0:validations", value: "Validation Conflict" },
+
+                        { value: "---------------------" },
                         { key: "locale:ak_gh", value: "Akan" },
                         { key: "locale:dga_gh", value: "Dagbani" },
                         { key: "locale:dag_gh", value: "Dagaare" },
                         { key: "locale:ee_gh", value: "Ewe" },
                         { key: "locale:kpo_gh", value: "Ikposo" },
+                        { value: "---------------------" },
+
+                        ...(enumerators?.map(enumerator => { return { key: `submitted_by__id:${enumerator.id}`, value: `Recorded by '${enumerator.fullname}'` } }) || []).sort()
+
                     ]}
                     bulkActions={[
                         { name: "Approve Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },

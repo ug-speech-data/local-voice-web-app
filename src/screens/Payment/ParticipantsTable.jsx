@@ -335,7 +335,7 @@ function ParticipantsTable() {
                     filters={[{ key: "paid:0", value: "Not paid" }, { key: "paid:1", value: "Paid" }]}
                     bulkActions={[
                         { name: "Pay selected", action: (bulkSelectedIds) => showBulkPayConfirmationModal(bulkSelectedIds) },
-                        { name: "Check Status of selected", action: (bulkSelectedIds) => handleBulkParticipantAction("payment_status_check") },
+                        { name: "Check status of selected", action: (bulkSelectedIds) => handleBulkParticipantAction("payment_status_check") },
                     ]}
                     headers={[{
                         key: "fullname", value: "Name",
@@ -349,9 +349,12 @@ function ParticipantsTable() {
                     }, {
                         key: "amount", value: "Amount (GHC)"
                     }, {
-                        key: "paid", value: "Paid", render: (item) => {
+                        key: "paid", value: "Payment", render: (item) => {
                             return (
-                                <span className={item.paid ? 'badge bg-success' : 'badge bg-danger'}>{item.paid ? "Yes" : "No"}</span>
+                                <span>
+                                    {item?.transaction === null && <span className="badge bg-warning">No payment</span>}
+                                    <span className='badge bg-primary'>{item?.transaction?.status}</span>
+                                </span>
                             )
                         }
                     },
