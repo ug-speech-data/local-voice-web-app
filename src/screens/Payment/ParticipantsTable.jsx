@@ -367,7 +367,7 @@ function ParticipantsTable() {
                                     {item?.transaction === null && <span className="badge bg-warning">No payment</span>}
                                     {item?.transaction?.status == "pending" ?
                                         <span className='badge bg-warning'>{item?.transaction?.status}</span> :
-                                        item?.transaction?.status == "succes" ?
+                                        item?.transaction?.status == "sucess" ?
                                             <span className='badge bg-sucess'>{item?.transaction?.status}</span> :
                                             <span className='badge bg-danger'>{item?.transaction?.status}</span>
                                     }
