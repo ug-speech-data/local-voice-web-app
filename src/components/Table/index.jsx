@@ -104,43 +104,6 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                 placeholder="Search"
                                 value={search} />
                         </div>
-                        <div className="d-flex align-items-center">
-                            <select className="form-select" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)} defaultValue={page}>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="300">300</option>
-                            </select>
-                        </div>
-                        <div className="d-flex align-items-center mx-3">
-                            <button className="btn btn-sm btn-primary"
-                                disabled={previousPage === null || isLoading}
-                                onClick={() => setPage(page - 1)}
-                            >
-                                <i className="bi bi-skip-backward"></i>
-                            </button>
-                            <span className="mx-2 d-flex"><span className="me-1">Page</span> <span>{page}</span> <span className="mx-1">of</span> <span>{totalPages}</span></span>
-                            (<b><span className="me-1">{totalItems}</span><span>items</span></b>)
-                            {totalPages > 1 ?
-                                <span className="me-1 d-flex align-items-center">
-                                    <input type="number" className="form-control d-inline" value={customPage} onChange={(e) => {
-                                        if (e.target.value < (totalPages + 1) && !isNaN(e.target.value) && e.target.value > 0 || e.target.value == "") {
-                                            setCustomPage(e.target.value)
-                                        }
-                                    }} style={{ width: "3em" }
-                                    } min={1} max={totalPages || 1} />
-                                    {customPage != page && Boolean(customPage) ? <button className="btn btn-sm btn-outline-primary" onClick={() => setPage(customPage)}><i className="bi bi-search"></i></button> : ""}
-                                </span>
-                                : ""
-                            }
-                            <button className="btn btn-sm btn-primary"
-                                disabled={nextPage === null || isLoading}
-                                onClick={() => setPage(page + 1)}
-                            >
-                                <i className="bi bi-skip-forward"></i>
-                            </button>
-                        </div>
                     </div>
 
                     <div className="d-flex align-items-center justify-content-end">
@@ -188,7 +151,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                     </div>
                 </div>
 
-                <table className="table">
+                <table className="table mb-2">
                     <thead>
                         <tr>
                             {bulkActions?.length > 0 && <th>
@@ -260,14 +223,45 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                             )
                         })}
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colSpan={(headers?.length || 7) + 2}>
-                                <b><p>{totalItems} items found</p></b>
-                            </td>
-                        </tr>
-                    </tfoot>
                 </table>
+            </div>
+
+            <div className="d-flex align-items-center mx-3 my-3">
+                <div className="d-flex align-items-center me-2">
+                    <select className="form-select" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)} defaultValue={page}>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="300">300</option>
+                    </select>
+                </div>
+                <button className="btn btn-sm btn-primary"
+                    disabled={previousPage === null || isLoading}
+                    onClick={() => setPage(page - 1)}
+                >
+                    <i className="bi bi-skip-backward"></i>
+                </button>
+                <span className="mx-2 d-flex"><span className="me-1">Page</span> <span>{page}</span> <span className="mx-1">of</span> <span>{totalPages}</span></span>
+                (<b><span className="me-1">{totalItems}</span><span>items</span></b>)
+                {totalPages > 1 ?
+                    <span className="me-1 d-flex align-items-center">
+                        <input type="number" className="form-control d-inline" value={customPage} onChange={(e) => {
+                            if (e.target.value < (totalPages + 1) && !isNaN(e.target.value) && e.target.value > 0 || e.target.value == "") {
+                                setCustomPage(e.target.value)
+                            }
+                        }} style={{ width: "3em" }
+                        } min={1} max={totalPages || 1} />
+                        {customPage != page && Boolean(customPage) ? <button className="btn btn-sm btn-outline-primary" onClick={() => setPage(customPage)}><i className="bi bi-search"></i></button> : ""}
+                    </span>
+                    : ""
+                }
+                <button className="btn btn-sm btn-primary"
+                    disabled={nextPage === null || isLoading}
+                    onClick={() => setPage(page + 1)}
+                >
+                    <i className="bi bi-skip-forward"></i>
+                </button>
             </div>
         </Fragment >
     );
