@@ -305,6 +305,13 @@ function ParticipantsTable() {
                                 </div>
 
                                 <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Transaction ID</b></label>
+                                    <p>
+                                        {selectedParticipant?.transaction?.transaction_id}
+                                    </p>
+                                </div>
+
+                                <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Status</b></label>
                                     <p>
                                         {selectedParticipant?.transaction === null && <span className="badge bg-warning">No transaction</span>}
