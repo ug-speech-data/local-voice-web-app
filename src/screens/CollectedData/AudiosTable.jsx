@@ -265,6 +265,11 @@ function AudiosTable() {
                                 </div>
 
                                 <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Device</b></label>
+                                    <p>{selectedAudio?.device_id}</p>
+                                </div>
+
+                                <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Date</b></label>
                                     <p>{selectedAudio?.created_at}</p>
                                 </div>
@@ -334,25 +339,46 @@ function AudiosTable() {
                     headers={[{
                         key: "name", value: "Name", render: (item) => {
                             return (
-                                <div className="d-flex align-items-center">
-                                    <TextOverflow text={item.name} width={20} />
-                                    {item.is_accepted ?
-                                        (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
-                                        :
-                                        (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle" ></i></span>)
-                                    }
+                                <div>
+                                    <div className="d-flex align-items-center">
+                                        <TextOverflow text={item.name} width={10} />
+                                        {item.is_accepted ?
+                                            (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
+                                            :
+                                            (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle" ></i></span>)
+                                        }
+                                    </div>
+
+
                                 </div>
                             )
                         }
-                    }, {
-                        key: "duration", value: "Duration"
-                    }, {
+                    },
+                    {
+                        key: "duration", value: "Player", render: (item) => {
+                            return (
+                                <AudioPlayer
+                                    src={item?.file}
+                                    canSeek={true}
+                                    setIsAudioBuffering={setIsAudioBuffering} />
+                            )
+                        }
+                    },
+                    {
                         key: "locale", value: "Locale"
                     }, {
                         key: "environment", value: "Environment"
-                    }, {
-                        key: "device_id", value: "Device"
-                    }, {
+                    },
+
+                    {
+                        key: "device_id", value: "Device", render: (item) => {
+                            return (
+                                <TextOverflow text={item.device_id} width={10} />
+                            )
+                        }
+                    },
+
+                    {
                         key: "submitted_by", value: "User"
                     }, {
                         key: "image_url", value: "Image", render: (item) => {

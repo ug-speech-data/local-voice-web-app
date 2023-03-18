@@ -4,7 +4,7 @@ import { useToast } from '@chakra-ui/react'
 import { useMemo } from 'react';
 import { useEffect } from 'react';
 
-function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => null, className = '' }) {
+function AudioPlayer({ src, onEnded = () => null, canSeek = false, setIsAudioBuffering = () => null, className = '' }) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [fullyPlayed, setFullyPlayed] = useState(false);
 
@@ -22,7 +22,7 @@ function AudioPlayer({ src, onEnded = () => null, setIsAudioBuffering = () => nu
     const onSeek = (event) => {
         if (audioPlayer === null)
             return
-        if (!fullyPlayed) {
+        if (!fullyPlayed && !canSeek) {
             event.preventDefault()
             toast.close("seeking-error")
             toast({
