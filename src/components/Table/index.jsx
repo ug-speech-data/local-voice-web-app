@@ -226,6 +226,12 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                 </table>
             </div>
 
+            {Boolean(bulkSelectedIds?.length) ?
+                <div>
+                    <b>Selected {bulkSelectedIds.length} out of {totalItems}</b>
+                </div> : ""
+            }
+
             <div className="d-flex align-items-center mx-3 my-3">
                 <div className="d-flex align-items-center me-2">
                     <select className="form-select" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)} defaultValue={page}>

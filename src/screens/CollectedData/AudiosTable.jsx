@@ -15,12 +15,12 @@ import PageMeta from '../../components/PageMeta';
 
 
 function AudiosTable() {
+    const [triggerReload, setTriggerReload] = useState(0);
+
     const [deleteAudio, { isLoading: isDeletingAudio, error: errorDeletingAudio }] = useDeleteAudiosMutation()
     const [putAudio, { isLoading: isPuttingAudio, isSuccess: successPuttingAudio, error: errorPuttingAudio }] = useUpdateAudiosMutation()
 
     const { trigger: getEnumerators, data: enumeratorResponse, error: errorGettingEnumerators, isLoading: gettingEnumerators } = useAxios({ mainUrl: BASE_API_URI + '/get-enumerators/' })
-
-
 
     const deletionModalRef = useRef(null);
     const editAudioModalRef = useRef(null);
@@ -103,6 +103,7 @@ function AudiosTable() {
             id: selectedAudio.id,
             is_accepted: isAccepted,
         }
+        console.log(body)
         const response = await putAudio(body).unwrap()
         if (response?.audio !== undefined) {
             setNewUpdate({ item: response.audio, action: "update" })
@@ -175,6 +176,7 @@ function AudiosTable() {
                 isClosable: true,
             })
         }
+        setTriggerReload((triggerReload) => triggerReload + 1);
     }, [bulkActionResponseData])
 
 
@@ -288,13 +290,6 @@ function AudiosTable() {
                                     />}
                                 </div>
 
-                                <div className="my-3">
-                                    <label htmlFor="name" className="form-label me-2">Accepted</label>
-                                    <input type="checkbox" className="form-check-input"
-                                        onChange={() => setIsAccepted(!isAccepted)}
-                                        checked={isAccepted} />
-                                </div>
-
                                 <div className="my-3 d-flex justify-content-end">
                                     <button className="btn btn-primary btn-sm"
                                         disabled={isPuttingAudio}
@@ -313,12 +308,14 @@ function AudiosTable() {
 
             <div className="my-5 overflow-scroll">
                 <TableView
+                    reloadTrigger={triggerReload}
                     responseDataAttribute="audios"
                     dataSourceUrl={`${BASE_API_URI}/collected-audios/`}
                     newUpdate={newUpdate}
                     filters={[
                         { key: "is_accepted:1", value: "Accepted" },
-                        { key: "is_accepted:0", value: "Not accepted" },
+                        { key: "is_accepted:0", value: "Pending" },
+                        { key: "rejected:1", value: "Rejected" },
                         { key: "is_accepted:0:validations", value: "Validation Conflict" },
 
                         { value: "---------------------" },
@@ -333,8 +330,8 @@ function AudiosTable() {
 
                     ]}
                     bulkActions={[
-                        { name: "Approve Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
-                        { name: "Reject Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
+                        { name: "Approve selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
+                        { name: "Reject selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
                     ]}
                     headers={[{
                         key: "name", value: "Name", render: (item) => {
@@ -345,11 +342,12 @@ function AudiosTable() {
                                         {item.is_accepted ?
                                             (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
                                             :
-                                            (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle" ></i></span>)
+                                            item.rejected ?
+                                                (<span className='ms-2 p-0 badge bg-danger'><i className="bi bi-info-circle" ></i></span>)
+                                                :
+                                                (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle" ></i></span>)
                                         }
                                     </div>
-
-
                                 </div>
                             )
                         }
