@@ -15,7 +15,6 @@ import { BASE_API_URI } from '../../utils/constants';
 
 function UsersCard() {
     const [triggerReload, setTriggerReload] = useState(0);
-    const [getUsers, { data: response = [], isFetching, error }] = useLazyGetUsersQuery()
     const modalRef = useRef(null);
     const deletionModalRef = useRef(null);
     const [modal, setModal] = useState(null);
@@ -39,6 +38,7 @@ function UsersCard() {
     const [phoneNetwork, setPhoneNetwork] = useState('');
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
+    const [isActive, setIsActive] = useState(true);
     const [locale, setLocale] = useState('');
     const [assignedImageBatch, setAssignedImageBatch] = useState('');
     const [assignedAudioBatch, setAssignedAudioBatch] = useState('');
@@ -47,33 +47,11 @@ function UsersCard() {
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('surname');
 
-    // Pagination
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [nextPage, setNextPage] = useState(null);
-    const [previousPage, setPreviousPage] = useState(null);
-
     useEffect(() => {
         const groups = selectedUser?.groups || []
         setSelectedGroups(groups)
     }, [selectedUser])
 
-    useEffect(() => {
-        setUsers(response["users"])
-        setAllUsers(response["users"])
-        setTotalPages(response["total_pages"])
-        setNextPage(response["next_page"])
-        setPreviousPage(response["previous_page"])
-    }, [isFetching, response])
-
-
-    useEffect(() => {
-        getUsers(1)
-    }, [getUsers])
-
-    useEffect(() => {
-        getUsers(page)
-    }, [page, getUsers])
 
     useEffect(() => {
         if (modalRef.current !== null && modal === null) {
@@ -97,6 +75,7 @@ function UsersCard() {
         setLocale(user.locale || "")
         setAssignedImageBatch(user.assigned_image_batch || "")
         setAssignedAudioBatch(user.assigned_audio_batch || "")
+        setIsActive(user.is_active)
         setPassword("")
         modal?.show()
     }
@@ -161,9 +140,10 @@ function UsersCard() {
             email_address: emailAddress,
             groups: selectedGroups,
             locale: locale,
+            is_active: isActive,
             assigned_image_batch: assignedImageBatch,
             assigned_audio_batch: assignedAudioBatch,
-            password: password
+            password: password,
         }
         if (selectedUser) {
             body['id'] = selectedUser.id
@@ -377,6 +357,13 @@ function UsersCard() {
                                     <TagInput tags={groups?.map((group) => group.name)} selectedTags={selectedGroups} setSelectedTags={setSelectedGroups} maxSelection={groups?.length} />
                                 </div>
 
+                                <div className="my-3">
+                                    <label htmlFor="is_active" className="form-label">Is Active</label>
+                                    <input type="checkbox" className="ms-2 form-check-input" id="is_active" aria-describedby="is_active"
+                                        checked={isActive}
+                                        onChange={(e) => setIsActive(e.target.checked)} />
+                                </div>
+
                                 <div className="my-5">
                                     <div className="d-flex justify-content-between">
                                         <h1><b>PASSWORD</b></h1>
@@ -444,9 +431,16 @@ function UsersCard() {
                             key: "surname", value: "Surname"
                         }, {
                             key: "other_names", value: "Other Names"
-                        }, {
-                            key: "email_address", value: "Email Address"
-                        }, {
+                        },
+                        {
+                            key: "email_address", value: "Email Address", render: (item) => {
+                                return (
+                                    <p className={item.is_active ? "" : "text-danger"}>{item.email_address}</p>
+                                )
+                            }
+                        },
+
+                        {
                             key: "groups", value: "Group", render: (item) => {
                                 return (
                                     <div>

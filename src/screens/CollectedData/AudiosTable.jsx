@@ -278,6 +278,7 @@ function AudiosTable() {
 
                                 <div className="d-flex align-items-center">
                                     <AudioPlayer
+                                        canSeek={true}
                                         src={selectedAudio?.file}
                                         setIsAudioBuffering={setIsAudioBuffering} />
 
