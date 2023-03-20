@@ -9,7 +9,10 @@ import useAxios from '../../app/hooks/useAxios';
 function Dashboard() {
     const { trigger: getDashboardStatics, data: responseData, error, isLoading } = useAxios({ mainUrl: `${BASE_API_URI}/dashboard-statistics/` });
     const [statistics, setStatistics] = useState(null)
-
+    const [languageStatistics, setLanguageStatistics] = useState(null)
+    const [languageStatisticsInHours, setLanguageStatisticsInHours] = useState(null)
+    const [updatedAt, setUpdatedAt] = useState("")
+    
     useEffect(() => {
         getDashboardStatics()
     }, [])
@@ -18,17 +21,29 @@ function Dashboard() {
         if (Boolean(responseData?.statistics)) {
             setStatistics(responseData.statistics)
         }
+
+        if (Boolean(responseData?.language_statistics)) {
+            setLanguageStatistics(responseData.language_statistics)
+        }
+
+        if (Boolean(responseData?.language_statistics_in_hours)) {
+            setLanguageStatisticsInHours(responseData.language_statistics_in_hours)
+        }
+
+        if (Boolean(responseData?.updated_at)) {
+            setUpdatedAt(responseData.updated_at)
+        }
     }, [responseData, isLoading])
 
     return (
         <Fragment>
             <TopNav />
             <div className="p-2">
-                <div className="mx-auto d-flex flex-wrap col-lg-8">
+                <div className="mx-auto d-flex flex-wrap col-lg-10">
                     <h4>DATA SUMMARY</h4>
                 </div>
                 {Boolean(statistics) ?
-                    <div className="mx-auto col-lg-8 row">
+                    <div className="mx-auto col-lg-10 row">
                         <div className="col-md-6">
                             <DashboardCard>
                                 <h5 className="h5">AUDIOS</h5>
@@ -65,6 +80,76 @@ function Dashboard() {
                                 <hr />
                             </DashboardCard>
                         </div>
+
+                        <DashboardCard className="col-md-12">
+                            <span className="badge bg-primary">{updatedAt}</span>
+                            <table className="table">
+                                <thead>
+                                    <tr style={{ verticalAlign: "middle" }}>
+                                        <th>LANGUAGE</th>
+                                        <th>TOTAL SUBMITTED</th>
+                                        <th>SINGLE VALIDATION</th>
+                                        <th>DOUBLE VALIDATION</th>
+                                        <th>VALIDATION CONFLICT</th>
+                                        <th>TRANSCRIBED AUDIOS</th>
+                                        <th>APPROVED</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                        <td><b>Akan</b></td>
+                                        <td>{languageStatistics.akan.akan_audios_submitted} Audios (<b>{languageStatisticsInHours.akan.akan_audios_submitted_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.akan.akan_audios_single_validation} Audios (<b>{languageStatisticsInHours.akan.akan_audios_single_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.akan.akan_audios_double_validation} Audios (<b>{languageStatisticsInHours.akan.akan_audios_double_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.akan.akan_audios_validation_conflict} Audios (<b>{languageStatisticsInHours.akan.akan_audios_validation_conflict_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.akan.akan_audios_akan_audios_transcribed} Audios (<b>{languageStatisticsInHours.akan.akan_audios_transcribed_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.akan.akan_audios_approved} Audios (<b>{languageStatisticsInHours.akan.akan_audios_approved_in_hours} hours</b>)</td>
+                                    </tr>
+
+                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                        <td><b>Dagaare</b></td>
+                                        <td>{languageStatistics.dagaare.dagaare_audios_submitted} Audios (<b>{languageStatisticsInHours.dagaare.dagaare_audios_submitted_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagaare.dagaare_audios_single_validation} Audios (<b>{languageStatisticsInHours.dagaare.dagaare_audios_single_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagaare.dagaare_audios_double_validation} Audios (<b>{languageStatisticsInHours.dagaare.dagaare_audios_double_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagaare.dagaare_audios_validation_conflict} Audios (<b>{languageStatisticsInHours.dagaare.dagaare_audios_validation_conflict_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagaare.dagaare_audios_dagaare_audios_transcribed} Audios (<b>{languageStatisticsInHours.dagaare.dagaare_audios_transcribed_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagaare.dagaare_audios_approved} Audios (<b>{languageStatisticsInHours.dagaare.dagaare_audios_approved_in_hours} hours</b>)</td>
+                                    </tr>
+
+                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                        <td><b>Dagbani</b></td>
+                                        <td>{languageStatistics.dagbani.dagbani_audios_submitted} Audios (<b>{languageStatisticsInHours.dagbani.dagbani_audios_submitted_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagbani.dagbani_audios_single_validation} Audios (<b>{languageStatisticsInHours.dagbani.dagbani_audios_single_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagbani.dagbani_audios_double_validation} Audios (<b>{languageStatisticsInHours.dagbani.dagbani_audios_double_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagbani.dagbani_audios_validation_conflict} Audios (<b>{languageStatisticsInHours.dagbani.dagbani_audios_validation_conflict_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagbani.dagbani_audios_dagbani_audios_transcribed} Audios (<b>{languageStatisticsInHours.dagbani.dagbani_audios_transcribed_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.dagbani.dagbani_audios_approved} Audios (<b>{languageStatisticsInHours.dagbani.dagbani_audios_approved_in_hours} hours</b>)</td>
+                                    </tr>
+
+                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                        <td><b>Ewe</b></td>
+                                        <td>{languageStatistics.ewe.ewe_audios_submitted} Audios (<b>{languageStatisticsInHours.ewe.ewe_audios_submitted_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ewe.ewe_audios_single_validation} Audios (<b>{languageStatisticsInHours.ewe.ewe_audios_single_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ewe.ewe_audios_double_validation} Audios (<b>{languageStatisticsInHours.ewe.ewe_audios_double_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ewe.ewe_audios_validation_conflict} Audios (<b>{languageStatisticsInHours.ewe.ewe_audios_validation_conflict_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ewe.ewe_audios_transcribed} Audios (<b>{languageStatisticsInHours.ewe.ewe_audios_transcribed_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ewe.ewe_audios_approved} Audios (<b>{languageStatisticsInHours.ewe.ewe_audios_approved_in_hours} hours</b>)</td>
+                                    </tr>
+
+                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                        <td><b>Ikposo</b></td>
+                                        <td>{languageStatistics.ikposo.ikposo_audios_submitted} Audios (<b>{languageStatisticsInHours.ikposo.ikposo_audios_submitted_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ikposo.ikposo_audios_single_validation} Audios (<b>{languageStatisticsInHours.ikposo.ikposo_audios_single_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ikposo.ikposo_audios_double_validation} Audios (<b>{languageStatisticsInHours.ikposo.ikposo_audios_double_validation_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ikposo.ikposo_audios_validation_conflict} Audios (<b>{languageStatisticsInHours.ikposo.ikposo_audios_validation_conflict_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ikposo.ikposo_audios_ikposo_audios_transcribed} Audios (<b>{languageStatisticsInHours.ikposo.ikposo_audios_transcribed_in_hours} hours</b>)</td>
+                                        <td>{languageStatistics.ikposo.ikposo_audios_approved} Audios (<b>{languageStatisticsInHours.ikposo.ikposo_audios_approved_in_hours} hours</b>)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </DashboardCard>
+
                     </div>
                     : ""}
             </div>
