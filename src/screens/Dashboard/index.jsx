@@ -96,7 +96,7 @@ function Dashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                    <tr style={{ height: "3em", verticalAlign: "middle"}}>
                                         <td><b>Akan</b></td>
                                         <td>{languageStatistics.akan.akan_audios_submitted} Audios (<b>{languageStatisticsInHours.akan.akan_audios_submitted_in_hours} hours</b>)</td>
                                         <td>{languageStatistics.akan.akan_audios_single_validation} Audios (<b>{languageStatisticsInHours.akan.akan_audios_single_validation_in_hours} hours</b>)</td>
@@ -106,7 +106,7 @@ function Dashboard() {
                                         <td>{languageStatistics.akan.akan_audios_approved} Audios (<b>{languageStatisticsInHours.akan.akan_audios_approved_in_hours} hours</b>)</td>
                                     </tr>
 
-                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                    <tr style={{ height: "3em", verticalAlign: "middle"}}>
                                         <td><b>Dagaare</b></td>
                                         <td>{languageStatistics.dagaare.dagaare_audios_submitted} Audios (<b>{languageStatisticsInHours.dagaare.dagaare_audios_submitted_in_hours} hours</b>)</td>
                                         <td>{languageStatistics.dagaare.dagaare_audios_single_validation} Audios (<b>{languageStatisticsInHours.dagaare.dagaare_audios_single_validation_in_hours} hours</b>)</td>
@@ -116,7 +116,7 @@ function Dashboard() {
                                         <td>{languageStatistics.dagaare.dagaare_audios_approved} Audios (<b>{languageStatisticsInHours.dagaare.dagaare_audios_approved_in_hours} hours</b>)</td>
                                     </tr>
 
-                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                    <tr style={{ height: "3em", verticalAlign: "middle"}}>
                                         <td><b>Dagbani</b></td>
                                         <td>{languageStatistics.dagbani.dagbani_audios_submitted} Audios (<b>{languageStatisticsInHours.dagbani.dagbani_audios_submitted_in_hours} hours</b>)</td>
                                         <td>{languageStatistics.dagbani.dagbani_audios_single_validation} Audios (<b>{languageStatisticsInHours.dagbani.dagbani_audios_single_validation_in_hours} hours</b>)</td>
@@ -126,7 +126,7 @@ function Dashboard() {
                                         <td>{languageStatistics.dagbani.dagbani_audios_approved} Audios (<b>{languageStatisticsInHours.dagbani.dagbani_audios_approved_in_hours} hours</b>)</td>
                                     </tr>
 
-                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                    <tr style={{ height: "3em", verticalAlign: "middle"}}>
                                         <td><b>Ewe</b></td>
                                         <td>{languageStatistics.ewe.ewe_audios_submitted} Audios (<b>{languageStatisticsInHours.ewe.ewe_audios_submitted_in_hours} hours</b>)</td>
                                         <td>{languageStatistics.ewe.ewe_audios_single_validation} Audios (<b>{languageStatisticsInHours.ewe.ewe_audios_single_validation_in_hours} hours</b>)</td>
@@ -136,7 +136,7 @@ function Dashboard() {
                                         <td>{languageStatistics.ewe.ewe_audios_approved} Audios (<b>{languageStatisticsInHours.ewe.ewe_audios_approved_in_hours} hours</b>)</td>
                                     </tr>
 
-                                    <tr style={{ height: "3em", verticalAlign: "middle", textAlign: "center" }}>
+                                    <tr style={{ height: "3em", verticalAlign: "middle"}}>
                                         <td><b>Ikposo</b></td>
                                         <td>{languageStatistics.ikposo.ikposo_audios_submitted} Audios (<b>{languageStatisticsInHours.ikposo.ikposo_audios_submitted_in_hours} hours</b>)</td>
                                         <td>{languageStatistics.ikposo.ikposo_audios_single_validation} Audios (<b>{languageStatisticsInHours.ikposo.ikposo_audios_single_validation_in_hours} hours</b>)</td>
