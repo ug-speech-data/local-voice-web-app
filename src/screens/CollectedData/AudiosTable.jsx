@@ -35,7 +35,6 @@ function AudiosTable() {
 
     // Form input
     const [name, setName] = useState('');
-    const [isAccepted, setIsAccepted] = useState(false);
 
     useEffect(() => {
         if (editAudioModalRef.current !== null && editAudioModal === null) {
@@ -90,23 +89,21 @@ function AudiosTable() {
     useEffect(() => {
         if (selectedAudio) {
             setName(selectedAudio.name)
-            setIsAccepted(selectedAudio.is_accepted)
         }
     }, [selectedAudio])
 
-    const handleSubmission = async () => {
+    const handleSubmission = async (status) => {
         if (selectedAudio === null) {
             return
         }
         const body = {
             name,
             id: selectedAudio.id,
-            is_accepted: isAccepted,
+            status: status,
         }
-        console.log(body)
         const response = await putAudio(body).unwrap()
         if (response?.audio !== undefined) {
-            setNewUpdate({ item: response.audio, action: "update" })
+            setTriggerReload((triggerReload) => triggerReload + 1);
         }
     }
 
@@ -276,7 +273,7 @@ function AudiosTable() {
                                     <p>{selectedAudio?.created_at}</p>
                                 </div>
 
-                                <div className="d-flex align-items-center">
+                                <div className="d-flex align-items-center" style={{overflow:"auto"}}>
                                     <AudioPlayer
                                         canSeek={true}
                                         src={selectedAudio?.file}
@@ -291,10 +288,18 @@ function AudiosTable() {
                                     />}
                                 </div>
 
-                                <div className="my-3 d-flex justify-content-end">
-                                    <button className="btn btn-primary btn-sm"
-                                        disabled={isPuttingAudio}
-                                        onClick={handleSubmission}>{isPuttingAudio && <Spinner />} Save Changes</button>
+                                <div className='my-3'>
+                                    <h6 className='h6'>Reject/Approval</h6>
+                                    <div className="d-flex">
+                                        <button className="me-5 btn btn-sm btn-success" onClick={() => {
+                                            handleSubmission("accept");
+                                        }}>Accept</button>
+                                        <button className="ms-5 btn btn-sm btn-outline-danger"
+                                            onClick={() => {
+                                                handleSubmission("reject");
+                                            }}
+                                        >Reject</button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -314,21 +319,19 @@ function AudiosTable() {
                     dataSourceUrl={`${BASE_API_URI}/collected-audios/`}
                     newUpdate={newUpdate}
                     filters={[
-                        { key: "is_accepted:1", value: "Accepted" },
-                        { key: "is_accepted:0", value: "Pending" },
-                        { key: "rejected:1", value: "Rejected" },
-                        { key: "is_accepted:0:validations", value: "Validation Conflict" },
-
-                        { value: "---------------------" },
                         { key: "locale:ak_gh", value: "Akan" },
                         { key: "locale:dga_gh", value: "Dagbani" },
                         { key: "locale:dag_gh", value: "Dagaare" },
                         { key: "locale:ee_gh", value: "Ewe" },
                         { key: "locale:kpo_gh", value: "Ikposo" },
                         { value: "---------------------" },
-
                         ...(enumerators?.map(enumerator => { return { key: `submitted_by__id:${enumerator.id}`, value: `Recorded by '${enumerator.fullname}'` } }) || []).sort()
-
+                    ]}
+                    filters2={[
+                        { key: "is_accepted:1", value: "Accepted" },
+                        { key: "is_accepted:0", value: "Pending" },
+                        { key: "rejected:1", value: "Rejected" },
+                        { key: "is_accepted:0:validations", value: "Validation Conflict" },
                     ]}
                     bulkActions={[
                         { name: "Approve selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },

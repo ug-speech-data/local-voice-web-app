@@ -4,11 +4,12 @@ import useAxios from '../../app/hooks/useAxios';
 
 import { Spinner } from '@chakra-ui/react';
 
-function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, urlParams = "", setUrlParams = () => null, newUpdate = null, filters = null, bulkActions = [], reloadTrigger = 0 }) {
+function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, urlParams = "", setUrlParams = () => null, newUpdate = null, filters = null, filters2 = null, bulkActions = [], reloadTrigger = 0 }) {
     const [originalData, setOriginalData] = useState([])
     const [displayedData, setDisplayedData] = useState([])
     const { trigger, data: responseData, error, isLoading } = useAxios()
     const [filter, setFilter] = useState("")
+    const [filter2, setFilter2] = useState("")
     const [sortAscending, setSortAscending] = useState(true)
 
     const [bulkSelectedIds, setBulkSelectedIds] = useState([])
@@ -48,16 +49,16 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
     }, [responseData])
 
     useEffect(() => {
-        setUrlParams(`?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
-        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
-    }, [page, filter, pageSize, dataSourceUrl])
+        setUrlParams(`?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}`)
+        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}`)
+    }, [page, filter, filter2, pageSize, dataSourceUrl])
 
     useEffect(() => {
-        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
+        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}`)
     }, [reloadTrigger])
 
     const reloadData = () => {
-        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}`)
+        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}`)
     }
 
     useEffect(() => {
@@ -142,6 +143,24 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                 })}
                             </select>
                         </div>
+
+                        {filters2 != null ?
+                            <div className="d-flex align-items-center mx-3">
+                                <label htmlFor="filter" className="form-label me-2">Filters</label>
+                                <select className="form-select"
+                                    id="filter"
+                                    defaultValue={filter}
+                                    onChange={(e) => setFilter2(e.target.value)}
+                                >
+                                    <option value="">None</option>
+                                    {filters2?.map(({ key, value }, index) => {
+                                        return (
+                                            <option key={index} value={key}>{value}</option>
+                                        )
+                                    })}
+                                </select>
+                            </div> : ""
+                        }
 
                         <button className="btn btn-sm btn-outline-primary d-flex align-items-center"
                             disabled={isLoading}

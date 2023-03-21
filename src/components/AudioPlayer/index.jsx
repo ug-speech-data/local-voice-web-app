@@ -76,7 +76,7 @@ function AudioPlayer({ src, onEnded = () => null, canSeek = false, setIsAudioBuf
 
     const audioPlayer = useMemo(() => {
         const player = new Audio()
-        player.preload = "auto"
+        player.preload = "metadata"
         player.ontimeupdate = handleTimeupdate
         player.oncanplay = function () { setIsAudioBuffering(false) }
         player.onloadedmetadata = onLoaded
