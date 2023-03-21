@@ -345,6 +345,8 @@ function ParticipantsTable() {
                     newUpdate={newUpdate}
                     filters={[
                         { key: "paid:0", value: "Not paid" },
+                        { key: "type:INDEPENDENT", value: "Independent Participants" },
+                        { key: "type:ASSISTED", value: "Assisted Participants" },
                         { key: "transaction__status:pending", value: "Transaction pending" },
                         { key: "transaction__status:success", value: "Transaction succeeded" },
                         { key: "transaction__status:failed", value: "Transaction failed" },
