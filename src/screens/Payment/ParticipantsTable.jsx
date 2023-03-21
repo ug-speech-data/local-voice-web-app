@@ -364,6 +364,8 @@ function ParticipantsTable() {
                     }, {
                         key: "momo_number", value: "Momo Number"
                     }, {
+                        key: "type", value: "Type"
+                    }, {
                         key: "gender", value: "Gender"
                     }, {
                         key: "audio_count", value: "Audios"

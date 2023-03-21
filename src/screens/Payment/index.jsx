@@ -23,9 +23,9 @@ function Payment() {
                         <BalanceWidget />
                     </div>
                 </div>
-                <TabLayout tabs={["Users", "Participants", "History"]}>
-                    <UserPayment />
+                <TabLayout tabs={["Participants", "Users", "History"]}>
                     <ParticipantsTable />
+                    <UserPayment />
                     <TransactionHistory />
                 </TabLayout>
             </div>

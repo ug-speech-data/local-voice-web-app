@@ -134,10 +134,10 @@ function CollectedData() {
                         </button>
                     </div>
                 </div>
-                <TabLayout tabs={["Images", "Audios", "Transcriptions"]}>
-                    <ImagesTable />
+                <TabLayout tabs={["Audios", "Transcriptions", "Images"]}>
                     <AudiosTable />
                     <TranscriptionsTable />
+                    <ImagesTable />
                 </TabLayout>
             </div>
             <Footer />
