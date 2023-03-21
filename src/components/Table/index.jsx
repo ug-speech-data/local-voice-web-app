@@ -9,6 +9,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
     const [displayedData, setDisplayedData] = useState([])
     const { trigger, data: responseData, error, isLoading } = useAxios()
     const [filter, setFilter] = useState("")
+    const [sortAscending, setSortAscending] = useState(true)
 
     const [bulkSelectedIds, setBulkSelectedIds] = useState([])
     const [selectedBulkActionIndex, setSelectedBulkActionIndex] = useState(-1)
@@ -68,16 +69,17 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
         setDisplayedData(filtered)
     }, [search])
 
-    useEffect(() => {
+    const triggerSort = (key) => {
+        setSort(key)
         const toToSorted = [...displayedData]
         toToSorted.sort((a, b) => {
             if (a[sort] < b[sort]) {
-                return -1;
+                return sortAscending ? -1 : 1;
             }
-            return 1;
+            return sortAscending ? 1 : -1;
         })
         setDisplayedData(toToSorted)
-    }, [sort])
+    }
 
     useEffect(() => {
         if (newUpdate === null) {
@@ -172,12 +174,15 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                 </div>
                             </th>
 
-                            {headers?.map(({ key, value }, index) => {
+                            {headers?.map(({ key, value, render = null }, index) => {
                                 return (
-                                    <th key={index} onClick={(e) => setSort(key)}>
+                                    <th key={index} onClick={render === null ? (e) => { if (key === sort) { setSortAscending(!sortAscending) }; triggerSort(key) } : null
+                                    }
+                                        style={{ cursor: render === null ? "pointer" : "" }}
+                                    >
                                         <div className="d-flex">
                                             {value.toUpperCase()}
-                                            {sort === key && <i className="bi bi-caret-down-fill"></i>}
+                                            {sort === key && (sortAscending ? <i className="bi bi-caret-down-fill"></i> : <i className="bi bi-caret-up-fill"></i>)}
                                         </div>
                                     </th>
                                 )
