@@ -6,6 +6,7 @@ const Permissions = {
     VALIDATE_TRANSCRIPTION: "validate_transcription",
     MANAGE_SETUP: "manage_setup",
     MANAGE_PAYMENT: "manage_payment",
+    VIEW_DASHBOARD: "view_dashboard",
 }
 
 export default Permissions;

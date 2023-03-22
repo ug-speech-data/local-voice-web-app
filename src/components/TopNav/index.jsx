@@ -99,7 +99,9 @@ function TopNav() {
             </div>
             <div className="overlay"></div>
             <div className='nav-left'>
-                <Link key="/dashboard" to="/dashboard" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
+                {userPermissions.has(Permissions.VIEW_DASHBOARD) &&
+                    <Link key="/dashboard" to="/dashboard" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
+                }
                 <Link key="/tasks" to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>
                 {userPermissions.has(Permissions.MANAGE_COLLECTED_DATA) &&
                     <Link key="/collected-data" to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>DATA</Link>

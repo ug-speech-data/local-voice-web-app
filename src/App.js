@@ -57,7 +57,7 @@ function App() {
         } />
 
         <Route path="/dashboard" element={
-          <ProtectedRoute>
+          <ProtectedRoute permissions={[Permissions.VIEW_DASHBOARD]}>
             <Dashboard />
           </ProtectedRoute>
         } />

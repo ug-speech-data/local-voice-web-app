@@ -25,6 +25,7 @@ function ProfileScreen() {
     const [phoneNetwork, setPhoneNetwork] = useState('');
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
     const [locale, setLocale] = useState('');
     const [assignedImageBatch, setAssignedImageBatch] = useState('');
     const [assignedAudioBatch, setAssignedAudioBatch] = useState('');
@@ -45,7 +46,8 @@ function ProfileScreen() {
             locale: locale,
             assigned_image_batch: assignedImageBatch,
             assigned_audio_batch: assignedAudioBatch,
-            password: password
+            password: password,
+            old_password: oldPassword,
         }
 
         updateUserProfile(
@@ -98,18 +100,32 @@ function ProfileScreen() {
 
     // Success alert
     useEffect(() => {
-        if (Boolean(updateResponse) && Boolean(updateResponse?.user) && !isUpdatingUser) {
-            toast.close("update")
-            toast({
-                id: "update",
-                position: 'top-center',
-                title: `Success`,
-                description: "Profile updated successfully.",
-                status: 'success',
-                duration: 2000,
-                isClosable: true,
-            })
+        if (Boolean(updateResponse) && !isUpdatingUser) {
+            toast.close("updatesuccess")
+            toast.close("updateerror")
+            if (Boolean(updateResponse?.user)) {
+                toast({
+                    id: "updatesuccess",
+                    position: 'top-center',
+                    title: `Success`,
+                    description: "Profile updated successfully.",
+                    status: 'success',
+                    duration: 2000,
+                    isClosable: true,
+                })
+            } else if (Boolean(updateResponse?.message)) {
+                toast({
+                    id: "updateerror",
+                    position: 'top-center',
+                    title: `Error`,
+                    description: updateResponse?.message,
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
+                })
+            }
         }
+
     }, [updateResponse, isUpdatingUser])
 
     return (
@@ -217,8 +233,15 @@ function ProfileScreen() {
                             </div>
                             {!hidePassowordUpdate &&
                                 <div>
-                                    {currentUser && <p className="text-muted">Enter your new password</p>}
-                                    <PasswordInput placeholder="New password" value={password} setValue={setPassword} required={currentUser == null} />
+                                    <div className='mb-3'>
+                                        {currentUser && <p className="text-muted">Enter your old password</p>}
+                                        <PasswordInput placeholder="Old password" value={oldPassword} setValue={setOldPassword} required={currentUser == null} />
+                                    </div>
+
+                                    <div>
+                                        {currentUser && <p className="text-muted">Enter your new password</p>}
+                                        <PasswordInput placeholder="New password" value={password} setValue={setPassword} required={currentUser == null} />
+                                    </div>
                                 </div>
                             }
                         </div>
