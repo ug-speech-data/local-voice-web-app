@@ -57,7 +57,7 @@ function AudioValidation() {
         if (response['message'] != null) {
             toast({
                 position: 'top-center',
-                title: `An error occurred`,
+                title: `Info`,
                 description: response['message'],
                 status: 'success',
                 duration: 1000,
