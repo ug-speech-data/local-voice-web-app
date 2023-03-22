@@ -296,7 +296,7 @@ function TranscriptionsTable() {
             </div>
 
 
-            <div className="my-5 overflow-scroll">
+            <div className="mb-5 overflow-scroll">
                 <TableView
                     responseDataAttribute="transcriptions"
                     dataSourceUrl={`${BASE_API_URI}/collected-transcriptions/`}

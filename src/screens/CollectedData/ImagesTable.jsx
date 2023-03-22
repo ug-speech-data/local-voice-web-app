@@ -385,7 +385,7 @@ function ImagesTable() {
                 </div>
             </div>
 
-            <div className="my-5 overflow-scroll">
+            <div className="mb-5 overflow-scroll">
                 <TableView
                     reloadTrigger={triggerReload}
                     responseDataAttribute="images"

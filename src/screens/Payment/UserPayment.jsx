@@ -279,7 +279,7 @@ function UserPayment() {
 
             {/* End of modals */}
 
-            <div className="my-5 overflow-scroll">
+            <div className="mb-5 overflow-scroll">
                 <TableView
                     responseDataAttribute="users"
                     dataSourceUrl={`${BASE_API_URI}/payments/users`}

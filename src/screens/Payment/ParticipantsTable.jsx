@@ -338,18 +338,20 @@ function ParticipantsTable() {
                 </div>
             </div>
 
-            <div className="my-5 overflow-scroll">
+            <div className="mb-5 overflow-scroll">
                 <TableView
                     responseDataAttribute="participants"
                     dataSourceUrl={`${BASE_API_URI}/collected-participants/`}
                     newUpdate={newUpdate}
                     filters={[
-                        { key: "paid:0", value: "Not paid" },
+                        { key: "type:ASSISTED", value: "Assisted Participants"},
                         { key: "type:INDEPENDENT", value: "Independent Participants" },
-                        { key: "type:ASSISTED", value: "Assisted Participants" },
-                        { key: "transaction__status:pending", value: "Transaction pending" },
-                        { key: "transaction__status:success", value: "Transaction succeeded" },
-                        { key: "transaction__status:failed", value: "Transaction failed" },
+                    ]}
+                    filters2={[
+                        { key: "paid:0", value: "Not paid", defaultValue: true },
+                        { key: "transaction__status:pending", value: "Transaction Pending" },
+                        { key: "transaction__status:failed", value: "Transaction Failed" },
+                        { key: "transaction__status:success", value: "Transaction Succeeded" },
                     ]}
                     bulkActions={[
                         { name: "Pay selected", action: (bulkSelectedIds) => showBulkPayConfirmationModal(bulkSelectedIds) },

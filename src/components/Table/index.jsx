@@ -8,9 +8,10 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
     const [originalData, setOriginalData] = useState([])
     const [displayedData, setDisplayedData] = useState([])
     const { trigger, data: responseData, error, isLoading } = useAxios()
-    const [filter, setFilter] = useState("")
-    const [filter2, setFilter2] = useState("")
+    const [filter, setFilter] = useState(filters?.filter((filter)=>filter?.defaultValue)[0]?.key)
+    const [filter2, setFilter2] = useState(filters2?.filter((filter)=>filter?.defaultValue)[0]?.key)
     const [sortAscending, setSortAscending] = useState(true)
+
 
     const [bulkSelectedIds, setBulkSelectedIds] = useState([])
     const [selectedBulkActionIndex, setSelectedBulkActionIndex] = useState(-1)
@@ -97,6 +98,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
 
     return (
         <Fragment>
+            
             <div className="card-body" style={{ maxHeight: "60vh", overflowY: "auto" }}>
                 <div className="d-flex justify-content-between mb-3 p-3 mx-auto" style={{ position: "sticky", top: "0", background: "white", boxShadow: "0 0 1em 0.01em rgba(0,0,0,0.1)" }}>
                     <div className="d-flex">
@@ -129,39 +131,36 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                         }
 
                         <div className="d-flex align-items-center mx-3">
-                            <label htmlFor="filter" className="form-label me-2">Filters</label>
-                            <select className="form-select"
-                                id="filter"
-                                defaultValue={filter}
-                                onChange={(e) => setFilter(e.target.value)}
-                            >
-                                <option value="">None</option>
-                                {filters?.map(({ key, value }, index) => {
-                                    return (
-                                        <option key={index} value={key}>{value}</option>
-                                    )
-                                })}
-                            </select>
-                        </div>
-
-                        {filters2 != null ?
-                            <div className="d-flex align-items-center mx-3">
-                                <label htmlFor="filter" className="form-label me-2">Filters</label>
+                            <label htmlFor="filter" className="form-label me-2">Filters: </label>
+                            <div>
                                 <select className="form-select"
                                     id="filter"
                                     defaultValue={filter}
-                                    onChange={(e) => setFilter2(e.target.value)}
-                                >
+                                    onChange={(e) => setFilter(e.target.value)}>
                                     <option value="">None</option>
-                                    {filters2?.map(({ key, value }, index) => {
+                                    {filters?.map(({ key, value }, index) => {
                                         return (
                                             <option key={index} value={key}>{value}</option>
                                         )
                                     })}
                                 </select>
-                            </div> : ""
-                        }
 
+                                {filters2 != null ?
+                                    <select className="form-select"
+                                        id="filter"
+                                        defaultValue={filter2}
+                                        onChange={(e) => setFilter2(e.target.value)}
+                                    >
+                                        <option value="">None</option>
+                                        {filters2?.map(({ key, value }, index) => {
+                                            return (
+                                                <option key={index} value={key}>{value}</option>
+                                            )
+                                        })}
+                                    </select> : ""
+                                }
+                            </div>
+                        </div>
                         <button className="btn btn-sm btn-outline-primary d-flex align-items-center"
                             disabled={isLoading}
                             onClick={reloadData}

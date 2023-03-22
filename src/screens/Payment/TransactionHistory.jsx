@@ -62,7 +62,7 @@ function TransactionHistory() {
         <Fragment>
             <PageMeta title="Transaction History | Local Voice" />
 
-            <div className="my-5 overflow-scroll">
+            <div className="mb-5 overflow-scroll">
                 <TableView
                     responseDataAttribute="transactions"
                     dataSourceUrl={`${BASE_API_URI}/payments/transactions-history`}

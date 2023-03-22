@@ -312,7 +312,7 @@ function AudiosTable() {
             </div>
 
 
-            <div className="my-5 overflow-scroll">
+            <div className="mb-5 overflow-scroll">
                 <TableView
                     reloadTrigger={triggerReload}
                     responseDataAttribute="audios"
@@ -325,7 +325,7 @@ function AudiosTable() {
                         { key: "locale:ee_gh", value: "Ewe" },
                         { key: "locale:kpo_gh", value: "Ikposo" },
                         { value: "---------------------" },
-                        ...(enumerators?.map(enumerator => { return { key: `submitted_by__id:${enumerator.id}`, value: `Recorded by '${enumerator.fullname}'` } }) || []).sort()
+                        ...(enumerators?.map(enumerator => { return { key: `submitted_by__id:${enumerator.id}`, value: `${enumerator.fullname}` } }) || []).sort()
                     ]}
                     filters2={[
                         { key: "is_accepted:1", value: "Accepted" },
