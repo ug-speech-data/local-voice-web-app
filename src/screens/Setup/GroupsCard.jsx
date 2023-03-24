@@ -150,7 +150,6 @@ function GroupsCard() {
 
     return (
         <Fragment>
-
             <div ref={permissionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
@@ -239,7 +238,7 @@ function GroupsCard() {
 
             <div className="card">
                 <div className="card-header d-flex justify-content-between" style={{ "position": "sticky", "top": "-1em", "zIndex": "1", "background": "white" }}>
-                    <h1>GROUP</h1>
+                    <p>GROUP</p>
                     <div className="d-flex card-options justify-content-end">
                         <button className="btn btn-primary btn-sm" onClick={showNewFormGroupModal} >Add</button>
                     </div>

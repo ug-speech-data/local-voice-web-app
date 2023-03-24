@@ -203,7 +203,7 @@ function CategoryCard() {
 
             <div className="card">
                 <div className="card-header d-flex justify-content-between" style={{ "position": "sticky", "top": "-1em", "zIndex": "1", "background": "white" }}>
-                    <h1>CATEGORY</h1>
+                    <p>CATEGORY</p>
                     <div className="d-flex card-options justify-content-end">
                         <button className="btn btn-primary btn-sm" onClick={showNewFormCategoryModal} >Add</button>
                     </div>

@@ -66,7 +66,7 @@ function PermissionsComponent({ group }) {
 
     return (
         <Fragment>
-            <h1>Permissions</h1>
+            <p>Permissions</p>
             {isFetching && <Spinner />}
             <table className='table'>
                 <thead>

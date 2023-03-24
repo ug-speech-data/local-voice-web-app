@@ -259,7 +259,7 @@ function UsersCard() {
                                 <input type="hidden" name="id"
                                     value={selectedUser ? selectedUser.id : ""} />
 
-                                <h1><b>BIO</b></h1>
+                                <p><b>BIO</b></p>
                                 <div className="mb-3">
                                     <label htmlFor="surname" className="form-label">Surname</label>
                                     <input type="text" className="form-control" id="surname" aria-describedby="surname"
@@ -353,7 +353,7 @@ function UsersCard() {
 
 
                                 <div className="mt-5">
-                                    <h1><b>GROUPS</b></h1>
+                                    <p><b>GROUPS</b></p>
                                     <TagInput tags={groups?.map((group) => group.name)} selectedTags={selectedGroups} setSelectedTags={setSelectedGroups} maxSelection={groups?.length} />
                                 </div>
 
@@ -366,7 +366,7 @@ function UsersCard() {
 
                                 <div className="my-5">
                                     <div className="d-flex justify-content-between">
-                                        <h1><b>PASSWORD</b></h1>
+                                        <p><b>PASSWORD</b></p>
                                         <button className="btn btn-light"
                                             type='button'
                                             onClick={() => {
@@ -407,7 +407,7 @@ function UsersCard() {
 
             <div className="card">
                 <div className="card-header d-flex justify-content-between" style={{ "position": "sticky", "top": "-1em", "zIndex": "1", "background": "white" }}>
-                    <h1>USERS</h1>
+                    <p>USERS</p>
                     <div className="d-flex card-options justify-content-end">
                         <button className="btn btn-primary btn-sm" onClick={showNewFormUserModal} >Add</button>
                     </div>

@@ -37,7 +37,7 @@ function BalanceWidget() {
     return (
         <Fragment>
             <div className="balance-display d-flex align-items-center">
-                <h1>Balance : GHC {balance !== null ? balance : "--"}</h1>
+                <p>Balance : GHC {balance !== null ? balance : "--"}</p>
                 <button className="ms-4 me-2 btn btn-sm btn-outline-primary"
                     disabled={isLoading}
                     onClick={() => trigger(`${BASE_API_URI}/payments/balance`)}>

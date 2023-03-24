@@ -249,7 +249,7 @@ function SystemConfigurationCard() {
         <Fragment>
             <div className="card">
                 <div className="card-header d-flex justify-content-between" style={{ "position": "sticky", "top": "-1em", "zIndex": "1", "background": "white" }}>
-                    <h1>GLOBAL CONFIGURATIONS</h1>
+                    <p>GLOBAL CONFIGURATIONS</p>
                     <div className="d-flex card-options justify-content-end">
                         <button className="btn btn-primary btn-sm"
                             disabled={isPuttingGroup}
