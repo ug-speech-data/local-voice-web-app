@@ -4,6 +4,7 @@ import DashboardCard from "../../components/DashboardCard";
 import { BASE_API_URI } from '../../utils/constants';
 import { Fragment, useEffect, useState } from "react";
 import useAxios from '../../app/hooks/useAxios';
+import PageMeta from "../../components/PageMeta";
 
 
 function Dashboard() {
@@ -37,6 +38,7 @@ function Dashboard() {
 
     return (
         <Fragment>
+            <PageMeta title="Dashboard | Speech Data UG" />
             <TopNav />
             <div className="p-2">
                 <div className="mx-auto d-flex flex-wrap col-lg-10">

@@ -208,8 +208,7 @@ function ParticipantsTable() {
 
     return (
         <Fragment>
-            <PageMeta title="Collected Participants | Local Voice" />
-
+            <PageMeta title="Participants Payment | Local Voice" />
             <div ref={confirmationModalRef} className="modal fade" tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-mg">
                     <div className="modal-content">

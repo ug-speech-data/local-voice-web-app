@@ -8,6 +8,7 @@ import TranscriptionValidation from "./TranscriptionValidation";
 import { Fragment } from "react";
 import { useSelector } from 'react-redux';
 import Permissions from "../../utils/permissions";
+import PageMeta from "../../components/PageMeta";
 
 function Tasks() {
     const userPermissions = useSelector((state) => new Set(state.authentication.userPermissions));
@@ -23,6 +24,7 @@ function Tasks() {
 
     return (
         <Fragment>
+            <PageMeta title="Validation and Transcription | Speech Data UG" />
             <TopNav />
             <div className="my-3 mx-auto col-md-10 col-11">
                 <h4><b>VALIDATION AND TRANSCRIPTION</b></h4>

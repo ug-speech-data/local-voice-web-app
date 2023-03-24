@@ -6,12 +6,14 @@ import UserPayment from './UserPayment';
 import TransactionHistory from './TransactionHistory';
 import BalanceWidget from "../../components/BalanceWidget";
 import ParticipantsTable from "./ParticipantsTable";
+import PageMeta from "../../components/PageMeta";
 
 
 function Payment() {
 
     return (
         <Fragment>
+            <PageMeta title="Payment | Speech Data UG" />
             <TopNav />
             <div className="my-3 mx-auto col-md-10">
                 <div className="d-flex justify-content-between align-items-center">
