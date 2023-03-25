@@ -386,8 +386,8 @@ function UsersCard() {
                                 </div>
 
                                 <div className="mb-5">
-                                    <p className='m-0 p-0'><small className=""><i>Created By: {selectedUser?.created_by}</i></small></p>
-                                    <p className='m-0 p-0'><small className=""><i>Updated By: {selectedUser?.updated_by}</i></small></p>
+                                    {Boolean(selectedUser?.created_by) ? <p className='m-0 p-0'><small className=""><i>Created By: {selectedUser?.created_by}</i></small></p> : ""}
+                                    {Boolean(selectedUser?.updated_by) ? <p className='m-0 p-0'><small className=""><i>Updated By: {selectedUser?.updated_by}</i></small></p> : ""}
                                 </div>
 
                                 <div className="mb-3">
