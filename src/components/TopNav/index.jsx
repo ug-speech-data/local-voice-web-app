@@ -142,10 +142,10 @@ function TopNav() {
 
                 <div className="drop-container position-relative">
                     <div className="d-flex align-items-center">
-                        <img src={user.avatar
-                            ? user.avatar
+                        <img src={user?.avatar
+                            ? user?.avatar
                             : "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} alt="avatar" className='profile-image mx-2' />
-                        <span className="ml-2">{user.short_name}</span>
+                        <span className="ml-2">{user?.short_name}</span>
                         <i className="ms-2 bi bi-chevron-down"></i>
                     </div>
 
