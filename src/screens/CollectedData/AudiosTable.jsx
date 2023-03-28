@@ -253,10 +253,8 @@ function AudiosTable() {
 
                             <div className="col-md-6 mx-auto">
                                 <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Name</b></label>
-                                    <input type="text" className="form-control" id="name" value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
+                                    <label htmlFor="name" className="form-label"><b>File ({selectedAudio?.id})</b></label>
+                                    <a href={selectedAudio?.audio_url} target="_blank">{selectedAudio?.audio_url}</a>
                                 </div>
                                 <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Batch Number</b></label>
@@ -273,10 +271,10 @@ function AudiosTable() {
                                     <p>{selectedAudio?.created_at}</p>
                                 </div>
 
-                                <div className="d-flex align-items-center" style={{overflow:"auto"}}>
+                                <div className="d-flex align-items-center" style={{ overflow: "auto" }}>
                                     <AudioPlayer
                                         canSeek={true}
-                                        src={selectedAudio?.file}
+                                        src={selectedAudio?.audio_url}
                                         setIsAudioBuffering={setIsAudioBuffering} />
 
                                     {selectedAudio && isAudioBuffering && <Spinner
@@ -360,7 +358,7 @@ function AudiosTable() {
                         key: "duration", value: "Player", render: (item) => {
                             return (
                                 <AudioPlayer
-                                    src={item?.file}
+                                    src={item?.audio_url}
                                     canSeek={true}
                                     setIsAudioBuffering={setIsAudioBuffering} />
                             )

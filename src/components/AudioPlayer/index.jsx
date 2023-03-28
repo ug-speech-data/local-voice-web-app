@@ -69,8 +69,22 @@ function AudioPlayer({ src, onEnded = () => null, canSeek = false, setIsAudioBuf
             setIsPlaying(false)
         }
         else if (audioPlayer?.paused == true) {
-            audioPlayer?.play()
-            setIsPlaying(true)
+            // audioPlayer?.play()
+            var playPromise = audioPlayer?.play();
+            // In browsers that don’t yet support this functionality,
+            // playPromise won’t be defined.
+            if (playPromise !== undefined) {
+                playPromise.then(function () {
+                    // Automatic playback started!
+                    setIsPlaying(true)
+                }).catch(function (error) {
+                    console.log(error);
+                    console.log("try to reload");
+                    audioPlayer.load();
+                    audioPlayer.play();
+                    setIsPlaying(true)
+                });
+            }
         }
     }
 
@@ -96,6 +110,8 @@ function AudioPlayer({ src, onEnded = () => null, canSeek = false, setIsAudioBuf
             audioPlayer.currentTime = 0
             audioPlayer.src = src
         }
+
+        console.log("src", src)
     }, [src])
 
 

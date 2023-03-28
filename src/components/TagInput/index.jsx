@@ -1,7 +1,7 @@
 import './style.scss';
 import { useState, useEffect } from 'react'
 
-function TagInput({ tags = [], selectedTags, setSelectedTags, maxSelection = null, heading = "Click to select" }) {
+function TagInput({ tags = [], selectedTags, setSelectedTags, maxSelection = null, heading = "Click to select", searchable = false }) {
     const [disabled, setDisabled] = useState(false)
 
     const handleTagClick = (tag) => {
@@ -22,6 +22,7 @@ function TagInput({ tags = [], selectedTags, setSelectedTags, maxSelection = nul
     return (
         <div className="tag-input">
 
+
             <div className="selected-tags">
                 {selectedTags?.length === 0 && <p className='m-0 p-0 text-warning'><b>None is selected</b></p>}
 
@@ -32,6 +33,10 @@ function TagInput({ tags = [], selectedTags, setSelectedTags, maxSelection = nul
 
             {heading && <p className='mt-3'>{heading}</p>}
             <div className="tags">
+                {searchable ?
+                    <input type="text" className='form-control' /> : ""}
+
+
                 {tags?.length > 0 ? tags?.map((tag, index) => (
                     <span
                         key={index}

@@ -354,7 +354,7 @@ function UsersCard() {
 
                                 <div className="mt-5">
                                     <p><b>GROUPS</b></p>
-                                    <TagInput tags={groups?.map((group) => group.name)} selectedTags={selectedGroups} setSelectedTags={setSelectedGroups} maxSelection={groups?.length} />
+                                    <TagInput tags={groups?.map((group) => group.name)} selectedTags={selectedGroups} setSelectedTags={setSelectedGroups} maxSelection={groups?.length} searchable={true} />
                                 </div>
 
                                 <div className="my-3">
@@ -378,7 +378,7 @@ function UsersCard() {
                                         </button>
                                     </div>
                                     {!hidePassowordUpdate &&
-                                        <div>
+                                    <div>
                                             {selectedUser && <p className="text-muted">Leave blank to keep current password</p>}
                                             <PasswordInput value={password} setValue={setPassword} required={selectedUser === null} />
                                         </div>
