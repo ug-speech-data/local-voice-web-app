@@ -78,8 +78,6 @@ function AudioPlayer({ src, onEnded = () => null, canSeek = false, setIsAudioBuf
                     // Automatic playback started!
                     setIsPlaying(true)
                 }).catch(function (error) {
-                    console.log(error);
-                    console.log("try to reload");
                     audioPlayer.load();
                     audioPlayer.play();
                     setIsPlaying(true)
@@ -110,8 +108,6 @@ function AudioPlayer({ src, onEnded = () => null, canSeek = false, setIsAudioBuf
             audioPlayer.currentTime = 0
             audioPlayer.src = src
         }
-
-        console.log("src", src)
     }, [src])
 
 
