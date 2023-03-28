@@ -138,7 +138,13 @@ function ProfileScreen() {
                     <h4>PROFILE</h4>
                 </div>
                 <div className="mx-auto col-lg-4 col-md-6 mx-auto">
-                    <form onSubmit={handleFormSubmit}>
+                    <div className="mt-2 pb-3">
+                        <h1><b>STATS</b></h1>
+                        <p className="">Audios Validated: {currentUser?.audios_validated}</p>
+                    </div>
+                    <hr />
+
+                    <form onSubmit={handleFormSubmit} className="form mt-5">
                         <h1><b>BIO</b></h1>
                         <div className="mb-3">
                             <label htmlFor="surname" className="form-label">Surname</label>
