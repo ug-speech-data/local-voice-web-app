@@ -267,7 +267,7 @@ function AudiosTable() {
                                 </div>
 
                                 <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Participant's Phone</b></label>
+                                    <label htmlFor="name" className="form-label"><b>Submitted By</b></label>
                                     <p>{selectedAudio?.participant_phone}</p>
                                 </div>
 
