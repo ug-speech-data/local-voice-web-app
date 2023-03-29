@@ -267,6 +267,11 @@ function AudiosTable() {
                                 </div>
 
                                 <div className="my-3">
+                                    <label htmlFor="name" className="form-label"><b>Participant's Phone</b></label>
+                                    <p>{selectedAudio?.participant_phone}</p>
+                                </div>
+
+                                <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Date</b></label>
                                     <p>{selectedAudio?.created_at}</p>
                                 </div>
