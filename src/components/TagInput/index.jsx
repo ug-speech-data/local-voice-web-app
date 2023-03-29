@@ -33,10 +33,6 @@ function TagInput({ tags = [], selectedTags, setSelectedTags, maxSelection = nul
 
             {heading && <p className='mt-3'>{heading}</p>}
             <div className="tags">
-                {searchable ?
-                    <input type="text" className='form-control' /> : ""}
-
-
                 {tags?.length > 0 ? tags?.map((tag, index) => (
                     <span
                         key={index}
