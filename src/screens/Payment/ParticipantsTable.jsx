@@ -33,6 +33,7 @@ function ParticipantsTable() {
     const [amount, setAmount] = useState(0);
     const [network, setNetwork] = useState('');
     const [momoNumber, setMomoNumber] = useState('');
+    const [flatten, setFlatten] = useState(null);
 
     useEffect(() => {
         if (editParticipantModalRef.current !== null && editParticipantModal === null) {
@@ -94,6 +95,7 @@ function ParticipantsTable() {
             setAmount(selectedParticipant?.amount || 0)
             setNetwork(selectedParticipant?.network || "")
             setMomoNumber(selectedParticipant.momo_number)
+            setFlatten(selectedParticipant.flatten)
         }
     }, [selectedParticipant])
 
@@ -106,6 +108,7 @@ function ParticipantsTable() {
             momo_number: momoNumber,
             amount: amount,
             network: network,
+            flatten: flatten,
             id: selectedParticipant?.id || -1,
         }
         const response = await putParticipant(body).unwrap()
@@ -283,9 +286,16 @@ function ParticipantsTable() {
                                     <input type="text" className="form-control" id="name" value={fullname} onChange={(e) => setFullname(e.target.value)} />
                                 </div>
 
-                                <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Amount</b></label>
-                                    <input type="number" className="form-control" id="name" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                                <div className="row align-items-center">
+                                    <div className="my-3 col-md-8">
+                                        <label htmlFor="name" className="form-label"><b>Amount</b></label>
+                                        <input type="number" className="form-control" id="name" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                                    </div>
+                                    <div className="my-3 col-md-4">
+                                        <label htmlFor="flatten" className="form-label m-0"><b>Flatten <i className="bi bi-info-circle" title='This amount will not be updated again to reflect the number of audios.'></i></b></label>
+                                        <br />
+                                        <input type="checkbox" className="form-check-input" onChange={(e) => setFlatten(e.target.checked)} checked={flatten} />
+                                    </div>
                                 </div>
 
                                 <div className="my-3">
@@ -343,7 +353,7 @@ function ParticipantsTable() {
                     dataSourceUrl={`${BASE_API_URI}/collected-participants/`}
                     newUpdate={newUpdate}
                     filters={[
-                        { key: "type:ASSISTED", value: "Assisted Participants"},
+                        { key: "type:ASSISTED", value: "Assisted Participants" },
                         { key: "type:INDEPENDENT", value: "Independent Participants" },
                     ]}
                     filters2={[
@@ -368,8 +378,6 @@ function ParticipantsTable() {
                         key: "momo_number", value: "Momo Number"
                     }, {
                         key: "type", value: "Type"
-                    }, {
-                        key: "gender", value: "Gender"
                     }, {
                         key: "audio_count", value: "Audios"
                     }, {

@@ -42,6 +42,7 @@ function UsersCard() {
     const [locale, setLocale] = useState('');
     const [assignedImageBatch, setAssignedImageBatch] = useState('');
     const [assignedAudioBatch, setAssignedAudioBatch] = useState('');
+    const [leadEmailAddress, setLeadEmailAddress] = useState('');
 
     // Filter inputs
     const [search, setSearch] = useState('');
@@ -75,6 +76,7 @@ function UsersCard() {
         setLocale(user.locale || "")
         setAssignedImageBatch(user.assigned_image_batch || "")
         setAssignedAudioBatch(user.assigned_audio_batch || "")
+        setLeadEmailAddress(user.lead_email_address || "")
         setIsActive(user.is_active)
         setPassword("")
         modal?.show()
@@ -91,6 +93,7 @@ function UsersCard() {
         setAssignedImageBatch("")
         setAssignedAudioBatch("")
         setPassword("")
+        setLeadEmailAddress("")
         modal?.show()
     }
 
@@ -143,6 +146,7 @@ function UsersCard() {
             is_active: isActive,
             assigned_image_batch: assignedImageBatch,
             assigned_audio_batch: assignedAudioBatch,
+            lead_email_address: leadEmailAddress,
             password: password,
         }
         if (selectedUser) {
@@ -351,6 +355,13 @@ function UsersCard() {
                                         value={assignedAudioBatch} />
                                 </div>
 
+                                <div className="mb-3">
+                                    <label htmlFor="lead_email_address" className="form-label">Email Language Lead</label>
+                                    <input type="email" className="form-control" id="lead_email_address" aria-describedby="lead_email_address"
+                                        onChange={(e) => setLeadEmailAddress(e.target.value)}
+                                        placeholder="Email Language Lead"
+                                        value={leadEmailAddress} />
+                                </div>
 
                                 <div className="mt-5">
                                     <p><b>GROUPS</b></p>
@@ -378,7 +389,7 @@ function UsersCard() {
                                         </button>
                                     </div>
                                     {!hidePassowordUpdate &&
-                                    <div>
+                                        <div>
                                             {selectedUser && <p className="text-muted">Leave blank to keep current password</p>}
                                             <PasswordInput value={password} setValue={setPassword} required={selectedUser === null} />
                                         </div>

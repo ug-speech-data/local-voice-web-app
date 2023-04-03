@@ -19,7 +19,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
     // Filter inputs
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('');
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(100);
 
     // Pagination
     const [page, setPage] = useState(1);
@@ -99,7 +99,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
     return (
         <Fragment>
             
-            <div className="card-body" style={{ maxHeight: "60vh", overflowY: "auto" }}>
+            <div className="card-body" style={{ maxHeight: "70vh", overflowY: "auto" }}>
                 <div className="d-flex justify-content-between mb-3 p-3 mx-auto" style={{ position: "sticky", top: "0", background: "white", boxShadow: "0 0 1em 0.01em rgba(0,0,0,0.1)" }}>
                     <div className="d-flex">
                         <div className="d-flex align-items-center">
@@ -221,7 +221,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
 
                         {displayedData?.map((item, index) => {
                             return (
-                                <tr key={index} style={{ height: "5em", verticalAlign: "middle" }}>
+                                <tr key={index} style={{ minHeight: "3em", verticalAlign: "middle" }}>
                                     {bulkActions?.length > 0 && <td>
                                         <input type="checkbox" className="form-check-input" id="bulk_select"
                                             onChange={(e) => {
@@ -258,10 +258,8 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
             <div className="d-flex align-items-center mx-3 my-3">
                 <div className="d-flex align-items-center me-2">
                     <select className="form-select" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)} defaultValue={page}>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
                         <option value="100">100</option>
+                        <option value="200">200</option>
                         <option value="300">300</option>
                     </select>
                 </div>
