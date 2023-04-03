@@ -1,5 +1,5 @@
 import './style.scss';
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useLogOutUserMutation, logOutLocally } from '../../features/authentication/authentication-api-slice';
 import { setActiveNavMenu } from '../../features/global/global-slice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,7 +13,6 @@ import useAxios from '../../app/hooks/useAxios';
 
 function TopNav() {
     const userPermissions = useSelector((state) => new Set(state.authentication.userPermissions));
-    const activeMenu = useSelector((state) => state.global.activeTopNavMenu);
     const user = useSelector((state) => state.authentication.user);
     const [notifications, setNotifications] = useState([]);
 
@@ -90,27 +89,27 @@ function TopNav() {
                 <div className='side-bar-toggler'>
                     <button className="btn btn-light" onClick={toggleMenu}><i className="bi bi-list"></i></button>
                 </div>
-                <Link to="/" className='logo'>
+                <NavLink to="/" className='logo'>
                     <div className="d-flex align-items-center">
                         <img className='logo me-2' src={logo} alt="logo" />
                         <p style={{ fontWeight: "800" }}>SPEECHDATA</p>
                     </div>
-                </Link>
+                </NavLink>
             </div>
             <div className="overlay"></div>
             <div className='nav-left'>
                 {userPermissions.has(Permissions.VIEW_DASHBOARD) &&
-                    <Link key="/dashboard" to="/dashboard" className={`nav-menu-item ${activeMenu === 'home' ? 'active' : ''}`} onClick={() => setActiveMenu("home")}>DASHBOARD</Link>
+                    <NavLink key="/dashboard" to="/dashboard" className={`nav-menu-item`} onClick={() => setActiveMenu("home")}>DASHBOARD</NavLink>
                 }
-                <Link key="/tasks" to="/tasks" className={`nav-menu-item ${activeMenu === 'validation' ? 'active' : ''}`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</Link>
+                <NavLink key="/tasks" to="/tasks" className={`nav-menu-item`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</NavLink>
                 {userPermissions.has(Permissions.MANAGE_COLLECTED_DATA) &&
-                    <Link key="/collected-data" to="/collected-data" className={`nav-menu-item ${activeMenu === 'collected-data' ? 'active' : ''}`} onClick={() => setActiveMenu("collected-data")}>DATA</Link>
+                    <NavLink key="/collected-data" to="/collected-data" className={`nav-menu-item`} onClick={() => setActiveMenu("collected-data")}>DATA</NavLink>
                 }
                 {userPermissions.has(Permissions.MANAGE_PAYMENT) &&
-                    <Link key="/payment" to="/payment" className={`nav-menu-item ${activeMenu === 'payment' ? 'active' : ''}`} onClick={() => setActiveMenu("payment")}>PAYMENT</Link>
+                    <NavLink key="/payment" to="/payment" className={`nav-menu-item`} onClick={() => setActiveMenu("payment")}>PAYMENT</NavLink>
                 }
                 {userPermissions.has(Permissions.MANAGE_SETUP) &&
-                    <Link key="/setup" to="/setup" className={`nav-menu-item ${activeMenu === 'setup' ? 'active' : ''}`} onClick={() => setActiveMenu("setup")}>SETUP</Link>
+                    <NavLink key="/setup" to="/setup" className={`nav-menu-item`} onClick={() => setActiveMenu("setup")}>SETUP</NavLink>
                 }
             </div>
             <div className='nav-right d-flex align-items-center position-relative'>

@@ -11,6 +11,7 @@ import TagInput from '../../components/TagInput';
 import useAxios from '../../app/hooks/useAxios';
 import { Spinner, useToast } from '@chakra-ui/react';
 import { BASE_API_URI } from '../../utils/constants';
+import { useSearchParams } from "react-router-dom";
 
 
 function CollectedData() {

@@ -10,6 +10,7 @@ import { Spinner, useToast } from '@chakra-ui/react';
 import { BASE_API_URI } from '../../utils/constants';
 import useAxios from '../../app/hooks/useAxios';
 import PageMeta from '../../components/PageMeta';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 function ParticipantsTable() {
@@ -375,7 +376,12 @@ function ParticipantsTable() {
                         key: "fullname", value: "Name",
 
                     }, {
-                        key: "momo_number", value: "Momo Number"
+                        key: "momo_number", value: "Momo Number", render: (item) => {
+                            return (
+                                <Link to={`/collected-data?query=${item.momo_number}`}
+                                    className="text-primary">{item.momo_number}</Link>
+                            )
+                        }
                     }, {
                         key: "type", value: "Type"
                     }, {

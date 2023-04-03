@@ -1,6 +1,7 @@
 import "./style.scss"
 import { Fragment, useState, useEffect } from 'react';
 import useAxios from '../../app/hooks/useAxios';
+import { useSearchParams } from "react-router-dom";
 
 import { Spinner } from '@chakra-ui/react';
 
@@ -8,16 +9,16 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
     const [originalData, setOriginalData] = useState([])
     const [displayedData, setDisplayedData] = useState([])
     const { trigger, data: responseData, error, isLoading } = useAxios()
-    const [filter, setFilter] = useState(filters?.filter((filter)=>filter?.defaultValue)[0]?.key)
-    const [filter2, setFilter2] = useState(filters2?.filter((filter)=>filter?.defaultValue)[0]?.key)
+    const [filter, setFilter] = useState(filters?.filter((filter) => filter?.defaultValue)[0]?.key)
+    const [filter2, setFilter2] = useState(filters2?.filter((filter) => filter?.defaultValue)[0]?.key)
     const [sortAscending, setSortAscending] = useState(true)
-
+    let [searchParams, setSearchParams] = useSearchParams();
 
     const [bulkSelectedIds, setBulkSelectedIds] = useState([])
     const [selectedBulkActionIndex, setSelectedBulkActionIndex] = useState(-1)
 
     // Filter inputs
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(searchParams.get('query') || "");
     const [sort, setSort] = useState('');
     const [pageSize, setPageSize] = useState(100);
 
@@ -98,7 +99,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
 
     return (
         <Fragment>
-            
+
             <div className="card-body" style={{ maxHeight: "70vh", overflowY: "auto" }}>
                 <div className="d-flex justify-content-between mb-3 p-3 mx-auto" style={{ position: "sticky", top: "0", background: "white", boxShadow: "0 0 1em 0.01em rgba(0,0,0,0.1)" }}>
                     <div className="d-flex">
