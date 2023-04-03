@@ -16,6 +16,10 @@ import Error404Screen from "./screens/ErrorScreens/Error404";
 import HomeScreen from "./screens/Home";
 import Payment from "./screens/Payment";
 import ProfileScreen from "./screens/Profile";
+import UsersCard from "./screens/Setup/UsersCard";
+import SystemConfigurationCard from "./screens/Setup/SystemConfigurationCard";
+import CategoryCard from "./screens/Setup/CategoriesCard";
+import GroupsCard from "./screens/Setup/GroupsCard";
 
 
 function App() {
@@ -48,7 +52,13 @@ function App() {
           <ProtectedRoute permissions={[Permissions.MANAGE_SETUP]}>
             <Setup />
           </ProtectedRoute>
-        } />
+        }>
+          <Route path="" element={<UsersCard />} />
+          <Route path="users" element={<UsersCard />} />
+          <Route path="system-configuration" element={<SystemConfigurationCard />} />
+          <Route path="categories" element={<CategoryCard />} />
+          <Route path="groups" element={<GroupsCard />} />
+        </Route>
 
         <Route path="/payment" element={
           <ProtectedRoute permissions={[Permissions.MANAGE_SETUP]}>

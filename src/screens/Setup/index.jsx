@@ -7,6 +7,7 @@ import GroupsCard from './GroupsCard';
 import UsersCard from './UsersCard';
 import SystemConfigurationCard from './SystemConfigurationCard';
 import PageMeta from '../../components/PageMeta';
+import { NavLink, Outlet } from "react-router-dom";
 
 
 function Setup() {
@@ -23,21 +24,19 @@ function Setup() {
                         Setup global configuration for the web and mobile application.
                     </p>
 
-                    <div className="row setup-container">
-                        <div className="col-md-6 setup-card-container mx-auto">
-                            <SystemConfigurationCard />
+                    <div className='row'>
+                        <div className="col-md-2">
+                            <nav className='side-nav'>
+                                <h4 className='my-2'><NavLink to="/setup/users">Users</NavLink></h4>
+                                <h4 className='my-2'><NavLink to="/setup/system-configuration">System Configuration</NavLink></h4>
+                                <h4 className='my-2'><NavLink to="/setup/groups">Groups/Roles</NavLink></h4>
+                                <h4 className='my-2'><NavLink to="/setup/categories">Image Categories</NavLink></h4>
+                            </nav>
                         </div>
-
-                        <div className="col-md-6 setup-card-container mx-auto">
-                            <CategoryCard />
-                        </div>
-
-                        <div className="col-md-12 setup-card-container mx-auto">
-                            <GroupsCard />
-                        </div>
-
-                        <div className="col-md-12 mx-auto overflow-scroll">
-                            <UsersCard />
+                        <div className="col-md-9  setup-container">
+                            <div className='setup-card-container'>
+                                <Outlet />
+                            </div>
                         </div>
                     </div>
                 </div>
