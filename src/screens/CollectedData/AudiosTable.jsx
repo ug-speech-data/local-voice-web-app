@@ -345,7 +345,7 @@ function AudiosTable() {
                             return (
                                 <div>
                                     <div className="d-flex align-items-center">
-                                        <TextOverflow text={item.name} width={10} />
+                                        <TextOverflow text={item.audio_url} width={10} />
                                         {item.is_accepted ?
                                             (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
                                             :

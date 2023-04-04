@@ -293,7 +293,7 @@ export const { useGetImageToValidateQuery,
     useGetUserPermissionsQuery,
 
     useLazyGetUserPermissionsQuery,
-    useGetAudioToTranscribeQuery,
+    useLazyGetAudioToTranscribeQuery,
     useGetTranscriptionToValidateQuery,
     useValidateTranscriptionMutation,
 

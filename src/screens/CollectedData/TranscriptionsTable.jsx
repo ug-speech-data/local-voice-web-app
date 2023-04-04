@@ -301,7 +301,10 @@ function TranscriptionsTable() {
                     responseDataAttribute="transcriptions"
                     dataSourceUrl={`${BASE_API_URI}/collected-transcriptions/`}
                     newUpdate={newUpdate}
-                    filters={[{ key: "is_accepted:1", value: "Accepted" }, { key: "is_accepted:0", value: "Pending" }]}
+                    filters={[{ key: "is_accepted:1", value: "Accepted" },
+                    { key: "transcription_status:pending", value: "Pending" },
+                    { key: "transcription_status:conflict", value: "Conflict" },
+                    ]}
                     bulkActions={[
                         { name: "Approve Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
                         { name: "Reject Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
@@ -310,19 +313,11 @@ function TranscriptionsTable() {
                         key: "name", value: "Audio", render: (item) => {
                             return (
                                 <div className="d-flex align-items-center">
-                                    <TextOverflow text={item.audio.name} width={30} />
+                                    <TextOverflow text={item.audio.audio_url} width={30} />
                                     {item.is_accepted ?
-                                        <ToolTip title="Add Transcription" header={
-                                            (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
-                                        }>
-                                            Transcription has be approved. Click on more to view more details.
-                                        </ToolTip>
+                                        <span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>
                                         :
-                                        <ToolTip title="Add Transcription" header={
-                                            (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>)
-                                        }>
-                                            This transcription is pending approval. Click on more to view more details.
-                                        </ToolTip>
+                                        <span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>
                                     }
                                 </div>
                             )

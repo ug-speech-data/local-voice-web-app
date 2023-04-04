@@ -2,13 +2,13 @@ import './style.scss';
 import AudioPlayer from "../../components/AudioPlayer";
 import { useState, useEffect } from 'react';
 import { useToast, Spinner } from '@chakra-ui/react';
-import { useGetAudioToTranscribeQuery, useSubmitTranscriptionMutation } from '../../features/resources/resources-api-slice';
+import { useLazyGetAudioToTranscribeQuery, useSubmitTranscriptionMutation } from '../../features/resources/resources-api-slice';
 
 function Transcription() {
     //HACK : offset is used to trigger a new request to the API
     const [offset, setOffset] = useState(0);
 
-    const { data: response = {}, isFetching: isFetchingAudio, error: audioFetchingError } = useGetAudioToTranscribeQuery(offset);
+    const [getAudiosToTranscribe, { data: response = {}, isFetching: isFetchingAudio, error: audioFetchingError }] = useLazyGetAudioToTranscribeQuery(offset);
     const [submitTranscription, { isLoading: isSubmittingTranscription, error: audioValidationError }] = useSubmitTranscriptionMutation()
     const toast = useToast()
     const [text, setText] = useState('')
@@ -31,7 +31,7 @@ function Transcription() {
         // Loading audio
         setIsAudioBuffering(true)
         setIsActionButtonDisabled(true)
-        setOffset(currentAudio?.id || -1)
+        getAudiosToTranscribe()
         setText('')
     }
 
@@ -69,12 +69,16 @@ function Transcription() {
         setIsActionButtonDisabled(false)
     }
 
+    useEffect(() => {
+        getAudiosToTranscribe()
+    }, [])
+
     return (
         <section className='image-validation'>
             {currentAudio === undefined || currentAudio === null ?
                 <div className="my-5">
                     <p className='text-warning text-center'><b>No more audios to transcribe</b></p>
-                    <p className='text-center my-3'><button className='btn btn-primary' onClick={() => setOffset(-1)}>
+                    <p className='text-center my-3'><button className='btn btn-primary' onClick={() => getAudiosToTranscribe()}>
                         {isFetchingAudio && <Spinner size={"sm"} />}
                         Reload
                     </button></p>
@@ -86,11 +90,11 @@ function Transcription() {
                     <p>Please transcribe the audio below as it is.</p>
                 </div>}
 
-            {currentAudio && !isFetchingAudio && <p className='text-center'>{currentAudio.name}</p>}
+            {currentAudio && !isFetchingAudio && <p className='text-center'>{currentAudio.audio_url}</p>}
 
             {currentAudio === undefined ?
                 <div className="my-5 d-flex justify-content-center align-items-center">
-                    <h2>No audios to validate</h2>
+                    <h2>No audios to transcribe</h2>
                 </div> : null
             }
 
@@ -127,7 +131,7 @@ function Transcription() {
                     <button
                         className="btn btn-outline-primary mx-3 px-3"
                         disabled={isSubmittingTranscription}
-                        onClick={() => setOffset(currentAudio?.id || -1)}>
+                        onClick={() => getAudiosToTranscribe()}>
                         <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
                     </button>
                     <button className="btn btn-outline-success me-2 px-3"
