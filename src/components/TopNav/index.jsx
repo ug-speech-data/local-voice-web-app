@@ -99,17 +99,17 @@ function TopNav() {
             <div className="overlay"></div>
             <div className='nav-left'>
                 {userPermissions.has(Permissions.VIEW_DASHBOARD) &&
-                    <NavLink key="/dashboard" to="/dashboard" className={`nav-menu-item`} onClick={() => setActiveMenu("home")}>DASHBOARD</NavLink>
+                    <NavLink key="/dashboard" to="/dashboard" className={`nav-menu-item`}>DASHBOARD</NavLink>
                 }
-                <NavLink key="/tasks" to="/tasks" className={`nav-menu-item`} onClick={() => setActiveMenu("validation")}>VALIDATION AND TRANSCRIPTION</NavLink>
+                <NavLink key="/tasks" to="/tasks" className={`nav-menu-item`}>VALIDATION AND TRANSCRIPTION</NavLink>
                 {userPermissions.has(Permissions.MANAGE_COLLECTED_DATA) &&
-                    <NavLink key="/collected-data" to="/collected-data" className={`nav-menu-item`} onClick={() => setActiveMenu("collected-data")}>DATA</NavLink>
+                    <NavLink key="/collected-data" to="/collected-data" className={`nav-menu-item`}>DATA</NavLink>
                 }
                 {userPermissions.has(Permissions.MANAGE_PAYMENT) &&
-                    <NavLink key="/payment" to="/payment" className={`nav-menu-item`} onClick={() => setActiveMenu("payment")}>PAYMENT</NavLink>
+                    <NavLink key="/payment" to="/payment" className={`nav-menu-item`}>PAYMENT</NavLink>
                 }
                 {userPermissions.has(Permissions.MANAGE_SETUP) &&
-                    <NavLink key="/setup" to="/setup" className={`nav-menu-item`} onClick={() => setActiveMenu("setup")}>SETUP</NavLink>
+                    <NavLink key="/setup" to="/setup" className={`nav-menu-item`}>SETUP</NavLink>
                 }
             </div>
             <div className='nav-right d-flex align-items-center position-relative'>

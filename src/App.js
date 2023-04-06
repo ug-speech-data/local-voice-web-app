@@ -61,7 +61,7 @@ function App() {
         </Route>
 
         <Route path="/payment" element={
-          <ProtectedRoute permissions={[Permissions.MANAGE_SETUP]}>
+          <ProtectedRoute permissions={[Permissions.MANAGE_PAYMENT]}>
             <Payment />
           </ProtectedRoute>
         } />
