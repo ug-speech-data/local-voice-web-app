@@ -130,8 +130,11 @@ function AudioValidation() {
 
             <div className="container">
                 {currentAudio &&
-                    <div className="col-10 col-md-8 mx-auto d-flex justify-content-center align-items-center">
-                        <p className='m-2'>Please verify whether the audio correctly describes the image below.</p>
+                    <div className="col-10 col-md-8 mx-auto my-3">
+                        <p className="text-center"><span className="badge bg-primary">Audio ID: {currentAudio.id}</span></p>
+                        <p className='m-2 text-center'><a href={currentAudio.audio_url} target='_blank'>{currentAudio.audio_url}</a></p>
+                        
+                        <p className='m-2 text-center my-4'><strong>Please verify whether the audio correctly describes the image below.</strong></p>
                     </div>}
 
                 <div className="col-10 col-md-8 mx-auto d-flex justify-content-center align-items-center">
