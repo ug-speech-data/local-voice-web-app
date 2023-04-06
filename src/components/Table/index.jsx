@@ -12,9 +12,10 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
     const [filter, setFilter] = useState(filters?.filter((filter) => filter?.defaultValue)[0]?.key)
     const [filter2, setFilter2] = useState(filters2?.filter((filter) => filter?.defaultValue)[0]?.key)
     const [sortAscending, setSortAscending] = useState(true)
-    let [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     const [bulkSelectedIds, setBulkSelectedIds] = useState([])
+    const [selectedItems, setSelectedItems] = useState([])
     const [selectedBulkActionIndex, setSelectedBulkActionIndex] = useState(-1)
 
     // Filter inputs
@@ -127,7 +128,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                 </select>
                                 <button className="btn btn-primary"
                                     disabled={selectedBulkActionIndex < 0 || bulkSelectedIds.length === 0}
-                                    onClick={() => bulkActions[selectedBulkActionIndex]?.action(bulkSelectedIds)}>Go</button>
+                                    onClick={() => bulkActions[selectedBulkActionIndex]?.action(bulkSelectedIds, selectedItems)}>Go</button>
                             </div>
                         }
 
@@ -180,8 +181,10 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                     onChange={(e) => {
                                         if (e.target.checked) {
                                             setBulkSelectedIds(displayedData.map(c => c.id))
+                                            setSelectedItems([...displayedData])
                                         } else {
                                             setBulkSelectedIds([])
+                                            setSelectedItems([])
                                         }
                                     }}
                                     checked={bulkSelectedIds.length === displayedData.length && bulkSelectedIds.length > 0}
@@ -228,8 +231,10 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                             onChange={(e) => {
                                                 if (e.target.checked) {
                                                     setBulkSelectedIds([...bulkSelectedIds, item.id])
+                                                    setSelectedItems([...selectedItems, item])
                                                 } else {
                                                     setBulkSelectedIds(bulkSelectedIds.filter(c => c != item.id))
+                                                    setSelectedItems(selectedItems.filter(c => c != item))
                                                 }
                                             }}
                                             checked={bulkSelectedIds.includes(item.id)}

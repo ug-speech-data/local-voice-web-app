@@ -10,7 +10,7 @@ import { Spinner, useToast } from '@chakra-ui/react';
 import { BASE_API_URI } from '../../utils/constants';
 import useAxios from '../../app/hooks/useAxios';
 import PageMeta from '../../components/PageMeta';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 function ParticipantsTable() {
@@ -28,6 +28,7 @@ function ParticipantsTable() {
     const [editParticipantModal, setEditParticipantModal] = useState(null);
     const [newUpdate, setNewUpdate] = useState(null);
     const [selectedIds, setSelectedIds] = useState([])
+    const [totalToPay, setTotalToPay] = useState(0)
 
     // Form input
     const [fullname, setFullname] = useState('');
@@ -57,7 +58,7 @@ function ParticipantsTable() {
         }
         const response = await deleteParticipant({ id: selectedParticipant.id }).unwrap()
         const errorMessage = response["error_message"]
-        if (errorMessage !== undefined || errorMessage !== null) {
+        if ((errorMessage !== undefined) || (errorMessage !== null)) {
             setNewUpdate({ item: selectedParticipant, action: "remove" })
             toast({
                 position: 'top-center',
@@ -225,6 +226,7 @@ function ParticipantsTable() {
                         <div className="modal-body">
                             <div className="form-group my-3">
                                 <p className='h6 text-center'>Continue to pay every selected user?</p>
+                                <p className="text text-center">Total Amount: <span className="badge bg-primary">GHC {totalToPay}</span></p>
                                 <div className="my-3 d-flex justify-content-center">
                                     <button className="btn btn-primary"
                                         disabled={isSubmittingBulkAction}
@@ -364,7 +366,16 @@ function ParticipantsTable() {
                         { key: "transaction__status:success", value: "Transaction Succeeded" },
                     ]}
                     bulkActions={[
-                        { name: "Pay selected", action: (bulkSelectedIds) => showBulkPayConfirmationModal(bulkSelectedIds) },
+                        {
+                            name: "Pay selected", action: (bulkSelectedIds, selectedItems) => {
+                                let total = 0
+                                selectedItems.forEach(participant => {
+                                    total += Number.parseFloat(participant.amount)
+                                });
+                                setTotalToPay(total)
+                                showBulkPayConfirmationModal(bulkSelectedIds)
+                            }
+                        },
                         {
                             name: "Check status of selected", action: (bulkSelectedIds) => {
                                 setSelectedIds(bulkSelectedIds)
@@ -393,9 +404,9 @@ function ParticipantsTable() {
                             return (
                                 <span>
                                     {item?.transaction === null && <span className="badge bg-warning">No payment</span>}
-                                    {item?.transaction?.status == "pending" ?
+                                    {item?.transaction?.status === "pending" ?
                                         <span className='badge bg-warning'>{item?.transaction?.status}</span> :
-                                        item?.transaction?.status == "success" ?
+                                        item?.transaction?.status === "success" ?
                                             <span className='badge bg-success'>{item?.transaction?.status}</span> :
                                             <span className='badge bg-danger'>{item?.transaction?.status}</span>
                                     }
