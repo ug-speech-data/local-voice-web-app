@@ -332,7 +332,7 @@ function AudiosTable() {
                     ]}
                     filters2={[
                         { key: "is_accepted:1", value: "Accepted" },
-                        { key: "is_accepted:0", value: "Pending" },
+                        { key: "audio_status:pending", value: "Pending" },
                         { key: "rejected:1", value: "Rejected" },
                         { key: "is_accepted:0:validations", value: "Validation Conflict" },
                     ]}
