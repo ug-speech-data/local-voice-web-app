@@ -398,8 +398,10 @@ function ParticipantsTable() {
                     }, {
                         key: "audio_count", value: "Audios"
                     }, {
-                        key: "amount", value: "Amount (GHC)"
-                    }, {
+                        key: "audios_validated", value: "% Val."
+                    },{
+                        key: "amount", value: "Amount (₵)"
+                    },  {
                         key: "paid", value: "Payment", render: (item) => {
                             return (
                                 <span>
@@ -418,13 +420,9 @@ function ParticipantsTable() {
                         value: "Actions", render: (item) => {
                             return (
                                 <div className="d-flex">
-                                    <button className="btn btn-sm btn-primary me-1 d-flex" onClick={() => showEditParticipantModal(item)}>
+                                    <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showEditParticipantModal(item)}>
                                         <i className="bi bi-list me-1"></i>
                                         More
-                                    </button>
-                                    <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showDeleteParticipantModal(item)}>
-                                        <i className="bi bi-trash me-1"></i>
-                                        Delete
                                     </button>
                                 </div>
                             )
