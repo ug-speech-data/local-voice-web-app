@@ -3,7 +3,6 @@ import TableView from '../../components/Table';
 import { Fragment, useRef, useState, useEffect } from 'react';
 import { Modal } from 'bootstrap';
 import {
-    useDeleteTranscriptionsMutation,
     useUpdateTranscriptionsMutation,
 } from '../../features/resources/resources-api-slice';
 import { Spinner, useToast } from '@chakra-ui/react';
@@ -95,6 +94,36 @@ function TranscriptionsTable() {
         }
     }, [successPuttingTranscription])
 
+    useEffect(() => {
+        highlight(`text-0-container`, `text-1-container`)
+    }, [selectedTranscription])
+
+    function highlight(newId, oldId) {
+        const oldElem = document.getElementById(oldId)
+        const newElem = document.getElementById(newId)
+        if (!Boolean(oldElem) || !Boolean(newElem)) return
+
+        const oldText = oldElem?.innerText.toLowerCase();
+        const newText = newElem?.innerText.toLowerCase();
+
+        let text = '';
+        newText.split('').forEach(function (val, i) {
+            if (val != oldText?.charAt(i)) {
+                if (val === " ") {
+                    text += "<span class='highlight'>&nbsp;";
+                } else {
+                    text += "<span class='highlight'>" + val;
+                }
+                text += "</span>";
+            }
+            else
+                text += val;
+        });
+        if (Boolean(newElem)) {
+            newElem.innerHTML = text
+        }
+    }
+
     return (
         <Fragment>
             <PageMeta title="Collected Transcriptions | Local Voice" />
@@ -141,14 +170,15 @@ function TranscriptionsTable() {
                                 <div className="my-3">
                                     <p htmlFor="name" className="m-0"><b>Transcriptions</b></p>
                                     {selectedTranscription?.transcriptions?.map((text, index) => {
-                                        return <div className='mb-3'>
+                                        const parent = <div className='mb-3'>
                                             <p className='text-primary d-flex align-items-center'><strong>Text {index + 1}</strong>
                                                 <button className="btn btn-sm btn-light d-flex align-items-center" onClick={(e) => setCorrectedText(text)}>
                                                     <i className="bi bi-pencil me-1"></i><small>Edit this</small>
                                                 </button>
                                             </p>
-                                            <p className="text-justify">{text}</p>
+                                            <p className="text-justify transcribed-text-container" id={`text-${index}-container`}>{text}</p>
                                         </div>
+                                        return parent;
                                     })}
                                     <hr />
                                     <p htmlFor="name" className="mt-3"><b>Edit</b></p>
