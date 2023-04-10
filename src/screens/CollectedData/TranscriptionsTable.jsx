@@ -10,7 +10,6 @@ import { Spinner, useToast } from '@chakra-ui/react';
 import TextOverflow from '../../components/TextOverflow';
 import { BASE_API_URI } from '../../utils/constants';
 import AudioPlayer from "../../components/AudioPlayer";
-import useAxios from '../../app/hooks/useAxios';
 import PageMeta from '../../components/PageMeta';
 import { useSelector } from 'react-redux';
 
@@ -19,7 +18,6 @@ function TranscriptionsTable() {
     const [triggerReload, setTriggerReload] = useState(0);
     const loggedInUser = useSelector((state) => state.authentication.user);
 
-    const [deleteTranscription, { isLoading: isDeletingTranscription, error: errorDeletingTranscription }] = useDeleteTranscriptionsMutation()
     const [putTranscription, { isLoading: isPuttingTranscription, isSuccess: successPuttingTranscription, error: errorPuttingTranscription }] = useUpdateTranscriptionsMutation()
 
     const deletionModalRef = useRef(null);
@@ -34,6 +32,7 @@ function TranscriptionsTable() {
 
     // Form input
     const [correctedText, setCorrectedText] = useState('');
+    const [transcriptionStatus, setTranscriptionStatus] = useState('accepted');
 
     useEffect(() => {
         if (editTranscriptionModalRef.current !== null && editTranscriptionModal === null) {
@@ -49,6 +48,7 @@ function TranscriptionsTable() {
     const showEditTranscriptionModal = (audio) => {
         setSelectedTranscription(audio)
         setCorrectedText("")
+        setTranscriptionStatus("accepted")
         editTranscriptionModal?.show()
     }
 
@@ -58,13 +58,14 @@ function TranscriptionsTable() {
         }
         const body = {
             text: correctedText,
+            transcription_status: transcriptionStatus,
             id: selectedTranscription?.id || -1,
         }
-        console.log(selectedTranscription)
         const response = await putTranscription(body).unwrap()
         if (response?.transcription !== undefined) {
             setNewUpdate({ item: response.transcription, action: "update" })
         }
+        setTriggerReload((triggerReload) => triggerReload + 1);
     }
 
     useEffect(() => {
@@ -93,51 +94,6 @@ function TranscriptionsTable() {
             editTranscriptionModal?.hide()
         }
     }, [successPuttingTranscription])
-
-
-    // Bulk actions
-    const { trigger: executeBulAudioAction, data: bulkActionResponseData, error: bulkActionError, isLoading: isSubmittingBulkAction } = useAxios({ method: "POST" })
-    function handleBulImageAction(ids, action) {
-        toast({
-            id: "submitting",
-            title: `Executing actions for ${ids.length} audios`,
-            status: "info",
-            position: "top-center",
-            isClosable: true,
-        })
-        executeBulAudioAction(
-            `${BASE_API_URI}/transcriptions-bulk-actions/`,
-            { ids: ids, action: action }
-        )
-    }
-
-    useEffect(() => {
-        toast.close("submitting")
-        if (bulkActionResponseData?.message) {
-            toast({
-                title: `Info`,
-                description: bulkActionResponseData?.message,
-                status: "info",
-                position: "top-center",
-                duration: 2000,
-                isClosable: true,
-            })
-        }
-    }, [bulkActionResponseData])
-
-    useEffect(() => {
-        toast.close("submitting")
-        if (bulkActionError) {
-            toast({
-                title: `Error`,
-                description: bulkActionError,
-                status: "error",
-                position: "top-center",
-                duration: 2000,
-                isClosable: true,
-            })
-        }
-    }, [bulkActionError])
 
     return (
         <Fragment>
@@ -201,12 +157,18 @@ function TranscriptionsTable() {
                                 </div>
 
                                 <div className="my-3 d-flex justify-content-end">
+                                    <div className='d-flex align-items-center' onChange={(e) => setTranscriptionStatus(e.target.value)}>
+                                        <select name="transcriptionStatus" id="transcriptionStatus" className='form-select' value={transcriptionStatus}>
+                                            <option value="accepted">Accepted</option>
+                                            <option value="conflict">Conflict</option>
+                                            <option value="pending">Pending</option>
+                                        </select>
+                                    </div>
                                     <button className="btn btn-primary btn-sm"
-                                        disabled={isPuttingTranscription || !Boolean(correctedText)}
+                                        disabled={isPuttingTranscription || (!Boolean(correctedText) && transcriptionStatus === "accepted")}
                                         onClick={handleSubmission}>{isPuttingTranscription && <Spinner />} Save and approve</button>
                                 </div>
                             </div>
-
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -218,6 +180,7 @@ function TranscriptionsTable() {
 
             <div className="mb-5 overflow-scroll">
                 <TableView
+                    reloadTrigger={triggerReload}
                     responseDataAttribute="audios"
                     dataSourceUrl={`${BASE_API_URI}/collected-transcriptions/`}
                     newUpdate={newUpdate}
@@ -231,10 +194,6 @@ function TranscriptionsTable() {
                     filters2={[{ key: "transcription_status:accepted", value: "Accepted" },
                     { key: "transcription_status:pending", value: "Pending" },
                     { key: "transcription_status:conflict", value: "Conflict" },
-                    ]}
-                    bulkActions={[
-                        { name: "Approve Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
-                        { name: "Reject Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
                     ]}
                     headers={[{
                         key: "audio_url", value: "Audio", render: (item) => {
