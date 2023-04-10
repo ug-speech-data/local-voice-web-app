@@ -166,7 +166,7 @@ function TranscriptionsTable() {
                                     </div>
                                     <button className="btn btn-primary btn-sm"
                                         disabled={isPuttingTranscription || (!Boolean(correctedText) && transcriptionStatus === "accepted")}
-                                        onClick={handleSubmission}>{isPuttingTranscription && <Spinner />} Save and approve</button>
+                                        onClick={handleSubmission}>{isPuttingTranscription && <Spinner />} Submit</button>
                                 </div>
                             </div>
                         </div>
