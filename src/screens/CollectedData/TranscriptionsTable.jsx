@@ -339,10 +339,6 @@ function TranscriptionsTable() {
                                         <i className="bi bi-list me-1"></i>
                                         More
                                     </button>
-                                    <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showDeleteTranscriptionModal(item)}>
-                                        <i className="bi bi-trash me-1"></i>
-                                        Delete
-                                    </button>
                                 </div>
                             )
                         }
