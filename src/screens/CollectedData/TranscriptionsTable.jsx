@@ -34,7 +34,6 @@ function TranscriptionsTable() {
 
     // Form input
     const [correctedText, setCorrectedText] = useState('');
-    const [isAccepted, setIsAccepted] = useState(false);
 
     useEffect(() => {
         if (editTranscriptionModalRef.current !== null && editTranscriptionModal === null) {
@@ -49,6 +48,7 @@ function TranscriptionsTable() {
 
     const showEditTranscriptionModal = (audio) => {
         setSelectedTranscription(audio)
+        setCorrectedText("")
         editTranscriptionModal?.show()
     }
 
@@ -168,6 +168,7 @@ function TranscriptionsTable() {
                                     <label htmlFor="name" className="form-label"><b>Audio</b></label>
                                     <div className="d-flex justify-content-start align-items-center">
                                         <AudioPlayer
+                                            canSeek={true}
                                             src={selectedTranscription?.audio_url}
                                             setIsAudioBuffering={setIsTranscriptionBuffering} />
 
