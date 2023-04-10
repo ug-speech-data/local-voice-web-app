@@ -3,6 +3,8 @@ import AudioPlayer from "../../components/AudioPlayer";
 import { useState, useEffect } from 'react';
 import { useToast, Spinner } from '@chakra-ui/react';
 import { useLazyGetAudioToTranscribeQuery, useSubmitTranscriptionMutation } from '../../features/resources/resources-api-slice';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 function Transcription() {
     //HACK : offset is used to trigger a new request to the API
@@ -121,8 +123,12 @@ function Transcription() {
 
             {currentAudio &&
                 <div className="col-md-10 mx-auto transcription-box">
-                    <textarea className='form-control' value={text} rows="5" placeholder='Type here' onChange={e => setText(e.target.value)}>
-                    </textarea>
+                    
+                    
+                    {/* <ReactQuill theme="snow" value={text} onChange={setText} />; */}
+                    
+                    
+                    <textarea className='form-control' value={text} rows="5" placeholder='Type here' onChange={e => setText(e.target.value)}></textarea>
                 </div>
             }
 

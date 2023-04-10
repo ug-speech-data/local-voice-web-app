@@ -111,6 +111,7 @@ function TopNav() {
                 {userPermissions.has(Permissions.MANAGE_SETUP) &&
                     <NavLink key="/setup" to="/setup" className={`nav-menu-item`}>SETUP</NavLink>
                 }
+
             </div>
             <div className='nav-right d-flex align-items-center position-relative'>
                 <div className="drop-container position-relative">

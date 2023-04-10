@@ -100,7 +100,6 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
 
     return (
         <Fragment>
-
             <div className="card-body" style={{ maxHeight: "70vh", overflowY: "auto" }}>
                 <div className="d-flex justify-content-between mb-3 p-3 mx-auto" style={{ position: "sticky", top: "0", background: "white", boxShadow: "0 0 1em 0.01em rgba(0,0,0,0.1)" }}>
                     <div className="d-flex">
@@ -131,38 +130,39 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                     onClick={() => bulkActions[selectedBulkActionIndex]?.action(bulkSelectedIds, selectedItems)}>Go</button>
                             </div>
                         }
-
-                        <div className="d-flex align-items-center mx-3">
-                            <label htmlFor="filter" className="form-label me-2">Filters: </label>
-                            <div>
-                                <select className="form-select"
-                                    id="filter"
-                                    defaultValue={filter}
-                                    onChange={(e) => setFilter(e.target.value)}>
-                                    <option value="">None</option>
-                                    {filters?.map(({ key, value }, index) => {
-                                        return (
-                                            <option key={index} value={key}>{value}</option>
-                                        )
-                                    })}
-                                </select>
-
-                                {filters2 != null ?
+                        {Boolean(filters) ?
+                            <div className="d-flex align-items-center mx-3">
+                                <label htmlFor="filter" className="form-label me-2">Filters: </label>
+                                <div>
                                     <select className="form-select"
                                         id="filter"
-                                        defaultValue={filter2}
-                                        onChange={(e) => setFilter2(e.target.value)}
-                                    >
+                                        defaultValue={filter}
+                                        onChange={(e) => setFilter(e.target.value)}>
                                         <option value="">None</option>
-                                        {filters2?.map(({ key, value }, index) => {
+                                        {filters?.map(({ key, value }, index) => {
                                             return (
                                                 <option key={index} value={key}>{value}</option>
                                             )
                                         })}
-                                    </select> : ""
-                                }
+                                    </select>
+
+                                    {filters2 != null ?
+                                        <select className="form-select"
+                                            id="filter"
+                                            defaultValue={filter2}
+                                            onChange={(e) => setFilter2(e.target.value)}
+                                        >
+                                            <option value="">None</option>
+                                            {filters2?.map(({ key, value }, index) => {
+                                                return (
+                                                    <option key={index} value={key}>{value}</option>
+                                                )
+                                            })}
+                                        </select> : ""
+                                    }
+                                </div>
                             </div>
-                        </div>
+                            : ""}
                         <button className="btn btn-sm btn-outline-primary d-flex align-items-center"
                             disabled={isLoading}
                             onClick={reloadData}

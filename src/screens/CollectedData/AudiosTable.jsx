@@ -12,10 +12,12 @@ import { BASE_API_URI } from '../../utils/constants';
 import AudioPlayer from "../../components/AudioPlayer";
 import useAxios from '../../app/hooks/useAxios';
 import PageMeta from '../../components/PageMeta';
+import { useSelector } from 'react-redux';
 
 
 function AudiosTable() {
     const [triggerReload, setTriggerReload] = useState(0);
+    const loggedInUser = useSelector((state) => state.authentication.user);
 
     const [deleteAudio, { isLoading: isDeletingAudio, error: errorDeletingAudio }] = useDeleteAudiosMutation()
     const [putAudio, { isLoading: isPuttingAudio, isSuccess: successPuttingAudio, error: errorPuttingAudio }] = useUpdateAudiosMutation()
@@ -322,11 +324,11 @@ function AudiosTable() {
                     dataSourceUrl={`${BASE_API_URI}/collected-audios/`}
                     newUpdate={newUpdate}
                     filters={[
-                        { key: "locale:ak_gh", value: "Akan" },
-                        { key: "locale:dga_gh", value: "Dagbani" },
-                        { key: "locale:dag_gh", value: "Dagaare" },
-                        { key: "locale:ee_gh", value: "Ewe" },
-                        { key: "locale:kpo_gh", value: "Ikposo" },
+                        { key: "locale:ak_gh", value: "Akan", defaultValue: loggedInUser?.locale === "ak_gh" },
+                        { key: "locale:dga_gh", value: "Dagbani", defaultValue: loggedInUser?.locale === "dga_gh" },
+                        { key: "locale:dag_gh", value: "Dagaare", defaultValue: loggedInUser?.locale === "dag_gh" },
+                        { key: "locale:ee_gh", value: "Ewe", defaultValue: loggedInUser?.locale === "ee_gh" },
+                        { key: "locale:kpo_gh", value: "Ikposo", defaultValue: loggedInUser?.locale === "kpo_gh" },
                         { value: "---------------------" },
                         ...(enumerators?.map(enumerator => { return { key: `submitted_by__id:${enumerator.id}`, value: `${enumerator.fullname}` } }) || []).sort()
                     ]}

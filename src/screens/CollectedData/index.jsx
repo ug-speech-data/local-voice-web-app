@@ -12,6 +12,8 @@ import useAxios from '../../app/hooks/useAxios';
 import { Spinner, useToast } from '@chakra-ui/react';
 import { BASE_API_URI } from '../../utils/constants';
 import { useSearchParams } from "react-router-dom";
+import LimitedUsersTable from './LimitedUsersTable';
+import { useParams, useLocation } from 'react-router-dom'
 
 
 function CollectedData() {
@@ -25,6 +27,15 @@ function CollectedData() {
     ]
     const [selectedFields, setSelectedFields] = useState([...allFields])
     const [format, setFormat] = useState("wav")
+    const [searchParams] = useSearchParams();
+    const [currentTab, setCurrentTab] = useState(searchParams.get('tab') || 0);
+    const location = useLocation()
+    const params = useParams();
+
+    useEffect(() => {
+        const tab = searchParams.get('tab');
+        setCurrentTab(tab || 0)
+    }, [location, params])
 
     const { trigger: exportAudioData, data: responseData, error, isLoading: isLoadingSubmittingExportRequest } = useAxios()
 
@@ -135,10 +146,11 @@ function CollectedData() {
                         </button>
                     </div>
                 </div>
-                <TabLayout tabs={["Audios", "Transcriptions", "Images"]}>
+                <TabLayout tabs={["Audios", "Transcriptions", "Images", "Sample"]} currentTab={currentTab}>
                     <AudiosTable />
                     <TranscriptionsTable />
                     <ImagesTable />
+                    <LimitedUsersTable />
                 </TabLayout>
             </div>
             <Footer />

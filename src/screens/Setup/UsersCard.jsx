@@ -1,19 +1,23 @@
 import {
-    useLazyGetUsersQuery,
+    useLazyGetGroupsQuery,
     usePutUsersMutation,
     useDeleteUsersMutation,
 } from '../../features/resources/resources-api-slice';
 import { Fragment, useState, useEffect, useRef } from 'react';
+import {
+    setGroups as setStoreGroups,
+} from '../../features/global/global-slice';
 import { Modal } from 'bootstrap';
 import { useToast, Spinner } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
 import TagInput from '../../components/TagInput';
 import PasswordInput from '../../components/PasswordInput';
 import SelectInput from '../../components/SelectInput';
 import TableView from '../../components/Table';
 import { BASE_API_URI } from '../../utils/constants';
+import { useDispatch } from 'react-redux';
 
 function UsersCard() {
+    const dispatch = useDispatch()
     const [triggerReload, setTriggerReload] = useState(0);
     const modalRef = useRef(null);
     const deletionModalRef = useRef(null);
@@ -27,9 +31,10 @@ function UsersCard() {
 
     const [putUser, { isLoading: isPuttingUser, error: errorPuttingUser }] = usePutUsersMutation()
     const [deleteUser, { isLoading: isDeletingUser, error: errorDeletingUser }] = useDeleteUsersMutation()
-    const groups = useSelector((state) => state.global.groups);
+    const [getGroups, { data: response = [], isFetching, error }] = useLazyGetGroupsQuery()
     const [selectedGroups, setSelectedGroups] = useState([]);
-    const [allUsers, setAllUsers] = useState([])
+    const [allUsers] = useState([])
+    const [groups, setGroups] = useState([])
 
     // Form input
     const [surname, setSurname] = useState('');
@@ -53,6 +58,14 @@ function UsersCard() {
         setSelectedGroups(groups)
     }, [selectedUser])
 
+    useEffect(() => {
+        setGroups(response["groups"])
+        dispatch(setStoreGroups(response["groups"]))
+    }, [isFetching])
+
+    useEffect(() => {
+        getGroups()
+    }, [])
 
     useEffect(() => {
         if (modalRef.current !== null && modal === null) {
@@ -369,6 +382,9 @@ function UsersCard() {
                                 </div>
 
                                 <div className="my-3">
+                                    <p className="p-0 m-0">
+                                        <small className="text-muted">Uncheck to block this user.</small>
+                                    </p>
                                     <label htmlFor="is_active" className="form-label">Is Active</label>
                                     <input type="checkbox" className="ms-2 form-check-input" id="is_active" aria-describedby="is_active"
                                         checked={isActive}
