@@ -248,8 +248,8 @@ function AudiosTable() {
                         </div>
                         <div className="modal-body row">
                             <div className="col-md-6 mx-auto">
-                                <div className="d-flex justify-content-center align-items-center">
-                                    <img src={selectedAudio?.image_url} alt={selectedAudio?.name} />
+                                <div className="d-flex justify-content-center align-items-center" style={{maxHeight: "40vh"}}>
+                                    <img src={selectedAudio?.image_url} alt={selectedAudio?.name} style={{maxHeight: "50vh"}} />
                                 </div>
                             </div>
 

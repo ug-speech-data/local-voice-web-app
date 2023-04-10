@@ -8,14 +8,17 @@ import {
 } from '../../features/resources/resources-api-slice';
 import { Spinner, useToast } from '@chakra-ui/react';
 import TextOverflow from '../../components/TextOverflow';
-import ToolTip from '../../components/ToolTip';
 import { BASE_API_URI } from '../../utils/constants';
 import AudioPlayer from "../../components/AudioPlayer";
 import useAxios from '../../app/hooks/useAxios';
 import PageMeta from '../../components/PageMeta';
+import { useSelector } from 'react-redux';
 
 
 function TranscriptionsTable() {
+    const [triggerReload, setTriggerReload] = useState(0);
+    const loggedInUser = useSelector((state) => state.authentication.user);
+
     const [deleteTranscription, { isLoading: isDeletingTranscription, error: errorDeletingTranscription }] = useDeleteTranscriptionsMutation()
     const [putTranscription, { isLoading: isPuttingTranscription, isSuccess: successPuttingTranscription, error: errorPuttingTranscription }] = useUpdateTranscriptionsMutation()
 
@@ -187,7 +190,6 @@ function TranscriptionsTable() {
         }
     }, [bulkActionError])
 
-
     return (
         <Fragment>
             <PageMeta title="Collected Transcriptions | Local Voice" />
@@ -197,7 +199,7 @@ function TranscriptionsTable() {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">
-                                Delete Transcription - '{selectedTranscription?.audio.name}'
+                                Delete Transcription - '{selectedTranscription?.audio_url}'
                             </h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -225,33 +227,28 @@ function TranscriptionsTable() {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">
-                                {selectedTranscription ? "Edit Transcription" : "New Transcription"}
+                            {selectedTranscription?.audio_url}
                             </h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body row">
                             <div className="col-md-6 mx-auto">
                                 <div className="d-flex justify-content-center align-items-center">
-                                    <img src={selectedTranscription?.audio.image_url} alt={selectedTranscription?.audio.name} />
+                                    <img src={selectedTranscription?.image_url} alt={selectedTranscription?.audio_url} style={{maxHeight: "40vh"}}/>
                                 </div>
                             </div>
 
                             <div className="col-md-6 mx-auto">
                                 <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Text</b></label>
-                                    <p className="text-justify">{selectedTranscription?.text}</p>
-                                </div>
-
-                                <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Locale</b></label>
-                                    <p className="text-justify">{selectedTranscription?.audio.locale}</p>
+                                    <p className="text-justify">{selectedTranscription?.locale}</p>
                                 </div>
 
                                 <div className="my-3">
                                     <label htmlFor="name" className="form-label"><b>Audio</b></label>
-                                    <div className="d-flex justify-content-center align-items-center">
+                                    <div className="d-flex justify-content-start align-items-center">
                                         <AudioPlayer
-                                            src={selectedTranscription?.audio.audio_url}
+                                            src={selectedTranscription?.audio_url}
                                             setIsAudioBuffering={setIsTranscriptionBuffering} />
 
                                         {selectedTranscription && isTranscriptionBuffering && <Spinner
@@ -265,19 +262,13 @@ function TranscriptionsTable() {
                                 </div>
 
                                 <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Validations</b></label>
-                                    <div>
-                                        {selectedTranscription?.validations?.map((validation, valIndex) => (
-                                            <span key={valIndex} className={validation.is_valid ? 'badge bg-primary' : 'badge bg-warning'}>{validation.user}</span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="my-3">
-                                    <label htmlFor="name" className="form-label me-2">Accepted</label>
-                                    <input type="checkbox" className="form-check-input"
-                                        onChange={() => setIsAccepted(!isAccepted)}
-                                        checked={isAccepted} />
+                                    <label htmlFor="name" className="form-label"><b>Transcriptions</b></label>
+                                    {selectedTranscription?.transcriptions?.map((text, index) => {
+                                        return <div className='my-3'> 
+                                            <p className='text-warning'><strong>Text {index + 1}</strong></p>
+                                            <p className="text-justify">{text}</p>
+                                        </div>
+                                    })}
                                 </div>
 
                                 <div className="my-3 d-flex justify-content-end">
@@ -298,10 +289,17 @@ function TranscriptionsTable() {
 
             <div className="mb-5 overflow-scroll">
                 <TableView
-                    responseDataAttribute="transcriptions"
+                    responseDataAttribute="audios"
                     dataSourceUrl={`${BASE_API_URI}/collected-transcriptions/`}
                     newUpdate={newUpdate}
-                    filters={[{ key: "is_accepted:1", value: "Accepted" },
+                    filters={[
+                        { key: "locale:ak_gh", value: "Akan", defaultValue: loggedInUser?.locale === "ak_gh" },
+                        { key: "locale:dga_gh", value: "Dagbani", defaultValue: loggedInUser?.locale === "dga_gh" },
+                        { key: "locale:dag_gh", value: "Dagaare", defaultValue: loggedInUser?.locale === "dag_gh" },
+                        { key: "locale:ee_gh", value: "Ewe", defaultValue: loggedInUser?.locale === "ee_gh" },
+                        { key: "locale:kpo_gh", value: "Ikposo", defaultValue: loggedInUser?.locale === "kpo_gh" },
+                    ]}
+                    filters2={[{ key: "is_accepted:1", value: "Accepted" },
                     { key: "transcription_status:pending", value: "Pending" },
                     { key: "transcription_status:conflict", value: "Conflict" },
                     ]}
@@ -310,10 +308,10 @@ function TranscriptionsTable() {
                         { name: "Reject Selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
                     ]}
                     headers={[{
-                        key: "name", value: "Audio", render: (item) => {
+                        key: "audio_url", value: "Audio", render: (item) => {
                             return (
                                 <div className="d-flex align-items-center">
-                                    <TextOverflow text={item.audio.audio_url} width={30} />
+                                    <TextOverflow text={item.audio_url} width={30} />
                                     {item.is_accepted ?
                                         <span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>
                                         :
@@ -323,22 +321,13 @@ function TranscriptionsTable() {
                             )
                         }
                     }, {
-                        key: "submitted_by", value: "User"
-                    }, {
+                        key: "locale", value: "Locale"
+                    },
+                    {
                         key: "image_url", value: "Image", render: (item) => {
                             return (
                                 <div>
-                                    <img src={item.audio.thumbnail} alt={item.audio.name} className="profile-image" onClick={() => showEditTranscriptionModal(item)} />
-                                </div>
-                            )
-                        }
-                    }, {
-                        key: "validations", value: "Validations", render: (item) => {
-                            return (
-                                <div>
-                                    {item.validations?.map((validation, valIndex) => (
-                                        <span key={valIndex} className={validation.is_valid ? 'badge bg-primary' : 'badge bg-warning'}>{validation.user}</span>
-                                    ))}
+                                    <img src={item.thumbnail} alt={item.image_url} className="profile-image" onClick={() => showEditTranscriptionModal(item)} />
                                 </div>
                             )
                         }

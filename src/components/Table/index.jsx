@@ -126,7 +126,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                     })}
                                 </select>
                                 <button className="btn btn-primary"
-                                    disabled={selectedBulkActionIndex < 0 || bulkSelectedIds.length === 0}
+                                    disabled={selectedBulkActionIndex < 0 || bulkSelectedIds?.length === 0}
                                     onClick={() => bulkActions[selectedBulkActionIndex]?.action(bulkSelectedIds, selectedItems)}>Go</button>
                             </div>
                         }
