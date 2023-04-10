@@ -123,11 +123,11 @@ function Transcription() {
 
             {currentAudio &&
                 <div className="col-md-10 mx-auto transcription-box">
-                    
-                    
+
+
                     {/* <ReactQuill theme="snow" value={text} onChange={setText} />; */}
-                    
-                    
+
+
                     <textarea className='form-control' value={text} rows="5" placeholder='Type here' onChange={e => setText(e.target.value)}></textarea>
                 </div>
             }
@@ -137,7 +137,7 @@ function Transcription() {
                     <button
                         className="btn btn-outline-primary mx-3 px-3"
                         disabled={isSubmittingTranscription}
-                        onClick={() => getAudiosToTranscribe()}>
+                        onClick={() => getAudiosToTranscribe(currentAudio?.id || -1)}>
                         <span><i className="bi bi-skip-forward me-1"></i>Skip</span>
                     </button>
                     <button className="btn btn-outline-success me-2 px-3"

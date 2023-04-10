@@ -33,7 +33,7 @@ function TranscriptionsTable() {
     const [isTranscriptionBuffering, setIsTranscriptionBuffering] = useState(true)
 
     // Form input
-    const [name, setName] = useState('');
+    const [correctedText, setCorrectedText] = useState('');
     const [isAccepted, setIsAccepted] = useState(false);
 
     useEffect(() => {
@@ -47,61 +47,20 @@ function TranscriptionsTable() {
         }
     }, [])
 
-    const handleDeleteTranscription = async () => {
-        if (selectedTranscription === null) {
-            return
-        }
-        const response = await deleteTranscription({ id: selectedTranscription.id }).unwrap()
-        const errorMessage = response["error_message"]
-        if (errorMessage !== undefined || errorMessage !== null) {
-            setNewUpdate({ item: selectedTranscription, action: "remove" })
-            toast({
-                position: 'top-center',
-                title: `Success`,
-                description: "Transcription deleted successfully",
-                status: 'success',
-                duration: 2000,
-                isClosable: true,
-            })
-        } else {
-            toast({
-                position: 'top-center',
-                title: `An error occurred`,
-                description: errorMessage,
-                status: 'error',
-                duration: 2000,
-                isClosable: true,
-            })
-        }
-        deleteAlertModal?.hide()
-    }
-
-    const showEditTranscriptionModal = (image) => {
-        setSelectedTranscription(image)
+    const showEditTranscriptionModal = (audio) => {
+        setSelectedTranscription(audio)
         editTranscriptionModal?.show()
     }
-
-    const showDeleteTranscriptionModal = (image) => {
-        setSelectedTranscription(image)
-        deleteAlertModal?.show()
-    }
-
-    useEffect(() => {
-        if (selectedTranscription) {
-            setName(selectedTranscription.name)
-            setIsAccepted(selectedTranscription.is_accepted)
-        }
-    }, [selectedTranscription])
 
     const handleSubmission = async () => {
         if (selectedTranscription === null) {
             return
         }
         const body = {
-            name,
+            text: correctedText,
             id: selectedTranscription?.id || -1,
-            is_accepted: isAccepted,
         }
+        console.log(selectedTranscription)
         const response = await putTranscription(body).unwrap()
         if (response?.transcription !== undefined) {
             setNewUpdate({ item: response.transcription, action: "update" })
@@ -112,24 +71,14 @@ function TranscriptionsTable() {
         if (errorPuttingTranscription) {
             toast({
                 title: `Error: ${errorPuttingTranscription.status}`,
-                description: "An error occurred while updating the image",
+                description: "An error occurred while updating the transcription.",
                 status: "error",
                 position: "top-center",
                 duration: 2000,
                 isClosable: true,
             })
         }
-        if (errorDeletingTranscription) {
-            toast({
-                title: `Error: ${errorDeletingTranscription.status}`,
-                description: "An error occurred while deleting the image",
-                position: "top-center",
-                status: "error",
-                duration: 2000,
-                isClosable: true,
-            })
-        }
-    }, [errorPuttingTranscription, errorDeletingTranscription])
+    }, [errorPuttingTranscription])
 
     useEffect(() => {
         if (successPuttingTranscription) {
@@ -193,48 +142,19 @@ function TranscriptionsTable() {
     return (
         <Fragment>
             <PageMeta title="Collected Transcriptions | Local Voice" />
-
-            <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-md">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">
-                                Delete Transcription - '{selectedTranscription?.audio_url}'
-                            </h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="modal-body d-flex justify-content-center overflow-scroll">
-                                <div className="d-flex flex-column">
-                                    <h5>Are you sure you want to delete this image?</h5>
-                                    <p className="text-muted">This action cannot be undone.</p>
-                                </div>
-                            </div>
-                            <p className="text-center mb-3">
-                                {isDeletingTranscription && <Spinner />}
-                            </p>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-outline-danger" onClick={() => handleDeleteTranscription(selectedTranscription)} >Yes, continue</button>
-                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div ref={editTranscriptionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-xl">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">
-                            {selectedTranscription?.audio_url}
+                                {selectedTranscription?.audio_url}
                             </h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body row">
                             <div className="col-md-6 mx-auto">
                                 <div className="d-flex justify-content-center align-items-center">
-                                    <img src={selectedTranscription?.image_url} alt={selectedTranscription?.audio_url} style={{maxHeight: "40vh"}}/>
+                                    <img src={selectedTranscription?.image_url} alt={selectedTranscription?.audio_url} style={{ maxHeight: "40vh" }} />
                                 </div>
                             </div>
 
@@ -262,19 +182,27 @@ function TranscriptionsTable() {
                                 </div>
 
                                 <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Transcriptions</b></label>
+                                    <p htmlFor="name" className="m-0"><b>Transcriptions</b></p>
                                     {selectedTranscription?.transcriptions?.map((text, index) => {
-                                        return <div className='my-3'> 
-                                            <p className='text-warning'><strong>Text {index + 1}</strong></p>
+                                        return <div className='mb-3'>
+                                            <p className='text-primary d-flex align-items-center'><strong>Text {index + 1}</strong>
+                                                <button className="btn btn-sm btn-light d-flex align-items-center" onClick={(e) => setCorrectedText(text)}>
+                                                    <i className="bi bi-pencil me-1"></i><small>Edit this</small>
+                                                </button>
+                                            </p>
                                             <p className="text-justify">{text}</p>
                                         </div>
                                     })}
+                                    <hr />
+                                    <p htmlFor="name" className="mt-3"><b>Edit</b></p>
+                                    <small className='text-muted'>Edit and save</small>
+                                    <textarea className='form-control' rows="5" placeholder='Type here' value={correctedText} onChange={(e) => setCorrectedText(e.target.value)}></textarea>
                                 </div>
 
                                 <div className="my-3 d-flex justify-content-end">
                                     <button className="btn btn-primary btn-sm"
-                                        disabled={isPuttingTranscription}
-                                        onClick={handleSubmission}>{isPuttingTranscription && <Spinner />} Save Changes</button>
+                                        disabled={isPuttingTranscription || !Boolean(correctedText)}
+                                        onClick={handleSubmission}>{isPuttingTranscription && <Spinner />} Save and approve</button>
                                 </div>
                             </div>
 
@@ -299,7 +227,7 @@ function TranscriptionsTable() {
                         { key: "locale:ee_gh", value: "Ewe", defaultValue: loggedInUser?.locale === "ee_gh" },
                         { key: "locale:kpo_gh", value: "Ikposo", defaultValue: loggedInUser?.locale === "kpo_gh" },
                     ]}
-                    filters2={[{ key: "is_accepted:1", value: "Accepted" },
+                    filters2={[{ key: "transcription_status:accepted", value: "Accepted" },
                     { key: "transcription_status:pending", value: "Pending" },
                     { key: "transcription_status:conflict", value: "Conflict" },
                     ]}
@@ -312,7 +240,7 @@ function TranscriptionsTable() {
                             return (
                                 <div className="d-flex align-items-center">
                                     <TextOverflow text={item.audio_url} width={30} />
-                                    {item.is_accepted ?
+                                    {item.transcription_status === 'accepted' ?
                                         <span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>
                                         :
                                         <span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>
@@ -327,7 +255,7 @@ function TranscriptionsTable() {
                         key: "image_url", value: "Image", render: (item) => {
                             return (
                                 <div>
-                                    <img src={item.thumbnail} alt={item.image_url} className="profile-image" onClick={() => showEditTranscriptionModal(item)} />
+                                    <img src={item.thumbnail} alt={item.thumbnail} className="profile-image" onClick={() => showEditTranscriptionModal(item)} />
                                 </div>
                             )
                         }

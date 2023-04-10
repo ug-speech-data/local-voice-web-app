@@ -139,13 +139,15 @@ function ProfileScreen() {
                 </div>
                 <div className="mx-auto col-lg-4 col-md-6 mx-auto">
                     <div className="mt-2 pb-3">
-                        <h1><b>STATS</b></h1>
-                        <p className="">Audios Validated: {currentUser?.audios_validated}</p>
+                        <h5><b>STATS</b></h5>
+                        <p className="">Audios You Validated: {currentUser?.audios_validated}</p>
+                        <p className="">Your Audios Rejected: {currentUser?.audios_rejected}</p>
+                        <p className="">Your Audios Accepted: {currentUser?.audios_accepted}</p>
                     </div>
                     <hr />
 
                     <form onSubmit={handleFormSubmit} className="form mt-5">
-                        <h1><b>BIO</b></h1>
+                        <h5><b>BIO</b></h5>
                         <div className="mb-3">
                             <label htmlFor="surname" className="form-label">Surname</label>
                             <input type="text" className="form-control" id="surname" aria-describedby="surname"
@@ -226,7 +228,7 @@ function ProfileScreen() {
 
                         <div className="my-5">
                             <div className="d-flex justify-content-between">
-                                <h1><b>PASSWORD</b></h1>
+                                <h5><b>PASSWORD</b></h5>
                                 <button className="btn btn-light"
                                     type='button'
                                     onClick={() => {
