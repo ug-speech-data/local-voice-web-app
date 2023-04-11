@@ -12,6 +12,8 @@ function Dashboard() {
     const [statistics, setStatistics] = useState(null)
     const [languageStatistics, setLanguageStatistics] = useState(null)
     const [languageStatisticsInHours, setLanguageStatisticsInHours] = useState(null)
+    const [conflictResolutionLeaders, setConflictResolutionLeaders] = useState(null)
+    const [validationLeaders, setValidationLeaders] = useState([])
     const [updatedAt, setUpdatedAt] = useState("")
 
     useEffect(() => {
@@ -21,6 +23,14 @@ function Dashboard() {
     useEffect(() => {
         if (Boolean(responseData?.statistics)) {
             setStatistics(responseData.statistics)
+        }
+
+        if (Boolean(responseData?.conflict_resolution_leaders)) {
+            setConflictResolutionLeaders(responseData.conflict_resolution_leaders)
+        }
+
+        if (Boolean(responseData?.validation_leaders)) {
+            setValidationLeaders(responseData.validation_leaders)
         }
 
         if (Boolean(responseData?.language_statistics)) {
@@ -79,9 +89,60 @@ function Dashboard() {
                                     <p>{statistics?.images_approved}</p>
                                 </div>
                                 <div className="d-flex justify-content-between my-3">
-                                   <br />
+                                    <br />
                                 </div>
                             </DashboardCard>
+                        </div>
+
+                        <h4 className="h4 mt-4">LEADER BOARDS</h4>
+                        <div className="row mb-4">
+                            <div className="col-md-6">
+                                <DashboardCard>
+                                    <h6 className="h6 text-muted">CONFLICT RESOLUTION {conflictResolutionLeaders?.length >= 15 ? "(TOP 15)" : "(ALL)"}</h6>
+                                    <table className="table">
+                                        <thead>
+                                            <tr style={{ verticalAlign: "middle" }}>
+                                                <th>SURNAME</th>
+                                                <th>OTHER NAMES</th>
+                                                <th>CONFLICT RESOLVED</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {conflictResolutionLeaders?.map(leader => {
+                                                return <tr>
+                                                    <td>{leader.surname}</td>
+                                                    <td>{leader.other_names}</td>
+                                                    <td>{leader.conflicts_resolved}</td>
+                                                </tr>
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </DashboardCard>
+                            </div>
+
+                            <div className="col-md-6">
+                                <DashboardCard>
+                                    <h6 className="h6 text-muted">VALIDATIONS {validationLeaders?.length >= 15 ? "(TOP 15)" : "(ALL)"}</h6>
+                                    <table className="table">
+                                        <thead>
+                                            <tr style={{ verticalAlign: "middle" }}>
+                                                <th>SURNAME</th>
+                                                <th>OTHER NAMES</th>
+                                                <th>VALIDATIONS RESOLVED</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {validationLeaders?.map(leader => {
+                                                return <tr>
+                                                    <td>{leader.surname}</td>
+                                                    <td>{leader.other_names}</td>
+                                                    <td>{leader.audios_validated}</td>
+                                                </tr>
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </DashboardCard>
+                            </div>
                         </div>
 
                         <DashboardCard className="col-md-12">
