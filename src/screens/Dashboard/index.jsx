@@ -104,7 +104,8 @@ function Dashboard() {
                                             <tr style={{ verticalAlign: "middle" }}>
                                                 <th>SURNAME</th>
                                                 <th>OTHER NAMES</th>
-                                                <th>CONFLICT RESOLVED</th>
+                                                <th>LANG</th>
+                                                <th>RES.</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -112,6 +113,7 @@ function Dashboard() {
                                                 return <tr>
                                                     <td>{leader.surname}</td>
                                                     <td>{leader.other_names}</td>
+                                                    <td>{leader.language}</td>
                                                     <td>{leader.conflicts_resolved}</td>
                                                 </tr>
                                             })}
@@ -128,7 +130,8 @@ function Dashboard() {
                                             <tr style={{ verticalAlign: "middle" }}>
                                                 <th>SURNAME</th>
                                                 <th>OTHER NAMES</th>
-                                                <th>VALIDATIONS</th>
+                                                <th>LANG</th>
+                                                <th>VAL.</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -136,6 +139,7 @@ function Dashboard() {
                                                 return <tr>
                                                     <td>{leader.surname}</td>
                                                     <td>{leader.other_names}</td>
+                                                    <td>{leader.language}</td>
                                                     <td>{leader.audios_validated}</td>
                                                 </tr>
                                             })}
