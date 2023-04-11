@@ -145,6 +145,7 @@ function Dashboard() {
                             </div>
                         </div>
 
+                        <h4 className="h4 mt-4">PER LANGUAGE STATS</h4>
                         <DashboardCard className="col-md-12">
                             <span className="badge bg-primary">Updated At: {updatedAt}</span>
                             <table className="table">
