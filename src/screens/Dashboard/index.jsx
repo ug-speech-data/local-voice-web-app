@@ -128,7 +128,7 @@ function Dashboard() {
                                             <tr style={{ verticalAlign: "middle" }}>
                                                 <th>SURNAME</th>
                                                 <th>OTHER NAMES</th>
-                                                <th>VALIDATIONS RESOLVED</th>
+                                                <th>VALIDATIONS</th>
                                             </tr>
                                         </thead>
                                         <tbody>
