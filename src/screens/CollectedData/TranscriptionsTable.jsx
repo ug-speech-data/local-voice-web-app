@@ -11,11 +11,13 @@ import { BASE_API_URI } from '../../utils/constants';
 import AudioPlayer from "../../components/AudioPlayer";
 import PageMeta from '../../components/PageMeta';
 import { useSelector } from 'react-redux';
+import useAxios from '../../app/hooks/useAxios';
 
 
 function TranscriptionsTable() {
     const [triggerReload, setTriggerReload] = useState(0);
     const loggedInUser = useSelector((state) => state.authentication.user);
+    const { trigger: getEnumerators, data: enumeratorResponse, error: errorGettingEnumerators, isLoading: gettingEnumerators } = useAxios({ mainUrl: BASE_API_URI + '/get-enumerators/' })
 
     const [putTranscription, { isLoading: isPuttingTranscription, isSuccess: successPuttingTranscription, error: errorPuttingTranscription }] = useUpdateTranscriptionsMutation()
 
@@ -32,6 +34,7 @@ function TranscriptionsTable() {
     // Form input
     const [correctedText, setCorrectedText] = useState('');
     const [transcriptionStatus, setTranscriptionStatus] = useState('accepted');
+    const [enumerators, setEnumerators] = useState([])
 
     useEffect(() => {
         if (editTranscriptionModalRef.current !== null && editTranscriptionModal === null) {
@@ -97,6 +100,18 @@ function TranscriptionsTable() {
     useEffect(() => {
         highlight(`text-0-container`, `text-1-container`)
     }, [selectedTranscription])
+
+    // Getting enumerators
+    useEffect(() => {
+        getEnumerators()
+    }, [])
+
+    useEffect(() => {
+        if (Boolean(enumeratorResponse?.enumerators)) {
+            setEnumerators(enumeratorResponse.enumerators)
+        }
+    }, [enumeratorResponse])
+
 
     function highlight(newId, oldId) {
         const oldElem = document.getElementById(oldId)
@@ -220,6 +235,8 @@ function TranscriptionsTable() {
                         { key: "locale:dag_gh", value: "Dagaare", defaultValue: loggedInUser?.locale === "dag_gh" },
                         { key: "locale:ee_gh", value: "Ewe", defaultValue: loggedInUser?.locale === "ee_gh" },
                         { key: "locale:kpo_gh", value: "Ikposo", defaultValue: loggedInUser?.locale === "kpo_gh" },
+                        { value: "---------------------" },
+                        ...(enumerators?.map(enumerator => { return { key: `submitted_by__id:${enumerator.id}`, value: `${enumerator.fullname}` } }) || []).sort()
                     ]}
                     filters2={[{ key: "transcription_status:accepted", value: "Accepted" },
                     { key: "transcription_status:pending", value: "Pending" },
