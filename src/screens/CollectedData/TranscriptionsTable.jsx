@@ -236,7 +236,7 @@ function TranscriptionsTable() {
                         { key: "locale:ee_gh", value: "Ewe", defaultValue: loggedInUser?.locale === "ee_gh" },
                         { key: "locale:kpo_gh", value: "Ikposo", defaultValue: loggedInUser?.locale === "kpo_gh" },
                         { value: "---------------------" },
-                        ...(enumerators?.map(enumerator => { return { key: `submitted_by__id:${enumerator.id}`, value: `${enumerator.fullname}` } }) || []).sort()
+                        ...(enumerators?.map(enumerator => { return { key: `transcriptions__id:${enumerator.id}`, value: `${enumerator.fullname}` } }) || []).sort()
                     ]}
                     filters2={[{ key: "transcription_status:accepted", value: "Accepted" },
                     { key: "transcription_status:pending", value: "Pending" },
