@@ -267,6 +267,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                         <option value="100">100</option>
                         <option value="200">200</option>
                         <option value="300">300</option>
+                        <option value="600">600</option>
                     </select>
                 </div>
                 <button className="btn btn-sm btn-primary"
