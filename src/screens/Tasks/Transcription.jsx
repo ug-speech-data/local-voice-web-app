@@ -117,7 +117,7 @@ function Transcription() {
             }
 
             {currentAudio && (isSubmittingTranscription || isActionButtonDisabled || text.length === 0) &&
-                <p className='text-center text-primary my-2'><b>Please play the full audio length and input the transcription.</b></p>
+                <p className='text-center text-primary my-2'><b>Please play the full audio and input the transcription.</b></p>
             }
 
             {currentAudio &&
