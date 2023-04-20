@@ -169,7 +169,7 @@ function Transcription() {
                             {currentAudio.transcriptions?.map((transcription, index) => {
                                 return <div className='mb-3' style={{ "userSelect": "none" }}>
                                     <span className="badge bg-primary">{index + 1}</span>
-                                    <pre className="text-center transcribed-text-container" id={`text-${index}-container`}>{transcription.text}</pre>
+                                    <p className="text-center transcribed-text-container" id={`text-${index}-container`}>{transcription.text}</p>
                                 </div>
                             })}
                         </div>
