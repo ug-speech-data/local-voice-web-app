@@ -16,17 +16,22 @@ function UserPayment() {
     const { trigger: executeCreditAction, data: creditResponseData, error: creditError, isLoading: isCrediting } = useAxios({ method: "POST" })
     const { trigger: executePaymentAction, data: paymentResponseData, error: paymentError, isLoading: isPaying } = useAxios({ method: "POST" })
     const { trigger: executeBalancePaymentAction, data: balancePaymentResponseData, error: balancePaymentError, isLoading: isPayingBalance } = useAxios({ method: "POST" })
+    const { trigger: executeValidationBenefitAction, data: validationBenefitResponseData, error: validationBenefitError, isLoading: isPayingValidation } = useAxios({ method: "POST" })
 
     const [groups, setGroups] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
+    const [totalToPay, setTotalToPay] = useState(0)
 
     const creditModalRef = useRef(null);
     const paymentModalRef = useRef(null);
     const paymentBalanceModalRef = useRef(null);
+    const paymentValidationModalRef = useRef(null);
+    const [paymentAmount, setPaymentAmount] = useState(0)
 
     const [creditModal, setCreditModal] = useState(null)
     const [paymentModal, setPaymentModal] = useState(null)
     const [balancePaymentModal, setBalancePaymentModal] = useState(null)
+    const [validationBenefitModal, setValidationBenefitModal] = useState(null)
 
     const toast = useToast()
 
@@ -50,6 +55,10 @@ function UserPayment() {
         if (paymentBalanceModalRef.current !== null && balancePaymentModal === null) {
             const modal = new Modal(paymentBalanceModalRef.current, { keyboard: false })
             setBalancePaymentModal(modal)
+        }
+        if (paymentValidationModalRef.current !== null && validationBenefitModal === null) {
+            const modal = new Modal(paymentValidationModalRef.current, { keyboard: false })
+            setValidationBenefitModal(modal)
         }
     }, [])
 
@@ -82,6 +91,19 @@ function UserPayment() {
         }
     }, [creditError, isCrediting])
 
+    useEffect(() => {
+        if (validationBenefitError && !isPayingValidation) {
+            toast({
+                position: 'top-center',
+                title: `Error`,
+                description: validationBenefitError,
+                status: 'error',
+                duration: 1000,
+                isClosable: true,
+            })
+        }
+    }, [validationBenefitError, isPayingValidation])
+
     const showCreditModal = (bulkSelectedIds) => {
         setSelectedIds(bulkSelectedIds)
         creditModal?.show()
@@ -94,7 +116,6 @@ function UserPayment() {
     }
 
     // Paying users
-    const [paymentAmount, setPaymentAmount] = useState(0)
     useEffect(() => {
         if (paymentResponseData?.message) {
             toast({
@@ -108,6 +129,20 @@ function UserPayment() {
             paymentModal?.hide()
         }
     }, [paymentResponseData])
+
+    useEffect(() => {
+        if (validationBenefitResponseData?.message) {
+            toast({
+                position: 'top-center',
+                title: `Info`,
+                description: validationBenefitResponseData.message,
+                status: 'info',
+                duration: 2000,
+                isClosable: true,
+            })
+            paymentModal?.hide()
+        }
+    }, [validationBenefitResponseData])
 
     useEffect(() => {
         if (paymentError && !isPaying) {
@@ -165,9 +200,22 @@ function UserPayment() {
         setSelectedIds(bulkSelectedIds)
         balancePaymentModal?.show()
     }
+
+    const showValidationBenefitPaymentModal = (bulkSelectedIds) => {
+        setSelectedIds(bulkSelectedIds)
+        validationBenefitModal?.show()
+    }
+
     function handleBalancePaymentSubmission() {
         executeBalancePaymentAction(
             `${BASE_API_URI}/payments/pay-users-balance/`,
+            { ids: selectedIds }
+        )
+    }
+
+    function handleValidationPaymentSubmission() {
+        executeValidationBenefitAction(
+            `${BASE_API_URI}/payments/pay-users-validation-benefit/`,
             { ids: selectedIds }
         )
     }
@@ -258,6 +306,9 @@ function UserPayment() {
                             <span className="badge bg-primary">{selectedIds.length} selected</span>
                             <div className="form-group my-3">
                                 Continue to pay every selected user their outstanding balance?
+
+                                <p className="text text-center">Total Amount: <span className="badge bg-primary">GHC {totalToPay}</span></p>
+
                                 <div className="my-3 d-flex justify-content-center">
                                     <button
                                         type="submit"
@@ -277,8 +328,41 @@ function UserPayment() {
                 </div>
             </div>
 
-            {/* End of modals */}
+            <div ref={paymentValidationModalRef} className="modal fade" tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-mg">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">
+                                Pay the validation benefit of selected users
+                            </h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <span className="badge bg-primary">{selectedIds.length} selected</span>
+                            <div className="form-group my-3">
+                                Continue to pay every selected user their validation benefit?
 
+                                <p className="text text-center">Total Amount: <span className="badge bg-primary">GHC {totalToPay}</span></p>
+                                <div className="my-3 d-flex justify-content-center">
+                                    <button
+                                        type="submit"
+                                        className='btn btn-primary mx-2 d-flex'
+                                        disabled={isPayingValidation}
+                                        onClick={handleValidationPaymentSubmission}>
+                                        {isPayingValidation && <span className="mx-2"><Spinner /></span>}
+                                        Yes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* End of modals */}
             <div className="mb-5 overflow-scroll">
                 <TableView
                     responseDataAttribute="users"
@@ -287,9 +371,28 @@ function UserPayment() {
                         groups?.map(group => { return { key: `groups__name__icontains:${group.name}`, value: `User's in group: '${group.name}'` } })
                     }
                     bulkActions={[
-                        { name: "Credit selected", action: (bulkSelectedIds) => showCreditModal(bulkSelectedIds) },
+                        {
+                            name: "Pay outstanding balance", action: (bulkSelectedIds, selectedItems) => {
+                                let total = 0
+                                selectedItems.forEach(user => {
+                                    total += Number.parseFloat(user.balance)
+                                });
+                                setTotalToPay(total.toFixed(2))
+                                showBalancePaymentModal(bulkSelectedIds)
+                            }
+                        },
+                        {
+                            name: "Pay accrued validation benefit", action: (bulkSelectedIds, selectedItems) => {
+                                let total = 0
+                                selectedItems.forEach(user => {
+                                    total += Number.parseFloat(user.validation_benefit)
+                                });
+                                setTotalToPay(total.toFixed(2))
+                                showValidationBenefitPaymentModal(bulkSelectedIds)
+                            }
+                        },
                         { name: "Pay selected", action: (bulkSelectedIds) => showPaymentModal(bulkSelectedIds) },
-                        { name: "Pay outstanding balance", action: (bulkSelectedIds) => showBalancePaymentModal(bulkSelectedIds) },
+                        // { name: "Credit selected", action: (bulkSelectedIds) => showCreditModal(bulkSelectedIds) },
                     ]}
                     headers={[
                         {
@@ -299,7 +402,14 @@ function UserPayment() {
                             key: "email_address", value: "Email Address",
                         }, {
                             key: "phone", value: "Momo Number"
-                        }, {
+                        },
+                        {
+                            key: "recording_benefit", value: "Rec. Amount"
+                        },
+                        {
+                            key: "validation_benefit", value: "Val. Amount"
+                        },
+                        {
                             key: "accrued_amount", value: "Accrued Amount"
                         }, {
                             key: "total_payout", value: "Total Payout"

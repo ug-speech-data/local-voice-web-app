@@ -86,11 +86,6 @@ function ParticipantsTable() {
         editParticipantModal?.show()
     }
 
-    const showDeleteParticipantModal = (image) => {
-        setSelectedParticipant(image)
-        deleteAlertModal?.show()
-    }
-
     useEffect(() => {
         if (selectedParticipant) {
             setFullname(selectedParticipant.fullname)
@@ -372,7 +367,7 @@ function ParticipantsTable() {
                                 selectedItems.forEach(participant => {
                                     total += Number.parseFloat(participant.amount)
                                 });
-                                setTotalToPay(total)
+                                setTotalToPay(total.toFixed(2))
                                 showBulkPayConfirmationModal(bulkSelectedIds)
                             }
                         },
