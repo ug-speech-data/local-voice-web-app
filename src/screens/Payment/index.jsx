@@ -7,9 +7,21 @@ import TransactionHistory from './TransactionHistory';
 import BalanceWidget from "../../components/BalanceWidget";
 import ParticipantsTable from "./ParticipantsTable";
 import PageMeta from "../../components/PageMeta";
+import { useParams, useLocation } from 'react-router-dom'
+import { useSearchParams } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
 
 
 function Payment() {
+    const params = useParams();
+    const location = useLocation()
+    const [searchParams] = useSearchParams();
+    const [currentTab, setCurrentTab] = useState(searchParams.get('tab') || 0);
+
+    useEffect(() => {
+        const tab = searchParams.get('tab');
+        setCurrentTab(tab || 0)
+    }, [location, params])
 
     return (
         <Fragment>
@@ -25,7 +37,7 @@ function Payment() {
                         <BalanceWidget />
                     </div>
                 </div>
-                <TabLayout tabs={["Participants", "Users", "History"]}>
+                <TabLayout tabs={["Participants", "Users", "History"]} currentTab={currentTab}>
                     <ParticipantsTable />
                     <UserPayment />
                     <TransactionHistory />
