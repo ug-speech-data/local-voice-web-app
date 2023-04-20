@@ -123,7 +123,7 @@ function Transcription() {
             {currentAudio &&
                 <div className="col-md-10 mx-auto transcription-box">
                     <div className="my-5 col-md-6 mx-auto">
-                        {Boolean(currentAudio.transcriptions) ? <p className=""><strong>Previous Transcriptions</strong></p> : ""}
+                        {currentAudio.transcriptions.length > 0 ? <p className=""><strong>Previous Transcriptions</strong></p> : ""}
                         {currentAudio.transcriptions?.map((transcription, index) => {
                             return <div className='mb-3' style={{ "userSelect": "none" }}>
                                 <span className="badge bg-primary">{index + 1}</span>
