@@ -184,14 +184,17 @@ function TranscriptionsTable() {
 
                                 <div className="my-3">
                                     <p htmlFor="name" className="m-0"><b>Transcriptions</b></p>
-                                    {selectedTranscription?.transcriptions?.map((text, index) => {
+                                    {selectedTranscription?.transcriptions?.map((transcription, index) => {
                                         const parent = <div className='mb-3'>
                                             <p className='text-primary d-flex align-items-center'><strong>Text {index + 1}</strong>
-                                                <button className="btn btn-sm btn-light d-flex align-items-center" onClick={(e) => setCorrectedText(text)}>
+                                                <button className="btn btn-sm btn-light d-flex align-items-center" onClick={(e) => setCorrectedText(transcription.text)}>
                                                     <i className="bi bi-pencil me-1"></i><small>Edit this</small>
                                                 </button>
+
+                                                <span className="badge bg-primary">{transcription.user.phone}</span>  
+                                                <span className="badge mx-2 bg-primary">{transcription.user.email_address}</span>
                                             </p>
-                                            <p className="text-justify transcribed-text-container" id={`text-${index}-container`}>{text}</p>
+                                            <p className="text-justify transcribed-text-container" id={`text-${index}-container`}>{transcription.text}</p>
                                         </div>
                                         return parent;
                                     })}

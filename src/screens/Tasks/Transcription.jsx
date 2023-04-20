@@ -86,8 +86,9 @@ function Transcription() {
             }
 
             {currentAudio && !isFetchingAudio &&
-                <div className="my-5 d-flex justify-content-center position-relative">
-                    <p>Please transcribe the audio below as it is.</p>
+                <div className="my-5 position-relative">
+                    <p className="text-center"><span className="badge bg-primary">Audio ID: {currentAudio.id}</span></p>
+                    <p className="text-center"> Please transcribe the audio below as it is.</p>
                 </div>}
 
             {currentAudio && !isFetchingAudio && <p className='text-center'>{currentAudio.audio_url}</p>}
@@ -121,6 +122,15 @@ function Transcription() {
 
             {currentAudio &&
                 <div className="col-md-10 mx-auto transcription-box">
+                    <div className="my-5 col-md-6 mx-auto">
+                        <p className=""><strong>Previous Transcriptions</strong></p>
+                        {currentAudio.transcriptions?.map((transcription, index) => {
+                            return <div className='mb-3' style={{ "userSelect": "none" }}>
+                                <span className="badge bg-primary">{index + 1}</span>
+                                <pre className="text-center transcribed-text-container" id={`text-${index}-container`}>{transcription.text}</pre>
+                            </div>
+                        })}
+                    </div>
                     <textarea className='form-control' value={text} rows="5" placeholder='Type here' onChange={e => setText(e.target.value)}></textarea>
                 </div>
             }
