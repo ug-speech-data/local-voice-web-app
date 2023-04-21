@@ -333,7 +333,7 @@ function UsersCard() {
                                     <SelectInput
                                         onChange={(e) => setLocale(e.target.value)}
                                         value={locale}
-                                        required
+                                        required={true}
                                         options={[
                                             { value: '', label: 'Choose locale' },
                                             { value: 'dga_gh', label: 'Dagbani' },
