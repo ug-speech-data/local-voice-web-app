@@ -347,9 +347,6 @@ function UsersCard() {
 
                                 <div className="mb-3">
                                     <label htmlFor="assigned_image_batch" className="form-label">Assigned Image Batch</label>
-
-                                    {(assignedAudioBatch === assignedImageBatch) && <p className="text-danger">Assigned audio batch should not be the same as assigned image batch.</p>}
-
                                     <input type="number" className="form-control" id="assigned_image_batch" aria-describedby="assigned_image_batch"
                                         onChange={(e) => setAssignedImageBatch(e.target.value)}
                                         placeholder="Assigned Image Batch"
@@ -359,9 +356,6 @@ function UsersCard() {
                                 <div className="mb-3">
                                     <label htmlFor="assigned_audio_batch" className="form-label">Assigned Audio Batch</label>
                                     <p className='m-0 p-0'><small>This user will validate all audio description of images belong to this batch.</small></p>
-
-                                    {(assignedAudioBatch === assignedImageBatch) && <p className="text-danger">Assigned audio batch should not be the same as assigned image batch.</p>}
-
                                     <input type="number" className="form-control" id="assigned_audio_batch" aria-describedby="assigned_audio_batch"
                                         onChange={(e) => setAssignedAudioBatch(e.target.value)}
                                         placeholder="Assigned Audio Batch"
@@ -421,7 +415,7 @@ function UsersCard() {
                                     <p className="text-end">
                                         <button
                                             className='btn btn-sm btn-primary d-flex align-items-center'
-                                            disabled={isPuttingUser || (assignedAudioBatch === assignedImageBatch)}>
+                                            disabled={isPuttingUser}>
                                             {isPuttingUser && <Spinner />}
                                             Submit
                                         </button>

@@ -34,6 +34,7 @@ function SystemConfigurationCard() {
     const [groups, setGroups] = useState([])
     const [enumeratorsGroup, setEnumeratorsGroup] = useState(null)
     const [validatorsGroup, setValidatorsGroup] = useState(null)
+    const [defaultUserGroup, setDefaultUserGroup] = useState(null)
 
     const [allowSavingLessThanRequiredPerParticipant, setAllowSavingLessThanRequiredPerParticipant] = useState(false)
     const [allowToRecordMoreThanRequiredPerParticipant, setAllowToRecordMoreThanRequiredPerParticipant] = useState(false)
@@ -162,6 +163,7 @@ function SystemConfigurationCard() {
         formData.append("required_transcription_validation_count", requiredTranscriptionValidationCount);
         formData.append("number_of_batches", numberOfBatches);
         formData.append("enumerators_group_name", enumeratorsGroup);
+        formData.append("default_user_group_name", defaultUserGroup);
         formData.append("validators_group_name", validatorsGroup);
         formData.append("android_apk", androidAPK);
         formData.append("participant_amount_per_audio", amountPerAudio);
@@ -231,6 +233,7 @@ function SystemConfigurationCard() {
             setRequiredTranscriptionValidationCount(configurations?.required_transcription_validation_count || 0);
             setNumberOfBatches(configurations?.number_of_batches || 0);
             setEnumeratorsGroup(configurations?.enumerators_group?.name || "");
+            setDefaultUserGroup(configurations?.default_user_group?.name || "");
             setValidatorsGroup(configurations?.validators_group?.name || "");
             setAmountPerAudio(configurations?.participant_amount_per_audio || 0);
             setAmountPerAudioValidation(configurations?.amount_per_audio_validation || 0);
@@ -398,6 +401,17 @@ function SystemConfigurationCard() {
                         <SelectInput
                             onChange={(e) => setEnumeratorsGroup(e.target.value)}
                             value={enumeratorsGroup}
+                            options={groups.map((group) => ({ value: group.name, label: group.name }))}
+                        />
+                    </div>
+
+
+                    <div className="form-group my-3 py-4 px-2 bg-white">
+                        <p><b>Default user group</b></p>
+                        All newly registered users will be added to this group.
+                        <SelectInput
+                            onChange={(e) => setDefaultUserGroup(e.target.value)}
+                            value={defaultUserGroup}
                             options={groups.map((group) => ({ value: group.name, label: group.name }))}
                         />
                     </div>
