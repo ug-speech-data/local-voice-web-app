@@ -143,6 +143,7 @@ function ProfileScreen() {
                         <p className="">Audios You Validated: {currentUser?.audios_validated}</p>
                         <p className="">Your Audios Rejected: {currentUser?.audios_rejected}</p>
                         <p className="">Your Audios Accepted: {currentUser?.audios_accepted}</p>
+                        <p className="">Your Transcriptions: {currentUser?.audios_transcribed}</p>
                     </div>
                     <hr />
 
