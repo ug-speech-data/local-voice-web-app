@@ -162,7 +162,7 @@ function Transcription() {
                     <p className='text-center text-primary my-2'><b>Please play the full audio and input the transcription.</b></p>
                 }
 
-                {currentAudio &&
+                {/* {currentAudio &&
                     <div className="col-md-10 mx-auto transcription-box">
                         <div className="my-5 col-md-6 mx-auto">
                             {currentAudio.transcriptions.length > 0 ? <p className=""><strong>Previous Transcriptions</strong></p> : ""}
@@ -175,7 +175,7 @@ function Transcription() {
                         </div>
                         <textarea className='form-control' value={text} rows="5" placeholder='Type here' onChange={e => setText(e.target.value)}></textarea>
                     </div>
-                }
+                } */}
 
                 {currentAudio &&
                     <div className="d-flex justify-content-center my-5 p-2 page-actions">
