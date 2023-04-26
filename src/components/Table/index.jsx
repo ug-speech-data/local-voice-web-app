@@ -198,9 +198,9 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
 
                             {headers?.map(({ key, value, render = null }, index) => {
                                 return (
-                                    <th key={index} onClick={render === null ? (e) => { if (key === sort) { setSortAscending(!sortAscending) }; triggerSort(key) } : null
+                                    <th key={index} onClick={(e) => { if (key === sort) { setSortAscending(!sortAscending) }; triggerSort(key) }
                                     }
-                                        style={{ cursor: render === null ? "pointer" : "" }}
+                                        style={{ cursor: "pointer" }}
                                     >
                                         <div className="d-flex">
                                             {value.toUpperCase()}

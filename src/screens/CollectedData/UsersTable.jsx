@@ -1,12 +1,7 @@
 import {
-    useLazyGetGroupsQuery,
     usePutUsersMutation,
-    useDeleteUsersMutation,
 } from '../../features/resources/resources-api-slice';
 import { Fragment, useState, useEffect, useRef } from 'react';
-import {
-    setGroups as setStoreGroups,
-} from '../../features/global/global-slice';
 import { Modal } from 'bootstrap';
 import { useToast, Spinner } from '@chakra-ui/react';
 import TagInput from '../../components/TagInput';
@@ -14,15 +9,13 @@ import PasswordInput from '../../components/PasswordInput';
 import SelectInput from '../../components/SelectInput';
 import TableView from '../../components/Table';
 import { BASE_API_URI } from '../../utils/constants';
-import { useDispatch } from 'react-redux';
+import useAxios from '../../app/hooks/useAxios';
 
-function UsersCard() {
-    const dispatch = useDispatch()
+
+function UsersTable() {
     const [triggerReload, setTriggerReload] = useState(0);
     const modalRef = useRef(null);
-    const deletionModalRef = useRef(null);
     const [modal, setModal] = useState(null);
-    const [deleteAlertModal, setDeletionAlertModal] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
     const toast = useToast()
     const [users, setUsers] = useState([])
@@ -30,8 +23,9 @@ function UsersCard() {
     const [urlParams, setUrlParams] = useState("");
 
     const [putUser, { isLoading: isPuttingUser, error: errorPuttingUser }] = usePutUsersMutation()
-    const [deleteUser, { isLoading: isDeletingUser, error: errorDeletingUser }] = useDeleteUsersMutation()
-    const [getGroups, { data: response = [], isFetching, error }] = useLazyGetGroupsQuery()
+    const { trigger: getGroups, data: response, error, isLoading } = useAxios()
+
+
     const [selectedGroups, setSelectedGroups] = useState([]);
     const [allUsers] = useState([])
     const [groups, setGroups] = useState([])
@@ -59,12 +53,11 @@ function UsersCard() {
     }, [selectedUser])
 
     useEffect(() => {
-        setGroups(response["groups"])
-        dispatch(setStoreGroups(response["groups"]))
-    }, [isFetching])
+        if (Boolean(response?.groups)) { setGroups(response["groups"]) }
+    }, [response, isLoading])
 
     useEffect(() => {
-        getGroups()
+        getGroups(`${BASE_API_URI}/groups?limited=true`)
     }, [])
 
     useEffect(() => {
@@ -72,12 +65,7 @@ function UsersCard() {
             const modal = new Modal(modalRef.current, { keyboard: false })
             setModal(modal)
         }
-
-        if (deletionModalRef.current !== null && deleteAlertModal === null) {
-            const modal = new Modal(deletionModalRef.current, { keyboard: false })
-            setDeletionAlertModal(modal)
-        }
-    }, [deleteAlertModal])
+    }, [modal])
 
     const showEditUserModal = (user) => {
         setSelectedUser(user)
@@ -108,38 +96,6 @@ function UsersCard() {
         setPassword("")
         setLeadEmailAddress("")
         modal?.show()
-    }
-
-    const handleDeleteUser = async () => {
-        const response = await deleteUser({ id: selectedUser.id }).unwrap()
-        const errorMessage = response["error_message"]
-        if (errorMessage !== undefined || errorMessage !== null) {
-            setUsers(users.filter(c => c.id !== selectedUser.id))
-            toast({
-                position: 'top-center',
-                title: `Success`,
-                description: "User deleted successfully",
-                status: 'success',
-                duration: 2000,
-                isClosable: true,
-            })
-            setTriggerReload((triggerReload) => triggerReload + 1);
-        } else {
-            toast({
-                position: 'top-center',
-                title: `An error occurred`,
-                description: errorMessage,
-                status: 'error',
-                duration: 2000,
-                isClosable: true,
-            })
-        }
-        deleteAlertModal?.hide()
-    }
-
-    const showDeleteUserAlert = (user) => {
-        setSelectedUser(user)
-        deleteAlertModal?.show()
     }
 
     const handleFormSubmit = async (e) => {
@@ -196,20 +152,6 @@ function UsersCard() {
         }
     }, [errorPuttingUser, toast])
 
-
-    useEffect(() => {
-        if (errorDeletingUser) {
-            toast({
-                position: 'top-center',
-                title: `An error occurred: ${errorDeletingUser.status}`,
-                description: errorDeletingUser.status,
-                status: 'error',
-                duration: 2000,
-                isClosable: true,
-            })
-        }
-    }, [errorDeletingUser, toast])
-
     useEffect(() => {
         const users = allUsers.filter(c => {
             return c.surname?.toLowerCase()?.includes(search.toLowerCase())
@@ -234,34 +176,6 @@ function UsersCard() {
 
     return (
         <Fragment>
-            <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-md">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">
-                                Delete User - '{selectedUser?.other_names} {selectedUser?.surname}'
-                            </h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="modal-body d-flex justify-content-center overflow-scroll">
-                                <div className="d-flex flex-column">
-                                    <h5>Are you sure you want to delete this user?</h5>
-                                    <p className="text-muted">This action cannot be undone.</p>
-                                </div>
-                            </div>
-                            <p className="text-center mb-3">
-                                {isDeletingUser && <Spinner />}
-                            </p>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-outline-danger" onClick={() => handleDeleteUser(selectedUser)} >Yes, continue</button>
-                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div ref={modalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-md">
                     <div className="modal-content">
@@ -346,23 +260,6 @@ function UsersCard() {
                                 </div>
 
                                 <div className="mb-3">
-                                    <label htmlFor="assigned_image_batch" className="form-label">Assigned Image Batch</label>
-                                    <input type="number" className="form-control" id="assigned_image_batch" aria-describedby="assigned_image_batch"
-                                        onChange={(e) => setAssignedImageBatch(e.target.value)}
-                                        placeholder="Assigned Image Batch"
-                                        value={assignedImageBatch} />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="assigned_audio_batch" className="form-label">Assigned Audio Batch</label>
-                                    <p className='m-0 p-0'><small>This user will validate all audio description of images belong to this batch.</small></p>
-                                    <input type="number" className="form-control" id="assigned_audio_batch" aria-describedby="assigned_audio_batch"
-                                        onChange={(e) => setAssignedAudioBatch(e.target.value)}
-                                        placeholder="Assigned Audio Batch"
-                                        value={assignedAudioBatch} />
-                                </div>
-
-                                <div className="mb-3">
                                     <label htmlFor="lead_email_address" className="form-label">Language Lead's Email</label>
                                     <input type="email" className="form-control" id="lead_email_address" aria-describedby="lead_email_address"
                                         onChange={(e) => setLeadEmailAddress(e.target.value)}
@@ -431,14 +328,14 @@ function UsersCard() {
                 </div>
             </div>
 
-            <div className="card">
-                <div className="card-header d-flex justify-content-between" style={{ "position": "sticky", "top": "0em", "zIndex": "1", "background": "white" }}>
-                    <p>USERS</p>
-                    <div className="d-flex justify-content-end">
-                        <button className="btn btn-primary btn-sm" onClick={showNewFormUserModal} >Add</button>
+            <div className="">
+                <div className="card-header d-flex justify-content-between">
+                    <p></p>
+                    <div className="m-3 d-flex card-options justify-content-end">
+                        <button className="btn btn-primary btn-sm" onClick={showNewFormUserModal}>New User</button>
                     </div>
                 </div>
-                <div className="overflow-scroll">
+                <div className="card-body overflow-scroll">
                     <TableView
                         reloadTrigger={triggerReload}
                         responseDataAttribute="users"
@@ -484,10 +381,6 @@ function UsersCard() {
                                             <i className="bi bi-list me-1"></i>
                                             More
                                         </button>
-                                        <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showDeleteUserAlert(item)}>
-                                            <i className="bi bi-trash me-1"></i>
-                                            Delete
-                                        </button>
                                     </div>
                                 )
                             }
@@ -499,4 +392,4 @@ function UsersCard() {
     );
 }
 
-export default UsersCard;
+export default UsersTable;

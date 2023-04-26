@@ -248,8 +248,8 @@ function AudiosTable() {
                         </div>
                         <div className="modal-body row">
                             <div className="col-md-6 mx-auto">
-                                <div className="d-flex justify-content-center align-items-center" style={{maxHeight: "40vh"}}>
-                                    <img src={selectedAudio?.image_url} alt={selectedAudio?.name} style={{maxHeight: "50vh"}} />
+                                <div className="d-flex justify-content-center align-items-center" style={{ maxHeight: "40vh" }}>
+                                    <img src={selectedAudio?.image_url} alt={selectedAudio?.name} style={{ maxHeight: "50vh" }} />
                                 </div>
                             </div>
 
@@ -384,9 +384,15 @@ function AudiosTable() {
                             )
                         }
                     },
-
                     {
-                        key: "submitted_by", value: "User"
+                        key: "submitted_by", value: "User", render: (item) => {
+                            return (
+                                <Fragment>
+                                    <span className={'badge bg-primary'}>{item.submitted_by}</span>
+                                    <span>{item.email_address}</span>
+                                </Fragment>
+                            )
+                        }
                     }, {
                         key: "image_url", value: "Image", render: (item) => {
                             return (

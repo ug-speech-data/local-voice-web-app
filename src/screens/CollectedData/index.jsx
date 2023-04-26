@@ -14,6 +14,7 @@ import { BASE_API_URI } from '../../utils/constants';
 import { useSearchParams } from "react-router-dom";
 import LimitedUsersTable from './LimitedUsersTable';
 import { useParams, useLocation } from 'react-router-dom'
+import UsersTable from './UsersTable';
 
 
 function CollectedData() {
@@ -146,11 +147,12 @@ function CollectedData() {
                         </button>
                     </div>
                 </div>
-                <TabLayout tabs={["Audios", "Transcriptions", "Images", "Sample"]} currentTab={currentTab}>
+                <TabLayout tabs={["Audios", "Transcriptions", "Images", "Sample", "Users"]} currentTab={currentTab}>
                     <AudiosTable />
                     <TranscriptionsTable />
                     <ImagesTable />
                     <LimitedUsersTable />
+                    <UsersTable />
                 </TabLayout>
             </div>
             <Footer />

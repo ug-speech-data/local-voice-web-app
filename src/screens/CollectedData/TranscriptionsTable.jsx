@@ -191,7 +191,7 @@ function TranscriptionsTable() {
                                                     <i className="bi bi-pencil me-1"></i><small>Edit this</small>
                                                 </button>
 
-                                                <span className="badge bg-primary">{transcription.user.phone}</span>  
+                                                <span className="badge bg-primary">{transcription.user.phone}</span>
                                                 <span className="badge mx-2 bg-primary">{transcription.user.email_address}</span>
                                             </p>
                                             <p className="text-justify transcribed-text-container" id={`text-${index}-container`}>{transcription.text}</p>
@@ -255,6 +255,18 @@ function TranscriptionsTable() {
                                         :
                                         <span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>
                                     }
+                                </div>
+                            )
+                        }
+                    }, {
+                        key: "transcriptions", value: "Transcriptions", render: (item) => {
+                            return (
+                                <div>
+                                    {item.transcriptions?.map((transcription, index) => (
+                                        <div>
+                                            <span key={index} className={'badge bg-primary'}>{transcription.user.full_name} ({transcription.user.email_address})</span>
+                                        </div>
+                                    ))}
                                 </div>
                             )
                         }
