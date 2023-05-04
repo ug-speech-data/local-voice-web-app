@@ -344,69 +344,78 @@ function AudiosTable() {
                         { name: "Reject selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
                     ]}
                     headers={[
-                    {
-                        key: "duration", value: "Player", render: (item) => {
-                            return (
-                                <AudioPlayer
-                                    src={item?.audio_url}
-                                    canSeek={true}
-                                    setIsAudioBuffering={setIsAudioBuffering} />
-                            )
-                        }
-                    },
-                    {
-                        key: "locale", value: "Locale"
-                    },
-                    {
-                        key: "device_id", value: "Device", render: (item) => {
-                            return (
-                                <TextOverflow text={item.device_id} width={10} />
-                            )
-                        }
-                    },
-                    {
-                        key: "submitted_by", value: "User", render: (item) => {
-                            return (
-                                <Link to={`/collected-data?query=${item.email_address}&tab=4`}>
-                                    <span className={'badge bg-primary'}>{item.submitted_by}</span>
-                                    <br /><span>{item.email_address}</span>
-                                </Link>
-                            )
-                        }
-                    }, {
-                        key: "image_url", value: "Image", render: (item) => {
-                            return (
-                                <div>
-                                    <img src={item.thumbnail} alt={item.name} className="profile-image" onClick={() => showEditAudioModal(item)} />
-                                </div>
-                            )
-                        }
-                    }, {
-                        key: "validations", value: "Validations", render: (item) => {
-                            return (
-                                <div>
-                                    {item.validations?.map((validation, valIndex) => (
-                                        <Link to={`/collected-data?query=${validation.user}&tab=4`} key={valIndex} className={validation.is_valid ? 'badge bg-primary' : 'badge bg-warning'}>{validation.user}</Link>
-                                    ))}
-                                </div>
-                            )
-                        }
-                    }, {
-                        value: "Actions", render: (item) => {
-                            return (
-                                <div className="d-flex">
-                                    <button className="btn btn-sm btn-primary me-1 d-flex" onClick={() => showEditAudioModal(item)}>
-                                        <i className="bi bi-list me-1"></i>
-                                        More
-                                    </button>
-                                    <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showDeleteAudioModal(item)}>
-                                        <i className="bi bi-trash me-1"></i>
-                                        Delete
-                                    </button>
-                                </div>
-                            )
-                        }
-                    }]}
+                        {
+                            key: "duration", value: "Player", render: (item) => {
+                                return (
+                                    <div className='d-flex align-items-center'>{item.audio_status == "accepted" ?
+                                        (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
+                                        :
+                                        item.rejected ?
+                                            (<span className='ms-2 p-0 badge bg-danger'><i className="bi bi-info-circle" ></i></span>)
+                                            :
+                                            (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle" ></i></span>)
+                                    }
+                                        <AudioPlayer
+                                            src={item?.audio_url}
+                                            canSeek={true}
+                                            setIsAudioBuffering={setIsAudioBuffering} />
+                                    </div>
+                                )
+                            }
+                        },
+                        {
+                            key: "locale", value: "Locale"
+                        },
+                        {
+                            key: "device_id", value: "Device", render: (item) => {
+                                return (
+                                    <TextOverflow text={item.device_id} width={10} />
+                                )
+                            }
+                        },
+                        {
+                            key: "submitted_by", value: "User", render: (item) => {
+                                return (
+                                    <Link to={`/collected-data?query=${item.email_address}&tab=4`}>
+                                        <span className={'badge bg-primary'}>{item.submitted_by}</span>
+                                        <br /><span>{item.email_address}</span>
+                                    </Link>
+                                )
+                            }
+                        }, {
+                            key: "image_url", value: "Image", render: (item) => {
+                                return (
+                                    <div>
+                                        <img src={item.thumbnail} alt={item.name} className="profile-image" onClick={() => showEditAudioModal(item)} />
+                                    </div>
+                                )
+                            }
+                        }, {
+                            key: "validations", value: "Validations", render: (item) => {
+                                return (
+                                    <div>
+                                        {item.validations?.map((validation, valIndex) => (
+                                            <Link to={`/collected-data?query=${validation.user}&tab=4`} key={valIndex} className={validation.is_valid ? 'badge bg-primary' : 'badge bg-warning'}>{validation.user}</Link>
+                                        ))}
+                                    </div>
+                                )
+                            }
+                        }, {
+                            value: "Actions", render: (item) => {
+                                return (
+                                    <div className="d-flex">
+                                        <button className="btn btn-sm btn-primary me-1 d-flex" onClick={() => showEditAudioModal(item)}>
+                                            <i className="bi bi-list me-1"></i>
+                                            More
+                                        </button>
+                                        <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showDeleteAudioModal(item)}>
+                                            <i className="bi bi-trash me-1"></i>
+                                            Delete
+                                        </button>
+                                    </div>
+                                )
+                            }
+                        }]}
                 >
                 </TableView>
             </div>
