@@ -10,6 +10,7 @@ import SelectInput from '../../components/SelectInput';
 import TableView from '../../components/Table';
 import { BASE_API_URI } from '../../utils/constants';
 import useAxios from '../../app/hooks/useAxios';
+import { Link } from 'react-router-dom';
 
 
 function UsersTable() {
@@ -358,7 +359,10 @@ function UsersTable() {
                         {
                             key: "email_address", value: "Email Address", render: (item) => {
                                 return (
-                                    <p className={item.is_active ? "" : "text-danger"}>{item.email_address}</p>
+                                    <Link to={`/collected-data?query=${item.email_address}&tab=0`}
+                                        className="text-primary">
+                                        <p className={item.is_active ? "" : "text-danger"}>{item.email_address}</p>
+                                    </Link>
                                 )
                             }
                         },

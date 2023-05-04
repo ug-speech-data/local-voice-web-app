@@ -13,6 +13,7 @@ import AudioPlayer from "../../components/AudioPlayer";
 import useAxios from '../../app/hooks/useAxios';
 import PageMeta from '../../components/PageMeta';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 
 function AudiosTable() {
@@ -342,25 +343,7 @@ function AudiosTable() {
                         { name: "Approve selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "approve") },
                         { name: "Reject selected", action: (bulkSelectedIds) => handleBulImageAction(bulkSelectedIds, "reject") },
                     ]}
-                    headers={[{
-                        key: "name", value: "Name", render: (item) => {
-                            return (
-                                <div>
-                                    <div className="d-flex align-items-center">
-                                        <TextOverflow text={item.audio_url} width={10} />
-                                        {item.audio_status == "accepted" ?
-                                            (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
-                                            :
-                                            item.rejected ?
-                                                (<span className='ms-2 p-0 badge bg-danger'><i className="bi bi-info-circle" ></i></span>)
-                                                :
-                                                (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle" ></i></span>)
-                                        }
-                                    </div>
-                                </div>
-                            )
-                        }
-                    },
+                    headers={[
                     {
                         key: "duration", value: "Player", render: (item) => {
                             return (
@@ -373,10 +356,7 @@ function AudiosTable() {
                     },
                     {
                         key: "locale", value: "Locale"
-                    }, {
-                        key: "environment", value: "Environment"
                     },
-
                     {
                         key: "device_id", value: "Device", render: (item) => {
                             return (
@@ -387,10 +367,10 @@ function AudiosTable() {
                     {
                         key: "submitted_by", value: "User", render: (item) => {
                             return (
-                                <Fragment>
+                                <Link to={`/collected-data?query=${item.email_address}&tab=4`}>
                                     <span className={'badge bg-primary'}>{item.submitted_by}</span>
-                                    <span>{item.email_address}</span>
-                                </Fragment>
+                                    <br /><span>{item.email_address}</span>
+                                </Link>
                             )
                         }
                     }, {
@@ -406,7 +386,7 @@ function AudiosTable() {
                             return (
                                 <div>
                                     {item.validations?.map((validation, valIndex) => (
-                                        <span key={valIndex} className={validation.is_valid ? 'badge bg-primary' : 'badge bg-warning'}>{validation.user}</span>
+                                        <Link to={`/collected-data?query=${validation.user}&tab=4`} key={valIndex} className={validation.is_valid ? 'badge bg-primary' : 'badge bg-warning'}>{validation.user}</Link>
                                     ))}
                                 </div>
                             )
