@@ -5,6 +5,7 @@ import { BASE_API_URI } from '../../utils/constants';
 import { Fragment, useEffect, useState } from "react";
 import useAxios from '../../app/hooks/useAxios';
 import PageMeta from "../../components/PageMeta";
+import TabLayout from "../../components/TabLayout";
 
 
 function Dashboard() {
@@ -14,6 +15,9 @@ function Dashboard() {
     const [languageStatisticsInHours, setLanguageStatisticsInHours] = useState(null)
     const [conflictResolutionLeaders, setConflictResolutionLeaders] = useState(null)
     const [validationLeaders, setValidationLeaders] = useState([])
+    const [audiosByLeads, setAudiosByLeads] = useState([])
+
+
     const [updatedAt, setUpdatedAt] = useState("")
 
     useEffect(() => {
@@ -39,6 +43,10 @@ function Dashboard() {
 
         if (Boolean(responseData?.language_statistics_in_hours)) {
             setLanguageStatisticsInHours(responseData.language_statistics_in_hours)
+        }
+
+        if (Boolean(responseData?.audios_by_leads)) {
+            setAudiosByLeads(responseData.audios_by_leads)
         }
 
         if (Boolean(responseData?.updated_at)) {
@@ -95,7 +103,35 @@ function Dashboard() {
                         </div>
 
                         <h4 className="h4 mt-4">LEADER BOARDS</h4>
-                        <div className="row mb-4">
+
+                        <TabLayout tabs={["AUDIOS BY LEADS", "CONFLICT RESOLUTION", "VALIDATIONS"]} currentTab={0}>
+                            <div className="col-md-6">
+                                <DashboardCard>
+                                    <h6 className="h6 text-muted">AUDIOS BY LEADS {"(ALL)"}</h6>
+                                    <table className="table">
+                                        <thead>
+                                            <tr style={{ verticalAlign: "middle" }}>
+                                                <th>SURNAME</th>
+                                                <th>OTHER NAMES</th>
+                                                <th>LANG</th>
+                                                <th style={{ verticalAlign: "middle", "textAlign": "center" }}>AUDIOS CONTRIBUTED <br />(EXP. 250)</th>
+                                                <th style={{ verticalAlign: "middle", "textAlign": "center" }}>APPROVED <br />(EXP. 250)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {audiosByLeads?.map(leader => {
+                                                return <tr>
+                                                    <td>{leader.surname}</td>
+                                                    <td>{leader.other_names}</td>
+                                                    <td>{leader.language}</td>
+                                                    <td> <p style={{ verticalAlign: "middle", "textAlign": "center" }}>{leader.proxy_audios_submitted_in_hours}</p></td>
+                                                    <td> <p style={{ verticalAlign: "middle", "textAlign": "center" }}>{leader.proxy_audios_accepted_in_hours}</p></td>
+                                                </tr>
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </DashboardCard>
+                            </div>
                             <div className="col-md-6">
                                 <DashboardCard>
                                     <h6 className="h6 text-muted">CONFLICT RESOLUTION {conflictResolutionLeaders?.length >= 15 ? "(TOP 15)" : "(ALL)"}</h6>
@@ -147,7 +183,7 @@ function Dashboard() {
                                     </table>
                                 </DashboardCard>
                             </div>
-                        </div>
+                        </TabLayout>
 
                         <h4 className="h4 mt-4">PER LANGUAGE STATS</h4>
                         <DashboardCard className="col-md-12">

@@ -394,6 +394,9 @@ function ParticipantsTable() {
                         key: "audio_count", value: "Audios"
                     }, {
                         key: "audios_validated", value: "% Val."
+                    },
+                    {
+                        key: "percentage_audios_accepted", value: "% ACC."
                     },{
                         key: "amount", value: "Amount (₵)"
                     },  {
