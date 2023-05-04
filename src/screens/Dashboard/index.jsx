@@ -6,9 +6,16 @@ import { Fragment, useEffect, useState } from "react";
 import useAxios from '../../app/hooks/useAxios';
 import PageMeta from "../../components/PageMeta";
 import TabLayout from "../../components/TabLayout";
+import { useSearchParams } from "react-router-dom";
+import { useParams, useLocation } from 'react-router-dom'
 
 
 function Dashboard() {
+    const location = useLocation()
+    const params = useParams();
+    const [searchParams] = useSearchParams();
+    const [currentTab, setCurrentTab] = useState(searchParams.get('tab') || 0);
+
     const { trigger: getDashboardStatics, data: responseData, error, isLoading } = useAxios({ mainUrl: `${BASE_API_URI}/dashboard-statistics/` });
     const [statistics, setStatistics] = useState(null)
     const [languageStatistics, setLanguageStatistics] = useState(null)
@@ -19,6 +26,11 @@ function Dashboard() {
 
 
     const [updatedAt, setUpdatedAt] = useState("")
+
+    useEffect(() => {
+        const tab = searchParams.get('tab');
+        setCurrentTab(tab || 0)
+    }, [location, params])
 
     useEffect(() => {
         getDashboardStatics()
@@ -104,7 +116,7 @@ function Dashboard() {
 
                         <h4 className="h4 mt-4">LEADER BOARDS</h4>
 
-                        <TabLayout tabs={["AUDIOS BY LEADS", "CONFLICT RESOLUTION", "VALIDATIONS"]} currentTab={0}>
+                        <TabLayout tabs={["AUDIOS BY LEADS", "CONFLICT RESOLUTION", "VALIDATIONS"]} currentTab={currentTab}>
                             <div className="col-md-6" style={{ "height": "80vh", "overflow": "auto" }}>
                                 <DashboardCard>
                                     <h6 className="h6 text-muted">AUDIOS BY LEADS {"(ALL)"}</h6>
