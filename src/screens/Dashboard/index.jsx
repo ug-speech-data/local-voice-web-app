@@ -108,7 +108,7 @@ function Dashboard() {
                             <div className="col-md-6" style={{ "height": "80vh", "overflow": "auto" }}>
                                 <DashboardCard>
                                     <h6 className="h6 text-muted">AUDIOS BY LEADS {"(ALL)"}</h6>
-                                    <p className="text-muted">Total number of audios recorded by all the enumerators per each lead.</p>
+                                    <p className="text-muted">Total number of audios (in hours) recorded by all the enumerators per each lead.</p>
                                     <table className="table">
                                         <thead>
                                             <tr style={{ verticalAlign: "middle" }}>
