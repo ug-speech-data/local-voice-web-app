@@ -105,7 +105,7 @@ function Dashboard() {
                         <h4 className="h4 mt-4">LEADER BOARDS</h4>
 
                         <TabLayout tabs={["AUDIOS BY LEADS", "CONFLICT RESOLUTION", "VALIDATIONS"]} currentTab={0}>
-                            <div className="col-md-6">
+                            <div className="col-md-6" style={{"height":"80vh", "overflow":"auto"}}>
                                 <DashboardCard>
                                     <h6 className="h6 text-muted">AUDIOS BY LEADS {"(ALL)"}</h6>
                                     <table className="table">
@@ -132,7 +132,7 @@ function Dashboard() {
                                     </table>
                                 </DashboardCard>
                             </div>
-                            <div className="col-md-6">
+                            <div className="col-md-6" style={{"height":"80vh", "overflow":"auto"}}>
                                 <DashboardCard>
                                     <h6 className="h6 text-muted">CONFLICT RESOLUTION {conflictResolutionLeaders?.length >= 15 ? "(TOP 15)" : "(ALL)"}</h6>
                                     <table className="table">
@@ -158,7 +158,7 @@ function Dashboard() {
                                 </DashboardCard>
                             </div>
 
-                            <div className="col-md-6">
+                            <div className="col-md-6" style={{"height":"80vh", "overflow":"auto"}}>
                                 <DashboardCard>
                                     <h6 className="h6 text-muted">VALIDATIONS {validationLeaders?.length >= 15 ? "(TOP 15)" : "(ALL)"}</h6>
                                     <table className="table">
