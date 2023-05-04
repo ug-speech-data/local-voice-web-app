@@ -105,12 +105,13 @@ function Dashboard() {
                         <h4 className="h4 mt-4">LEADER BOARDS</h4>
 
                         <TabLayout tabs={["AUDIOS BY LEADS", "CONFLICT RESOLUTION", "VALIDATIONS"]} currentTab={0}>
-                            <div className="col-md-6" style={{"height":"80vh", "overflow":"auto"}}>
+                            <div className="col-md-6" style={{ "height": "80vh", "overflow": "auto" }}>
                                 <DashboardCard>
                                     <h6 className="h6 text-muted">AUDIOS BY LEADS {"(ALL)"}</h6>
                                     <table className="table">
                                         <thead>
                                             <tr style={{ verticalAlign: "middle" }}>
+                                                <th>S/N</th>
                                                 <th>SURNAME</th>
                                                 <th>OTHER NAMES</th>
                                                 <th>LANG</th>
@@ -119,8 +120,9 @@ function Dashboard() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {audiosByLeads?.map(leader => {
+                                            {audiosByLeads?.map((leader, index) => {
                                                 return <tr>
+                                                    <td>{index + 1}</td>
                                                     <td>{leader.surname}</td>
                                                     <td>{leader.other_names}</td>
                                                     <td>{leader.language}</td>
@@ -132,12 +134,13 @@ function Dashboard() {
                                     </table>
                                 </DashboardCard>
                             </div>
-                            <div className="col-md-6" style={{"height":"80vh", "overflow":"auto"}}>
+                            <div className="col-md-6" style={{ "height": "80vh", "overflow": "auto" }}>
                                 <DashboardCard>
                                     <h6 className="h6 text-muted">CONFLICT RESOLUTION {conflictResolutionLeaders?.length >= 15 ? "(TOP 15)" : "(ALL)"}</h6>
                                     <table className="table">
                                         <thead>
                                             <tr style={{ verticalAlign: "middle" }}>
+                                                <th>S/N</th>
                                                 <th>SURNAME</th>
                                                 <th>OTHER NAMES</th>
                                                 <th>LANG</th>
@@ -145,8 +148,9 @@ function Dashboard() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {conflictResolutionLeaders?.map(leader => {
+                                            {conflictResolutionLeaders?.map((leader, index) => {
                                                 return <tr>
+                                                    <td>{index + 1}</td>
                                                     <td>{leader.surname}</td>
                                                     <td>{leader.other_names}</td>
                                                     <td>{leader.language}</td>
@@ -158,12 +162,13 @@ function Dashboard() {
                                 </DashboardCard>
                             </div>
 
-                            <div className="col-md-6" style={{"height":"80vh", "overflow":"auto"}}>
+                            <div className="col-md-6" style={{ "height": "80vh", "overflow": "auto" }}>
                                 <DashboardCard>
                                     <h6 className="h6 text-muted">VALIDATIONS {validationLeaders?.length >= 15 ? "(TOP 15)" : "(ALL)"}</h6>
                                     <table className="table">
                                         <thead>
                                             <tr style={{ verticalAlign: "middle" }}>
+                                                <th>S/N</th>
                                                 <th>SURNAME</th>
                                                 <th>OTHER NAMES</th>
                                                 <th>LANG</th>
@@ -171,8 +176,9 @@ function Dashboard() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {validationLeaders?.map(leader => {
+                                            {validationLeaders?.map((leader, index) => {
                                                 return <tr>
+                                                    <td>{index + 1}</td>
                                                     <td>{leader.surname}</td>
                                                     <td>{leader.other_names}</td>
                                                     <td>{leader.language}</td>
