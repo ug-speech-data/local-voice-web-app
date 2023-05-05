@@ -368,7 +368,10 @@ function UserPayment() {
                     responseDataAttribute="users"
                     dataSourceUrl={`${BASE_API_URI}/payments/users`}
                     filters={
-                        groups?.map(group => { return { key: `groups__name__icontains:${group.name}`, value: `User's in group: '${group.name}'` } })
+                        [
+                            { key: `wallet__balance__gt:0`, value: `Has balance`, defaultValue: true },
+                            ...(groups?.map(group => { return { key: `groups__name__icontains:${group.name}`, value: `User's in group: '${group.name}'` } }) || []),
+                        ]
                     }
                     bulkActions={[
                         {
