@@ -130,6 +130,7 @@ function Dashboard() {
                                                 <th>LANG</th>
                                                 <th style={{ verticalAlign: "middle", "textAlign": "center" }}>AUDIOS CONTRIBUTED <br />(EXP. 250)</th>
                                                 <th style={{ verticalAlign: "middle", "textAlign": "center" }}>APPROVED <br />(EXP. 250)</th>
+                                                <th style={{ verticalAlign: "middle", "textAlign": "center" }}>REJECTED</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -141,6 +142,7 @@ function Dashboard() {
                                                     <td>{leader.language}</td>
                                                     <td> <p style={{ verticalAlign: "middle", "textAlign": "center" }}>{leader.proxy_audios_submitted_in_hours}</p></td>
                                                     <td> <p style={{ verticalAlign: "middle", "textAlign": "center" }}>{leader.proxy_audios_accepted_in_hours}</p></td>
+                                                    <td> <p style={{ verticalAlign: "middle", "textAlign": "center" }}>{leader.proxy_audios_rejected_in_hours}</p></td>
                                                 </tr>
                                             })}
                                         </tbody>

@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 
 
 function ParticipantsTable() {
+    const [triggerReload, setTriggerReload] = useState(0);
     const [deleteParticipant, { isLoading: isDeletingParticipant, error: errorDeletingParticipant }] = useDeleteParticipantsMutation()
     const [putParticipant, { isLoading: isPuttingParticipant, isSuccess: successPuttingParticipant, error: errorPuttingParticipant }] = useUpdateParticipantsMutation()
 
@@ -188,6 +189,8 @@ function ParticipantsTable() {
             })
         }
         confirmationModal?.hide()
+        setTotalToPay(0)
+        setTriggerReload((triggerReload) => triggerReload + 1);
     }, [bulkActionResponseData])
 
 
@@ -205,6 +208,11 @@ function ParticipantsTable() {
         }
     }, [bulkActionError, isSubmittingBulkAction])
 
+
+    function showDeleteParticipantModal(item) {
+        setSelectedParticipant(item)
+        deleteAlertModal?.show()
+    }
 
     return (
         <Fragment>
@@ -347,6 +355,7 @@ function ParticipantsTable() {
 
             <div className="mb-5 overflow-scroll">
                 <TableView
+                    reloadTrigger={triggerReload}
                     responseDataAttribute="participants"
                     dataSourceUrl={`${BASE_API_URI}/collected-participants/`}
                     newUpdate={newUpdate}
@@ -355,10 +364,11 @@ function ParticipantsTable() {
                         { key: "type:INDEPENDENT", value: "Independent Participants" },
                     ]}
                     filters2={[
-                        { key: "paid:0", value: "Not paid", defaultValue: true },
-                        { key: "transaction__status:pending", value: "Transaction Pending" },
-                        { key: "transaction__status:failed", value: "Transaction Failed" },
-                        { key: "transaction__status:success", value: "Transaction Succeeded" },
+                        { key: "transaction:null", value: "Not paid", defaultValue: true },
+                        { key: "transaction__status:pending", value: "Pending transactions" },
+                        { key: "transaction__status:failed", value: "Failed transactions" },
+                        { key: "transaction__status:success", value: "Successful transactions" },
+                        { key: "transaction__status:new", value: "New transactions" },
                     ]}
                     bulkActions={[
                         {
@@ -390,6 +400,9 @@ function ParticipantsTable() {
                         }
                     }, {
                         key: "type", value: "Type"
+                    },
+                    {
+                        key: "locale", value: "Locale"
                     }, {
                         key: "audio_count", value: "Audios"
                     }, {
@@ -397,9 +410,9 @@ function ParticipantsTable() {
                     },
                     {
                         key: "percentage_audios_accepted", value: "% ACC."
-                    },{
+                    }, {
                         key: "amount", value: "Amount (₵)"
-                    },  {
+                    }, {
                         key: "paid", value: "Payment", render: (item) => {
                             return (
                                 <span>
@@ -408,7 +421,9 @@ function ParticipantsTable() {
                                         <span className='badge bg-warning'>{item?.transaction?.status}</span> :
                                         item?.transaction?.status === "success" ?
                                             <span className='badge bg-success'>{item?.transaction?.status}</span> :
-                                            <span className='badge bg-danger'>{item?.transaction?.status}</span>
+                                            item?.transaction?.status === "new" ?
+                                                <span className='badge bg-primary'>{item?.transaction?.status}</span> :
+                                                <span className='badge bg-danger'>{item?.transaction?.status}</span>
                                     }
                                 </span>
                             )
@@ -421,6 +436,11 @@ function ParticipantsTable() {
                                     <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showEditParticipantModal(item)}>
                                         <i className="bi bi-list me-1"></i>
                                         More
+                                    </button>
+
+                                    <button className="btn btn-sm btn-outline-danger me-1 d-flex" onClick={() => showDeleteParticipantModal(item)}>
+                                        <i className="bi bi-list me-1"></i>
+                                        Delete
                                     </button>
                                 </div>
                             )

@@ -48,6 +48,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
 
             // Reset selection
             setBulkSelectedIds([])
+            setSelectedItems([])
         }
     }, [responseData])
 
