@@ -118,8 +118,12 @@ function TranscriptionsTable() {
         const newElem = document.getElementById(newId)
         if (!Boolean(oldElem) || !Boolean(newElem)) return
 
-        const oldText = oldElem?.innerText.toLowerCase();
-        const newText = newElem?.innerText.toLowerCase();
+        let oldText = oldElem?.innerText.toLowerCase();
+        let newText = newElem?.innerText.toLowerCase();
+
+        const res = needlemanWunsch(oldText, newText)
+        oldText = res[0]
+        newText = res[1]
 
         let text = '';
         newText.split('').forEach(function (val, i) {
@@ -138,6 +142,67 @@ function TranscriptionsTable() {
             newElem.innerHTML = text
         }
     }
+
+    function needlemanWunsch(seq1, seq2) {
+        const m = seq1.length;
+        const n = seq2.length;
+        let gap_penalty = -2;
+        let match_score = 1;
+        let mismatch_penalty = -1;
+
+        // Initialize the scoring matrix
+        const score = [];
+        for (let i = 0; i <= m; i++) {
+            score[i] = [];
+            for (let j = 0; j <= n; j++) {
+                score[i][j] = 0;
+            }
+        }
+
+        // Initialize the first row and column of the scoring matrix
+        for (let i = 1; i <= m; i++) {
+            score[i][0] = score[i - 1][0] + gap_penalty;
+        }
+        for (let j = 1; j <= n; j++) {
+            score[0][j] = score[0][j - 1] + gap_penalty;
+        }
+
+        // Fill in the rest of the scoring matrix
+        for (let i = 1; i <= m; i++) {
+            for (let j = 1; j <= n; j++) {
+                let diagScore = score[i - 1][j - 1] + (seq1[i - 1] == seq2[j - 1] ? match_score : mismatch_penalty);
+                let leftScore = score[i][j - 1] + gap_penalty;
+                let upScore = score[i - 1][j] + gap_penalty;
+
+                score[i][j] = Math.max(diagScore, leftScore, upScore);
+            }
+        }
+
+        // Traceback
+        let align1 = "";
+        let align2 = "";
+        let i = m;
+        let j = n;
+        while (i > 0 || j > 0) {
+            if (i > 0 && j > 0 && score[i][j] == score[i - 1][j - 1] + (seq1[i - 1] == seq2[j - 1] ? match_score : mismatch_penalty)) {
+                align1 = seq1[i - 1] + align1;
+                align2 = seq2[j - 1] + align2;
+                i--;
+                j--;
+            } else if (j > 0 && score[i][j] == score[i][j - 1] + gap_penalty) {
+                align1 = "-" + align1;
+                align2 = seq2[j - 1] + align2;
+                j--;
+            } else {
+                align1 = seq1[i - 1] + align1;
+                align2 = "-" + align2;
+                i--;
+            }
+        }
+
+        return [align1, align2, score[m][n]];
+    }
+
 
     return (
         <Fragment>
@@ -185,7 +250,7 @@ function TranscriptionsTable() {
                                 <div className="my-3">
                                     <p htmlFor="name" className="m-0"><b>Transcriptions</b></p>
                                     {selectedTranscription?.transcriptions?.map((transcription, index) => {
-                                        const parent = <div className='mb-3'>
+                                        const parent = <div className='mb-3' key={index}>
                                             <p className='text-primary d-flex align-items-center'><strong>Text {index + 1}</strong>
                                                 <button className="btn btn-sm btn-light d-flex align-items-center" onClick={(e) => setCorrectedText(transcription.text)}>
                                                     <i className="bi bi-pencil me-1"></i><small>Edit this</small>
@@ -206,7 +271,7 @@ function TranscriptionsTable() {
 
                                 <div className="my-3 d-flex justify-content-end">
                                     <div className='d-flex align-items-center' onChange={(e) => setTranscriptionStatus(e.target.value)}>
-                                        <select name="transcriptionStatus" id="transcriptionStatus" className='form-select' value={transcriptionStatus}>
+                                        <select name="transcriptionStatus" id="transcriptionStatus" className='form-select' defaultValue={transcriptionStatus}>
                                             <option value="accepted">Accepted</option>
                                             <option value="conflict">Conflict</option>
                                             <option value="pending">Pending</option>
