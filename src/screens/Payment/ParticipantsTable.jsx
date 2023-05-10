@@ -384,10 +384,10 @@ function ParticipantsTable() {
                     ]}
                     filters2={[
                         { key: "balance__gt:0", value: "Has balance", defaultValue: true },
-                        { key: "transaction__status:pending", value: "Pending transactions" },
-                        { key: "transaction__status:failed", value: "Failed transactions" },
-                        { key: "transaction__status:success", value: "Successful transactions" },
-                        { key: "transaction__status:new", value: "New transactions" },
+                        { key: "transactions__status:pending", value: "Pending transactions" },
+                        { key: "transactions__status:failed", value: "Failed transactions" },
+                        { key: "transactions__status:success", value: "Successful transactions" },
+                        { key: "transactions__status:new", value: "New transactions" },
                     ]}
                     bulkActions={[
                         {

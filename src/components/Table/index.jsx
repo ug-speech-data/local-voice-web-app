@@ -78,7 +78,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
         setSort(key)
         const toToSorted = [...displayedData]
         toToSorted.sort((a, b) => {
-            if (a[sort] < b[sort]) {
+            if (a[sort] <= b[sort]) {
                 return sortAscending ? -1 : 1;
             }
             return sortAscending ? 1 : -1;
