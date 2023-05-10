@@ -230,7 +230,7 @@ function TranscriptionsTable() {
                                 </div>
 
                                 <div className="my-3">
-                                    <label htmlFor="name" className="form-label"><b>Audio</b></label>
+                                    <label htmlFor="name" className="form-label"><b>Audio</b> <span className="badge bg-primary">{selectedTranscription?.id}</span></label>
                                     <div className="d-flex justify-content-start align-items-center">
                                         <AudioPlayer
                                             canSeek={true}
@@ -251,7 +251,7 @@ function TranscriptionsTable() {
                                     <p htmlFor="name" className="m-0"><b>Transcriptions</b></p>
                                     {selectedTranscription?.transcriptions?.map((transcription, index) => {
                                         const parent = <div className='mb-3' key={index}>
-                                            <p className='text-primary d-flex align-items-center'><strong>Text {index + 1}</strong>
+                                            <p className='text-primary d-flex align-items-center'><strong>Text {index + 1} <span className="badge bg-primary">{transcription.id}</span></strong>
                                                 <button className="btn btn-sm btn-light d-flex align-items-center" onClick={(e) => setCorrectedText(transcription.text)}>
                                                     <i className="bi bi-pencil me-1"></i><small>Edit this</small>
                                                 </button>
@@ -310,54 +310,58 @@ function TranscriptionsTable() {
                     { key: "transcription_status:pending", value: "Pending" },
                     { key: "transcription_status:conflict", value: "Conflict" },
                     ]}
-                    headers={[{
-                        key: "audio_url", value: "Audio", render: (item) => {
-                            return (
-                                <div className="d-flex align-items-center">
-                                    <TextOverflow text={item.audio_url} width={30} />
-                                    {item.transcription_status === 'accepted' ?
-                                        <span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>
-                                        :
-                                        <span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>
-                                    }
-                                </div>
-                            )
-                        }
-                    }, {
-                        key: "transcriptions", value: "Transcriptions", render: (item) => {
-                            return (
-                                <div>
-                                    {item.transcriptions?.map((transcription, index) => (
-                                        <div>
-                                            <span key={index} className={'badge bg-primary'}>{transcription.user.full_name} ({transcription.user.email_address})</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            )
-                        }
-                    }, {
-                        key: "locale", value: "Locale"
-                    },
-                    {
-                        key: "image_url", value: "Image", render: (item) => {
-                            return (
-                                <div>
-                                    <img src={item.thumbnail} alt={item.thumbnail} className="profile-image" onClick={() => showEditTranscriptionModal(item)} />
-                                </div>
-                            )
-                        }
-                    }, {
-                        value: "Actions", render: (item) => {
-                            return (
-                                <div className="d-flex">
-                                    <button className="btn btn-sm btn-primary me-1 d-flex" onClick={() => showEditTranscriptionModal(item)}>
-                                        <i className="bi bi-list me-1"></i>
-                                        More
-                                    </button>
-                                </div>
-                            )
-                        }
-                    }]}
+                    headers={[
+                        {
+                            key: "id", value: "ID"
+                        },
+                        {
+                            key: "audio_url", value: "Audio", render: (item) => {
+                                return (
+                                    <div className="d-flex align-items-center">
+                                        <TextOverflow text={item.audio_url} width={30} />
+                                        {item.transcription_status === 'accepted' ?
+                                            <span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>
+                                            :
+                                            <span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle"></i></span>
+                                        }
+                                    </div>
+                                )
+                            }
+                        }, {
+                            key: "transcriptions", value: "Transcriptions", render: (item) => {
+                                return (
+                                    <div>
+                                        {item.transcriptions?.map((transcription, index) => (
+                                            <div>
+                                                <span key={index} className={'badge bg-primary'}>{transcription.user.full_name} ({transcription.user.email_address})</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )
+                            }
+                        }, {
+                            key: "locale", value: "Locale"
+                        },
+                        {
+                            key: "image_url", value: "Image", render: (item) => {
+                                return (
+                                    <div>
+                                        <img src={item.thumbnail} alt={item.thumbnail} className="profile-image" onClick={() => showEditTranscriptionModal(item)} />
+                                    </div>
+                                )
+                            }
+                        }, {
+                            value: "Actions", render: (item) => {
+                                return (
+                                    <div className="d-flex">
+                                        <button className="btn btn-sm btn-primary me-1 d-flex" onClick={() => showEditTranscriptionModal(item)}>
+                                            <i className="bi bi-list me-1"></i>
+                                            More
+                                        </button>
+                                    </div>
+                                )
+                            }
+                        }]}
                 >
                 </TableView>
             </div>
