@@ -26,8 +26,13 @@ function CollectedData() {
         'SPEAKER_ID', "LOCALE", "GENDER", "AGE", "DEVICE", "ENVIRONMENT",
         "YEAR", "TRANSCRIPTION"
     ]
-    const [selectedFields, setSelectedFields] = useState([...allFields])
-    const [format, setFormat] = useState("wav")
+
+    const [status, setStatus] = useState("accepted")
+    const [locale, setLocale] = useState("all")
+    const [numberOfFiles, setNumberOfFiles] = useState(0)
+    const [tag, setTag] = useState("")
+
+
     const [searchParams] = useSearchParams();
     const [currentTab, setCurrentTab] = useState(searchParams.get('tab') || 0);
     const location = useLocation()
@@ -38,7 +43,7 @@ function CollectedData() {
         setCurrentTab(tab || 0)
     }, [location, params])
 
-    const { trigger: exportAudioData, data: responseData, error, isLoading: isLoadingSubmittingExportRequest } = useAxios()
+    const { trigger: exportAudioData, data: responseData, error, isLoading: isLoadingSubmittingExportRequest } = useAxios({method:"POST"})
 
     useEffect(() => {
         if (responseData?.message) {
@@ -72,8 +77,10 @@ function CollectedData() {
         exportAudioData(
             `${BASE_API_URI}/export-audio-data/`,
             {
-                fields: selectedFields,
-                format: format,
+                status: status,
+                tag: tag,
+                locale: locale,
+                "number_of_files": numberOfFiles,
             }
         )
     }
@@ -99,31 +106,49 @@ function CollectedData() {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <h1 className="h4">Select fields to export</h1>
-                            <div>
-                                <TagInput
-                                    tags={allFields}
-                                    placeholder="Select fields to export"
-                                    maxTags={allFields.length}
-                                    setSelectedTags={setSelectedFields}
-                                    selectedTags={selectedFields}
-                                />
-                            </div>
-
-                            <div className='form-group'>
-                                <label htmlFor="format"><b>Audio Format</b></label>
-                                <select name="format" id="format" className='form-control' onChange={(e) => setFormat(e.target.value)}>
-                                    <option value="wav">Wave</option>
-                                    <option value="mp3">MP3</option>
+                            <div className='form-group my-3'>
+                                <label htmlFor="status"><b>Audio Status</b></label>
+                                <select name="status" id="status" className='form-select' defaultValue={status} onChange={(e) => setStatus(e.target.value)}>
+                                    <option value="accepted">Accepted Audios</option>
+                                    <option value="transcribed">Transcribed Audios</option>
                                 </select>
                             </div>
 
+                            <div className='form-group my-3'>
+                                <label htmlFor="locale"><b>Locale</b></label>
+                                <select name="locale" id="locale" className='form-select' defaultValue={locale} onChange={(e) => setLocale(e.target.value)}>
+                                    <option value="all">All</option>
+                                    <option value="ak_gh">Akan</option>
+                                    <option value="dga_gh">Dagbani</option>
+                                    <option value="dag_gh">Dagaare</option>
+                                    <option value="ee_gh">Ewe</option>
+                                    <option value="kpo_gh">Ikposo</option>
+                                </select>
+                            </div>
+
+                            <div className='form-group my-3'>
+                                <label htmlFor="file_count"><b>Number of files</b></label>
+                                <p className="text-muted">Enter 0 to export all the files that meet the filtering criteria.</p>
+                                <p className="text-muted">The audios will be exported after sorting and exported files will be tagged with the provided tag.</p>
+                                <input className='form-control' min={0} type="number" value={numberOfFiles} name="file_count" id="file_count" onChange={(e) => setNumberOfFiles(e.target.value)} />
+                            </div>
+
+                            <div className='form-group my-3'>
+                                <label htmlFor="file_count"><b>Tag</b></label>
+                                <p className="text-muted">Tags help export in data batches. Audios with this tag will not be exported again.</p>
+                                <p className="text-muted">A good tag can be the current date and time concatenated e.g., <strong>202305101013</strong></p>
+                                <input className='form-control' type="text" value={tag} onChange={(e) => setTag(e.target.value)} maxLength={50} />
+                            </div>
+
                             <div className="form-group d-flex justify-content-center mt-5 mb-2">
-                                <button className="btn btn-primary px-5 py-3"
+                                <button className="btn btn-primary"
                                     disabled={isLoadingSubmittingExportRequest}
                                     onClick={handleExportAudioData}
                                 >
-                                    <span className="d-flex">{isLoadingSubmittingExportRequest && <Spinner />} <span className='mx-1'>Submit</span></span>
+                                    <span className="d-flex">{isLoadingSubmittingExportRequest && <Spinner />}
+                                        <i className="bi bi-file-spreadsheet"></i>
+                                        <span className='mx-1'>Submit</span>
+                                    </span>
                                 </button>
                             </div>
                         </div>
