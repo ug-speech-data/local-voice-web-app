@@ -325,36 +325,36 @@ function ParticipantsTable() {
                                     <p>{selectedParticipant?.created_at}</p>
                                 </div>
                                 <div className="my-3">
-                                        <table className="table">
-                                            <thead>
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Transaction ID</th>
+                                                <th>Phone</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {console.log(selectedParticipant?.transactions)}
+                                            {selectedParticipant?.transactions?.map(transaction =>
                                                 <tr>
-                                                    <th>Transaction ID</th>
-                                                    <th>Phone</th>
-                                                    <th>Amount</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {console.log(selectedParticipant?.transactions)}
-                                                {selectedParticipant?.transactions?.map(transaction =>
-                                                    <tr>
-                                                        <td>{transaction.transaction_id}</td>
-                                                        <td>{transaction.phone_number}</td>
-                                                        <td>{transaction.amount}</td>
-                                                        <td>
-                                                            {transaction?.status === "pending" ?
-                                                                <span className='badge bg-warning'>{transaction?.status}</span> :
-                                                                transaction?.status === "success" ?
-                                                                    <span className='badge bg-success'>{transaction?.status}</span> :
-                                                                    transaction?.status === "new" ?
-                                                                        <span className='badge bg-primary'>{transaction?.status}</span> :
-                                                                        <span className='badge bg-danger'>{transaction?.status}</span>}
+                                                    <td>{transaction.transaction_id}</td>
+                                                    <td>{transaction.phone_number}</td>
+                                                    <td>{transaction.amount}</td>
+                                                    <td>
+                                                        {transaction?.status === "pending" ?
+                                                            <span className='badge bg-warning'>{transaction?.status}</span> :
+                                                            transaction?.status === "success" ?
+                                                                <span className='badge bg-success'>{transaction?.status}</span> :
+                                                                transaction?.status === "new" ?
+                                                                    <span className='badge bg-primary'>{transaction?.status}</span> :
+                                                                    <span className='badge bg-danger'>{transaction?.status}</span>}
 
-                                                        </td>
-                                                    </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
                                 </div>
 
                                 <div className="my-3 d-flex justify-content-end">
@@ -383,7 +383,7 @@ function ParticipantsTable() {
                         { key: "type:INDEPENDENT", value: "Independent Participants" },
                     ]}
                     filters2={[
-                        { key: "balance__gt:0", value: "Not paid", defaultValue: true },
+                        { key: "balance__gt:0", value: "Has balance", defaultValue: true },
                         { key: "transaction__status:pending", value: "Pending transactions" },
                         { key: "transaction__status:failed", value: "Failed transactions" },
                         { key: "transaction__status:success", value: "Successful transactions" },
