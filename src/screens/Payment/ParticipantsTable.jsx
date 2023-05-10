@@ -439,7 +439,7 @@ function ParticipantsTable() {
                                 <Fragment>
                                     <span>
                                         {item?.balance > 0 ?
-                                            <span className='badge bg-warning'>Pending</span> :
+                                            <span className='badge bg-warning'>Balance</span> :
                                             <span className='badge bg-success'>No Balance</span>
                                         }
                                     </span>
