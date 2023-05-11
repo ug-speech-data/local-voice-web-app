@@ -110,6 +110,7 @@ function CollectedData() {
                                 <label htmlFor="status"><b>Audio Status</b></label>
                                 <select name="status" id="status" className='form-select' defaultValue={status} onChange={(e) => setStatus(e.target.value)}>
                                     <option value="accepted">Accepted Audios</option>
+                                    <option value="transcription_resolved">Transcribed Audios (Resolved)</option>
                                     <option value="transcribed">Transcribed Audios</option>
                                 </select>
                             </div>
