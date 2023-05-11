@@ -123,16 +123,16 @@ function TopNav() {
                         </button>
                     </div>
 
-                    <div className="drop-down">
+                    <div className="drop-down" style={{height:"70vh", overflow:"auto"}}>
                         {notifications.map((notification, index) => {
                             return <div key={notification.id} className='drop-down-item'>
-                                <p className='text-bold'>{notification.title}</p>
-                                <p className="text-muted">
+                                <p className='text-bold m-0'>{notification.title}</p>
+                                <p className="text-muted m-0">
                                     {notification.message}
                                 </p>
                                 <div>
-                                    <p className="my-2"><a href={notification.url}>{notification.url}</a></p>
-                                    <p className="mt-2"><small className="text-muted">{notification.time_ago}</small></p>
+                                    <small className="my-0 text-primary"><a href={notification.url}>{notification.url}</a></small>
+                                    <p className="mt-0"><small className="text-muted">{notification.time_ago}</small></p>
                                 </div>
                             </div>
                         })}
