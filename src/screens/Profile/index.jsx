@@ -144,6 +144,7 @@ function ProfileScreen() {
                         <p className="">Your Audios Rejected: {currentUser?.audios_rejected}</p>
                         <p className="">Your Audios Accepted: {currentUser?.audios_accepted}</p>
                         <p className="">Your Transcriptions: {currentUser?.audios_transcribed}</p>
+                        <p className="">Transcription Resolutions: {currentUser?.transcriptions_resolved}</p>
                     </div>
                     <hr />
 
