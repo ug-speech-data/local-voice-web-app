@@ -99,6 +99,9 @@ function TranscriptionsTable() {
 
     useEffect(() => {
         highlight(`text-0-container`, `text-1-container`)
+        if (selectedTranscription?.transcriptions?.length > 0) {
+            setCorrectedText(selectedTranscription.transcriptions[0].corrected_text)
+        }
     }, [selectedTranscription])
 
     // Getting enumerators
@@ -264,7 +267,7 @@ function TranscriptionsTable() {
                                         return parent;
                                     })}
                                     <hr />
-                                    <p htmlFor="name" className="mt-3"><b>Edit</b></p>
+                                    <p htmlFor="name" className="mt-3"><b>Edit (Resolution)</b></p>
                                     <small className='text-muted'>Edit and save</small>
                                     <textarea className='form-control' rows="5" placeholder='Type here' value={correctedText} onChange={(e) => setCorrectedText(e.target.value)}></textarea>
                                 </div>
