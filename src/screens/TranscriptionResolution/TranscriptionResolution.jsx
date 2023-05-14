@@ -147,14 +147,12 @@ function TranscriptionResolution() {
                     </div>
 
                     {Boolean(currentAudio) ?
-
-
                         <Fragment>
                             <div className="my-3">
                                 <strong className="modal-title my-2"><a href={currentAudio?.audio_url}>{currentAudio?.audio_url}</a></strong>
                                 <hr />
                             </div>
-                            <div className="modal-body d-flex align-items-center flex-wrap">
+                            <div className="modal-body d-flex align-items-center justify-content-center flex-wrap">
                                 <div className="col-md-6">
                                     <img src={currentAudio?.image_url} alt={currentAudio?.audio_url} style={{ maxHeight: "40vh" }} />
                                 </div>
