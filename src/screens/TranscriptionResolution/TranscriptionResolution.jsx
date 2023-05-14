@@ -55,7 +55,7 @@ function TranscriptionResolution() {
         if (currentAudio?.transcriptions.length > 0 == true) {
             setCorrectedText(currentAudio?.transcriptions[0].corrected_text)
         }
-        needlemanWunsch(`text-0-container`, `text-1-container`)
+        highlight(`text-0-container`, `text-1-container`)
     }, [currentAudio])
 
     useEffect(() => {
@@ -99,6 +99,36 @@ function TranscriptionResolution() {
             })
         }
     }, [errorGettingResolution, isGettingResolution])
+
+    function highlight(newId, oldId) {
+        const oldElem = document.getElementById(oldId)
+        const newElem = document.getElementById(newId)
+        if (!Boolean(oldElem) || !Boolean(newElem)) return
+
+        let oldText = oldElem?.innerText.toLowerCase();
+        let newText = newElem?.innerText.toLowerCase();
+
+        const res = needlemanWunsch(oldText, newText)
+        oldText = res[0]
+        newText = res[1]
+
+        let text = '';
+        newText.split('').forEach(function (val, i) {
+            if (val != oldText?.charAt(i)) {
+                if (val === " ") {
+                    text += "<span class='highlight'>&nbsp;";
+                } else {
+                    text += "<span class='highlight'>" + val;
+                }
+                text += "</span>";
+            }
+            else
+                text += val;
+        });
+        if (Boolean(newElem)) {
+            newElem.innerHTML = text
+        }
+    }
 
     return (
         <Fragment>
