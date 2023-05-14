@@ -183,7 +183,7 @@ function TranscriptionResolution() {
                                 <hr />
                             </div>
                             <div className="modal-body d-flex align-items-center justify-content-center flex-wrap">
-                                <div className="col-md-6 d-flex align-items-center justify-content-center">
+                                <div className="col-md-6 d-flex align-items-center justify-content-center p-2">
                                     <img src={currentAudio?.image_url} alt={currentAudio?.audio_url} style={{ maxHeight: "40vh" }} />
                                 </div>
                                 <div className="col-md-6">
@@ -214,7 +214,7 @@ function TranscriptionResolution() {
                                         <p htmlFor="name" className="m-0"><b>Transcriptions</b></p>
                                         {currentAudio?.transcriptions?.map((transcription, index) => {
                                             const parent = <div className='mb-3' key={index}>
-                                                <p className='text-primary d-flex align-items-center'><strong>Text {index + 1} <span className="badge bg-primary">{transcription.id}</span></strong>
+                                                <p className='text-primary d-flex align-items-center flex-wrap my-3'><strong>Text {index + 1} <span className="badge bg-primary">{transcription.id}</span></strong>
                                                     <button className="btn btn-sm btn-light d-flex align-items-center" onClick={(e) => setCorrectedText(transcription.text)}>
                                                         <i className="bi bi-pencil me-1"></i><small>Edit this</small>
                                                     </button>
