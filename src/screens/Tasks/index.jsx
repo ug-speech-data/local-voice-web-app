@@ -11,6 +11,7 @@ import PageMeta from "../../components/PageMeta";
 import { useParams, useLocation } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import { useSearchParams } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 function Tasks() {
     const userPermissions = useSelector((state) => new Set(state.authentication.userPermissions));
@@ -25,14 +26,17 @@ function Tasks() {
         setCurrentTab(tab || 0)
     }, [location, params])
 
-    if (userPermissions.has(Permissions.VALIDATE_IMAGE))
-        tabs.push("Image Validation")
-
     if (userPermissions.has(Permissions.VALIDATE_AUDIO))
         tabs.push("Audio Validation")
 
     if (userPermissions.has(Permissions.TRANSCRIBE_AUDIO))
         tabs.push("Transcription")
+
+    if (userPermissions.has(Permissions.RESOLVE_TRANSCRIPTION))
+        tabs.push("Trans. Resolution")
+
+    if (userPermissions.has(Permissions.VALIDATE_IMAGE))
+        tabs.push("Image Validation")
 
     return (
         <Fragment>
@@ -42,9 +46,14 @@ function Tasks() {
                 <h4><b>VALIDATION AND TRANSCRIPTION</b></h4>
                 <p className="text-muted mb-4">Click on each tab to find available tasks to complete.</p>
                 <TabLayout tabs={tabs} currentTab={currentTab}>
-                    {userPermissions.has(Permissions.VALIDATE_IMAGE) && <ImageValidation />}
                     {userPermissions.has(Permissions.VALIDATE_AUDIO) && <AudioValidation />}
                     {userPermissions.has(Permissions.TRANSCRIBE_AUDIO) && <Transcription />}
+                    {userPermissions.has(Permissions.RESOLVE_TRANSCRIPTION) && <Fragment>
+                        <div className="d-flex justify-content-center align-items-center" style={{ height: "30vh" }}>
+                            <Link  to={"/transcription/resolution"} className="btn btn-outline-primary"> <i className="bi bi-box-arrow-up-right"></i>  Begin transcription resolution</Link>
+                        </div>
+                    </Fragment>}
+                    {userPermissions.has(Permissions.VALIDATE_IMAGE) && <ImageValidation />}
                 </TabLayout>
             </div>
 

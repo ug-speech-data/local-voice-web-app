@@ -8,6 +8,7 @@ const Permissions = {
     APPROVE_SAMPLE_AUDIO_RECORDERS: "approve_sample_audio_recorders",
     MANAGE_PAYMENT: "manage_payment",
     VIEW_DASHBOARD: "view_dashboard",
+    RESOLVE_TRANSCRIPTION: "resolve_transcription",
 }
 
 export default Permissions;

@@ -20,6 +20,7 @@ import UsersCard from "./screens/Setup/UsersCard";
 import SystemConfigurationCard from "./screens/Setup/SystemConfigurationCard";
 import CategoryCard from "./screens/Setup/CategoriesCard";
 import GroupsCard from "./screens/Setup/GroupsCard";
+import TranscriptionResolution from "./screens/TranscriptionResolution/TranscriptionResolution";
 
 
 function App() {
@@ -69,6 +70,12 @@ function App() {
         <Route path="/dashboard" element={
           <ProtectedRoute permissions={[Permissions.VIEW_DASHBOARD]}>
             <Dashboard />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/transcription/resolution" element={
+          <ProtectedRoute permissions={[Permissions.RESOLVE_TRANSCRIPTION]}>
+            <TranscriptionResolution />
           </ProtectedRoute>
         } />
 
