@@ -6,6 +6,7 @@ import { BASE_API_URI } from '../../utils/constants';
 import useAxios from '../../app/hooks/useAxios';
 import Footer from '../../components/Footer';
 import { useNavigate } from 'react-router-dom';
+import { needlemanWunsch } from "../../utils/functions";
 
 function TranscriptionResolution() {
     const navigate = useNavigate();
@@ -54,6 +55,7 @@ function TranscriptionResolution() {
         if (currentAudio?.transcriptions.length > 0 == true) {
             setCorrectedText(currentAudio?.transcriptions[0].corrected_text)
         }
+        needlemanWunsch(`text-0-container`, `text-1-container`)
     }, [currentAudio])
 
     useEffect(() => {
