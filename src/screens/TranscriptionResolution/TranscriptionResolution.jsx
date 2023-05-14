@@ -183,7 +183,7 @@ function TranscriptionResolution() {
                                 <hr />
                             </div>
                             <div className="modal-body d-flex align-items-center justify-content-center flex-wrap">
-                                <div className="col-md-6">
+                                <div className="col-md-6 d-flex align-items-center justify-content-center">
                                     <img src={currentAudio?.image_url} alt={currentAudio?.audio_url} style={{ maxHeight: "40vh" }} />
                                 </div>
                                 <div className="col-md-6">
