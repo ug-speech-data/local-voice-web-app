@@ -7,7 +7,6 @@ import ImagesTable from "./ImagesTable";
 import { Fragment } from "react";
 import TranscriptionsTable from "./TranscriptionsTable";
 import { Modal } from 'bootstrap';
-import TagInput from '../../components/TagInput';
 import useAxios from '../../app/hooks/useAxios';
 import { Spinner, useToast } from '@chakra-ui/react';
 import { BASE_API_URI } from '../../utils/constants';
@@ -29,7 +28,9 @@ function CollectedData() {
 
     const [status, setStatus] = useState("accepted")
     const [locale, setLocale] = useState("all")
+    const [randomise, setRandomise] = useState("false")
     const [numberOfFiles, setNumberOfFiles] = useState(0)
+    const [skip, setSkip] = useState(0)
     const [tag, setTag] = useState("")
 
 
@@ -43,7 +44,7 @@ function CollectedData() {
         setCurrentTab(tab || 0)
     }, [location, params])
 
-    const { trigger: exportAudioData, data: responseData, error, isLoading: isLoadingSubmittingExportRequest } = useAxios({method:"POST"})
+    const { trigger: exportAudioData, data: responseData, error, isLoading: isLoadingSubmittingExportRequest } = useAxios({ method: "POST" })
 
     useEffect(() => {
         if (responseData?.message) {
@@ -80,6 +81,8 @@ function CollectedData() {
                 status: status,
                 tag: tag,
                 locale: locale,
+                randomise: randomise,
+                skip: randomise === "false"? skip: 0,
                 "number_of_files": numberOfFiles,
             }
         )
@@ -128,16 +131,32 @@ function CollectedData() {
                             </div>
 
                             <div className='form-group my-3'>
+                                <label htmlFor="randomise"><b>Randomise</b></label>
+                                <select name="randomise" id="randomise" className='form-select' defaultValue={randomise} onChange={(e) => setRandomise(e.target.value)}>
+                                    <option value="false">False</option>
+                                    <option value="true">True</option>
+                                </select>
+                            </div>
+
+                            {randomise === "false" ?
+                                <div className='form-group my-4'>
+                                    <label htmlFor="skip"><b>Skip </b></label>
+                                    <p className="text-muted m-0">Number of files to skip.</p>
+                                    <input className='form-control' min={0} type="number" value={skip} name="skip" id="skip" onChange={(e) => setSkip(e.target.value)} />
+                                </div>
+                                : ""}
+
+                            <div className='form-group my-4'>
                                 <label htmlFor="file_count"><b>Number of files</b></label>
-                                <p className="text-muted">Enter 0 to export all the files that meet the filtering criteria.</p>
-                                <p className="text-muted">The audios will be exported after sorting and exported files will be tagged with the provided tag.</p>
+                                <p className="text-muted m-0">Enter 0 to export all the files that meet the filtering criteria.</p>
+                                <p className="text-muted m-0">The audios will be exported after sorting and exported files will be tagged with the provided tag.</p>
                                 <input className='form-control' min={0} type="number" value={numberOfFiles} name="file_count" id="file_count" onChange={(e) => setNumberOfFiles(e.target.value)} />
                             </div>
 
                             <div className='form-group my-3'>
                                 <label htmlFor="file_count"><b>Tag</b></label>
-                                <p className="text-muted">Tags help export in data batches. Audios with this tag will not be exported again.</p>
-                                <p className="text-muted">A good tag can be the current date and time concatenated e.g., <strong>202305101013</strong></p>
+                                <p className="text-muted m-0">Tags help export in data batches. Audios with this tag will not be exported again.</p>
+                                <p className="text-muted m-0">A good tag can be the current date and time concatenated e.g., <strong>202305101013</strong></p>
                                 <input className='form-control' type="text" value={tag} onChange={(e) => setTag(e.target.value)} maxLength={50} />
                             </div>
 
