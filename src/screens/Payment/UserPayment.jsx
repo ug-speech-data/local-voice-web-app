@@ -395,7 +395,7 @@ function UserPayment() {
                             }
                         },
                         { name: "Pay selected", action: (bulkSelectedIds) => showPaymentModal(bulkSelectedIds) },
-                        // { name: "Credit selected", action: (bulkSelectedIds) => showCreditModal(bulkSelectedIds) },
+                        { name: "Credit selected", action: (bulkSelectedIds) => showCreditModal(bulkSelectedIds) },
                     ]}
                     headers={[
                         {
