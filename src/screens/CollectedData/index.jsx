@@ -115,6 +115,7 @@ function CollectedData() {
                                     <option value="accepted">Accepted Audios</option>
                                     <option value="transcription_resolved">Transcribed Audios (Resolved)</option>
                                     <option value="transcribed">Transcribed Audios</option>
+                                    <option value="not_accepted">Not Accepted Audios</option>
                                 </select>
                             </div>
 
