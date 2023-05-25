@@ -222,7 +222,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                         {(!isLoading && displayedData?.length === 0) && <tr><td colSpan={(headers?.length || 7) + 2}>
                             <p className="text-center">No data to display</p>
                         </td></tr>}
-                        {!isLoading && error && <tr><td colSpan={headers?.length || 7}><p className="text-center text-warning">Error: {error}</p> </td></tr>}
+                        {!isLoading && error && <tr><td colSpan={(headers?.length || 7) + 2}><p className="text-center text-warning">Error: {error}</p> </td></tr>}
 
                         {displayedData?.map((item, index) => {
                             return (

@@ -12,6 +12,7 @@ import { BASE_API_URI } from '../../utils/constants';
 
 
 function UserPayment() {
+    const [triggerReload, setTriggerReload] = useState(0);
     const [getGroups, { data: response = [], isFetching, error }] = useLazyGetGroupsQuery()
     const { trigger: executeCreditAction, data: creditResponseData, error: creditError, isLoading: isCrediting } = useAxios({ method: "POST" })
     const { trigger: executePaymentAction, data: paymentResponseData, error: paymentError, isLoading: isPaying } = useAxios({ method: "POST" })
@@ -32,6 +33,11 @@ function UserPayment() {
     const [paymentModal, setPaymentModal] = useState(null)
     const [balancePaymentModal, setBalancePaymentModal] = useState(null)
     const [validationBenefitModal, setValidationBenefitModal] = useState(null)
+
+
+    // HACK: negative numbers are added to the total payout
+    const [sign, setSign] = useState(1)
+
 
     const toast = useToast()
 
@@ -75,6 +81,7 @@ function UserPayment() {
                 isClosable: true,
             })
             creditModal?.hide()
+            setTriggerReload((triggerReload) => triggerReload + 1);
         }
     }, [creditResponseData])
 
@@ -106,12 +113,13 @@ function UserPayment() {
 
     const showCreditModal = (bulkSelectedIds) => {
         setSelectedIds(bulkSelectedIds)
+        setCreditAmount(0)
         creditModal?.show()
     }
     function handleCreditSubmission() {
         executeCreditAction(
             `${BASE_API_URI}/payments/credit-users/`,
-            { ids: selectedIds, amount: creditAmount }
+            { ids: selectedIds, amount: sign * creditAmount }
         )
     }
 
@@ -159,6 +167,7 @@ function UserPayment() {
 
     const showPaymentModal = (bulkSelectedIds) => {
         setSelectedIds(bulkSelectedIds)
+        setPaymentAmount(0)
         paymentModal?.show()
     }
     function handlePaymentSubmission() {
@@ -222,16 +231,14 @@ function UserPayment() {
 
     return (
         <Fragment>
-            <PageMeta title="User Payment | Local Voice" />
-
-            {/* Modals */}
+            <PageMeta title="User Payment | UG Speech Data" />
 
             <div ref={creditModalRef} className="modal fade" tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-mg">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">
-                                Credit Selected Users
+                                Update Wallet
                             </h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -239,7 +246,7 @@ function UserPayment() {
                             <span className="badge bg-primary">{selectedIds.length} selected</span>
                             <div className="form-group my-3">
                                 <label htmlFor="amount">Amount</label>
-                                <p className="m-0 p-0"><span className="badge bg-primary"><i className="bi bi-info-circle me-2"></i> Enter negative amount to debit.</span></p>
+                                {/* <p className="m-0 p-0"><span className="badge bg-primary"><i className="bi bi-info-circle me-2"></i> Enter negative amount to debit.</span></p> */}
                                 <div className="d-flex align-items-center">
                                     <input type="number" className="form-control" name='amount' value={creditAmount} step={0.01} onChange={(e) => setCreditAmount(e.target.value)} />
                                     <button
@@ -366,6 +373,7 @@ function UserPayment() {
             <div className="mb-5 overflow-scroll">
                 <TableView
                     responseDataAttribute="users"
+                    reloadTrigger={triggerReload}
                     dataSourceUrl={`${BASE_API_URI}/payments/users`}
                     filters={
                         [
@@ -394,38 +402,65 @@ function UserPayment() {
                                 showValidationBenefitPaymentModal(bulkSelectedIds)
                             }
                         },
-                        { name: "Pay selected", action: (bulkSelectedIds) => showPaymentModal(bulkSelectedIds) },
-                        { name: "Credit selected", action: (bulkSelectedIds) => showCreditModal(bulkSelectedIds) },
+                        { name: "Pay selected an amount", action: (bulkSelectedIds) => showPaymentModal(bulkSelectedIds) },
+                        { name: "Credit selected an amount", action: (bulkSelectedIds) => { setSign(1); showCreditModal(bulkSelectedIds) } },
                     ]}
                     headers={[
                         {
-                            key: "fullname", value: "Full Name",
+                            key: "fullname",
+                            value: "Bio", render: (item) => {
+                                return (
+                                    <Fragment>
+                                        <span>{item.fullname}</span><br />
+                                        <span className={'badge bg-primary'}>{item.email_address}</span> <br />
+                                        <span className={'badge bg-primary'}>{item.phone}</span>
+                                    </Fragment>
+                                )
+                            }
                         },
                         {
-                            key: "email_address", value: "Email Address",
-                        }, {
-                            key: "phone", value: "Momo Number"
+                            key: "recording_benefit",
+                            value: "Rec. by oneself", render: (item) => {
+                                return <span className='d-flex'>{item.recording_benefit} ({item.audios_accepted})</span>
+                            }
                         },
                         {
-                            key: "recording_benefit", value: "Rec. Amount"
+                            key: "audios_by_recruits_benefit",
+                            value: "Rec. by recruits", render: (item) => {
+                                return <span className='d-flex'>{item.audios_by_recruits_benefit} ({item.accepted_audios_from_recruits})</span>
+                            }
                         },
                         {
-                            key: "validation_benefit", value: "Val. Amount"
+                            key: "validation_benefit",
+                            value: "Val. Amount", render: (item) => {
+                                return <span className='d-flex'>{item.validation_benefit} ({item.audios_validated})</span>
+                            }
+                        },
+                        {
+                            key: "transcription_benefit",
+                            value: "Trans. Amount", render: (item) => {
+                                return <span className='d-flex'>{item.transcription_benefit} ({item.audios_transcribed})</span>
+                            }
                         },
                         {
                             key: "accrued_amount", value: "Accrued Amount"
-                        }, {
-                            key: "total_payout", value: "Total Payout"
-                        }, {
+                        },
+                        {
+                            key: "total_payout",
+                            value: "Total Payout", render: (item) => {
+                                return <div className='d-flex'>
+                                    <span className='col-md-3'>{item.total_payout}</span>
+                                    <button className='col-md-7 mx-3 btn btn-sm btn-outline-primary' onClick={() => { setSign(-1); showCreditModal([item.id]) }}>Add</button>
+                                </div>
+                            }
+                        },
+                        {
                             value: "Balance", render: (item) => {
                                 return (
                                     <span className="badge bg-primary">{item.balance}</span>
                                 )
                             }
-                        },
-                        {
-                            key: "wallet_last_updated_at", value: "Wallet Updated"
-                        },
+                        }
                     ]}
                 >
                 </TableView>
