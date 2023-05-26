@@ -439,7 +439,7 @@ function UserPayment() {
                         {
                             key: "transcription_benefit",
                             value: "Trans. Amount", render: (item) => {
-                                return <span className='d-flex'>{item.transcription_benefit} ({item.audios_transcribed})</span>
+                                return <span className='d-flex'>{item.transcription_benefit} ({item.audios_transcribed + item.transcriptions_resolved})</span>
                             }
                         },
                         {
