@@ -450,7 +450,7 @@ function UserPayment() {
                             value: "Total Payout", render: (item) => {
                                 return <div className='d-flex'>
                                     <span className='col-md-3'>{item.total_payout}</span>
-                                    <button className='col-md-7 mx-3 btn btn-sm btn-outline-primary' onClick={() => { setSign(-1); showCreditModal([item.id]) }}>Add</button>
+                                    <button className='col-md-7 mx-3 btn btn-sm btn-outline-primary' onClick={() => { setSign(-1); showCreditModal([item.id]) }}>Paid</button>
                                 </div>
                             }
                         },
