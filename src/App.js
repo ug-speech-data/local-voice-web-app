@@ -21,6 +21,7 @@ import SystemConfigurationCard from "./screens/Setup/SystemConfigurationCard";
 import CategoryCard from "./screens/Setup/CategoriesCard";
 import GroupsCard from "./screens/Setup/GroupsCard";
 import TranscriptionResolution from "./screens/TranscriptionResolution/TranscriptionResolution";
+import FindUsers from "./screens/FindUsers";
 
 
 function App() {
@@ -30,7 +31,8 @@ function App() {
         <Route exact path="/" element={<HomeScreen />} />
         <Route exact path="/login" element={<LoginScreen />} />
         <Route exact path="/register" element={<RegisterScreen />} />
-
+        <Route exact path="/search-users" element={<FindUsers />} />
+        
         <Route path="/tasks" element={
           <ProtectedRoute>
             <Tasks />
