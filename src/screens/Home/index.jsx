@@ -71,6 +71,9 @@ function HomeScreen() {
                     <Link to={'/dashboard'} className="mx-4 my-2">
                         <button className="btn btn-outline-primary text-white"><i className="bi bi-grid-fill"></i> Dashboard</button>
                     </Link>
+                    <Link to={'/search-users'} className="mx-4 my-2">
+                        <button className="btn btn-outline-primary text-white"><i className="bi bi-search"></i> Search User</button>
+                    </Link>
                 </div>
             </div>
         </div>
