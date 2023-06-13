@@ -229,7 +229,7 @@ function Dashboard() {
                                         <td>{languageStatistics.akan.akan_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_single_validation_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.akan.akan_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_double_validation_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.akan.akan_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_validation_conflict_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.akan.akan_audios_akan_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_transcribed_in_hours} hours</b>]</td>
+                                        <td>{languageStatistics.akan.akan_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_transcribed_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.akan.akan_audios_approved} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_approved_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.akan.akan_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.akan.akan_audios_rejected_in_hours} hours</b>]</td>
                                     </tr>
@@ -240,7 +240,7 @@ function Dashboard() {
                                         <td>{languageStatistics.dagaare.dagaare_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_single_validation_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.dagaare.dagaare_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_double_validation_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.dagaare.dagaare_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_validation_conflict_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagaare.dagaare_audios_dagaare_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_transcribed_in_hours} hours</b>]</td>
+                                        <td>{languageStatistics.dagaare.dagaare_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_transcribed_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.dagaare.dagaare_audios_approved} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_approved_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.dagaare.dagaare_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_rejected_in_hours} hours</b>]</td>
                                     </tr>
@@ -273,7 +273,7 @@ function Dashboard() {
                                         <td>{languageStatistics.ikposo.ikposo_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_single_validation_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.ikposo.ikposo_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_double_validation_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.ikposo.ikposo_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_validation_conflict_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ikposo.ikposo_audios_ikposo_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_transcribed_in_hours} hours</b>]</td>
+                                        <td>{languageStatistics.ikposo.ikposo_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_transcribed_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.ikposo.ikposo_audios_approved} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_approved_in_hours} hours</b>]</td>
                                         <td>{languageStatistics.ikposo.ikposo_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_rejected_in_hours} hours</b>]</td>
                                     </tr>
