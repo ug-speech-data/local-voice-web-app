@@ -271,7 +271,7 @@ function Dashboard() {
                                         <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_double_validation_in_hours} hours</b>]</td>
                                         <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_validation_conflict_in_hours} hours</b>]</td>
                                         <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_transcribed} Transcriptions <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_transcribed_in_hours} hours</b>]</td>
-                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_transcribed_unique} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_transcribed_in_hour_unique} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_transcribed_unique} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_transcribed_in_hours_unique} hours</b>]</td>
                                         <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_approved} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_approved_in_hours} hours</b>]</td>
                                         <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_rejected_in_hours} hours</b>]</td>
                                     </tr>
