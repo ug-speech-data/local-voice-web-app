@@ -90,8 +90,12 @@ function Dashboard() {
                                 </div>
                                 <hr />
                                 <div className="d-flex justify-content-between my-3">
-                                    <p>Total Transcribed: </p>
+                                    <p>Total Transcription: </p>
                                     <p>{statistics?.audios_transcribed} ({statistics?.audios_hours_transcribed} hours)</p>
+                                </div>
+                                <div className="d-flex justify-content-between my-3">
+                                    <p>Total Unique Transcription: </p>
+                                    <p>{statistics?.audios_transcribed_unique} ({statistics?.audios_hours_transcribed_unique} hours)</p>
                                 </div>
                             </DashboardCard>
                         </div>
@@ -212,70 +216,76 @@ function Dashboard() {
                             <table className="table">
                                 <thead>
                                     <tr style={{ verticalAlign: "middle" }}>
-                                        <th>LANGUAGE</th>
-                                        <th>TOTAL SUBMITTED</th>
-                                        <th>SINGLE VALIDATION</th>
-                                        <th>DOUBLE VALIDATION</th>
-                                        <th>VALIDATION CONFLICT</th>
-                                        <th>TRANSCRIBED AUDIOS</th>
-                                        <th>APPROVED</th>
-                                        <th>% REJECTED</th>
+                                        <th style={{textAlign:"center"}}>LANGUAGE</th>
+                                        <th style={{textAlign:"center"}}>TOTAL SUBMITTED</th>
+                                        <th style={{textAlign:"center"}}>SINGLE VALIDATION</th>
+                                        <th style={{textAlign:"center"}}>DOUBLE VALIDATION</th>
+                                        <th style={{textAlign:"center"}}>VALIDATION CONFLICT</th>
+                                        <th style={{textAlign:"center"}}>ALL AUDIO TRANS.</th>
+                                        <th style={{textAlign:"center"}}>UNIQUE AUDIO TRANS.</th>
+                                        <th style={{textAlign:"center"}}>APPROVED</th>
+                                        <th style={{textAlign:"center"}}>% REJECTED</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr style={{ height: "5em", verticalAlign: "middle" }}>
                                         <td><b>Akan</b></td>
-                                        <td>{languageStatistics.akan.akan_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_submitted_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.akan.akan_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_single_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.akan.akan_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_double_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.akan.akan_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_validation_conflict_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.akan.akan_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_transcribed_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.akan.akan_audios_approved} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_approved_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.akan.akan_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.akan.akan_audios_rejected_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.akan.akan_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_submitted_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.akan.akan_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_single_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.akan.akan_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_double_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.akan.akan_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_validation_conflict_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.akan.akan_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_transcribed_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.akan.akan_audios_transcribed_unique} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_transcribed_in_hours_unique} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.akan.akan_audios_approved} Audios <br />[<b>{languageStatisticsInHours.akan.akan_audios_approved_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.akan.akan_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.akan.akan_audios_rejected_in_hours} hours</b>]</td>
                                     </tr>
 
                                     <tr style={{ height: "5em", verticalAlign: "middle" }}>
                                         <td><b>Dagaare</b></td>
-                                        <td>{languageStatistics.dagaare.dagaare_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_submitted_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagaare.dagaare_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_single_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagaare.dagaare_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_double_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagaare.dagaare_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_validation_conflict_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagaare.dagaare_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_transcribed_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagaare.dagaare_audios_approved} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_approved_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagaare.dagaare_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_rejected_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagaare.dagaare_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_submitted_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagaare.dagaare_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_single_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagaare.dagaare_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_double_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagaare.dagaare_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_validation_conflict_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagaare.dagaare_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_transcribed_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagaare.dagaare_audios_transcribed_unique} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_transcribed_in_hours_unique} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagaare.dagaare_audios_approved} Audios <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_approved_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagaare.dagaare_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.dagaare.dagaare_audios_rejected_in_hours} hours</b>]</td>
                                     </tr>
 
                                     <tr style={{ height: "5em", verticalAlign: "middle" }}>
                                         <td><b>Dagbani</b></td>
-                                        <td>{languageStatistics.dagbani.dagbani_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_submitted_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagbani.dagbani_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_single_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagbani.dagbani_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_double_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagbani.dagbani_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_validation_conflict_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagbani.dagbani_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_transcribed_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagbani.dagbani_audios_approved} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_approved_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.dagbani.dagbani_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_rejected_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagbani.dagbani_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_submitted_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagbani.dagbani_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_single_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagbani.dagbani_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_double_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagbani.dagbani_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_validation_conflict_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagbani.dagbani_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_transcribed_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagbani.dagbani_audios_transcribed_unique} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_transcribed_in_hours_unique} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagbani.dagbani_audios_approved} Audios <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_approved_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.dagbani.dagbani_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.dagbani.dagbani_audios_rejected_in_hours} hours</b>]</td>
                                     </tr>
 
                                     <tr style={{ height: "5em", verticalAlign: "middle" }}>
                                         <td><b>Ewe</b></td>
-                                        <td>{languageStatistics.ewe.ewe_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_submitted_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ewe.ewe_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_single_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ewe.ewe_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_double_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ewe.ewe_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_validation_conflict_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ewe.ewe_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_transcribed_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ewe.ewe_audios_approved} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_approved_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ewe.ewe_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_rejected_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_submitted_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_single_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_double_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_validation_conflict_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_transcribed_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_transcribed_unique} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_transcribed_in_hour_unique} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_approved} Audios <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_approved_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ewe.ewe_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.ewe.ewe_audios_rejected_in_hours} hours</b>]</td>
                                     </tr>
 
                                     <tr style={{ height: "5em", verticalAlign: "middle" }}>
                                         <td><b>Ikposo</b></td>
-                                        <td>{languageStatistics.ikposo.ikposo_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_submitted_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ikposo.ikposo_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_single_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ikposo.ikposo_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_double_validation_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ikposo.ikposo_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_validation_conflict_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ikposo.ikposo_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_transcribed_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ikposo.ikposo_audios_approved} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_approved_in_hours} hours</b>]</td>
-                                        <td>{languageStatistics.ikposo.ikposo_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_rejected_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ikposo.ikposo_audios_submitted} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_submitted_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ikposo.ikposo_audios_single_validation} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_single_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ikposo.ikposo_audios_double_validation} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_double_validation_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ikposo.ikposo_audios_validation_conflict} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_validation_conflict_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ikposo.ikposo_audios_transcribed} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_transcribed_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ikposo.ikposo_audios_transcribed_unique} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_transcribed_in_hours_unique} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ikposo.ikposo_audios_approved} Audios <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_approved_in_hours} hours</b>]</td>
+                                        <td style={{textAlign:"center"}}>{languageStatistics.ikposo.ikposo_audios_rejected_percentage} % <br />[<b>{languageStatisticsInHours.ikposo.ikposo_audios_rejected_in_hours} hours</b>]</td>
                                     </tr>
                                 </tbody>
                             </table>
