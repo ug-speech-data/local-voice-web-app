@@ -1,2 +1,11 @@
-export const BASE_API_URI = process.env.NODE_ENV === 'production' ? 'https://sdapi.ugspeechdata.com/api' : 'http://127.0.0.1:8000/api';
+export let BASE_API_URI = 'http://127.0.0.1:8000/api';
 export const APP_VERSION = "2.2.1"
+
+if (process.env.NODE_ENV === 'production') {
+    const url = window.location.href;
+    if (url.search("://app.") >= 0) {
+        BASE_API_URI = 'https://sdapi2.ugspeechdata.com/api'
+    } else {
+        BASE_API_URI = 'https://sdapi.ugspeechdata.com/api'
+    }
+}
