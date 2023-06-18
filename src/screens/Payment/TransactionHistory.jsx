@@ -67,6 +67,7 @@ function TransactionHistory() {
                     responseDataAttribute="transactions"
                     dataSourceUrl={`${BASE_API_URI}/payments/transactions-history`}
                     filters={[
+                        { key: `status:new`, value: `New` },
                         { key: `status:pending`, value: `Pending` },
                         { key: `status:success`, value: `Success` },
                         { key: `status:failed`, value: `Failed` }
