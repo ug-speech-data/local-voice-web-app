@@ -378,6 +378,8 @@ function UserPayment() {
                     filters={
                         [
                             { key: `wallet__balance__gt:0`, value: `Has balance`, defaultValue: true },
+                            { key: `wallet__balance__lt:0`, value: `Negative balance`, defaultValue: false },
+                            { key: `wallet__balance:0`, value: `Zero balance`, defaultValue: false },
                             ...(groups?.map(group => { return { key: `groups__name__icontains:${group.name}`, value: `User's in group: '${group.name}'` } }) || []),
                         ]
                     }
