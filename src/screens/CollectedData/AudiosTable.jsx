@@ -334,9 +334,9 @@ function AudiosTable() {
                         ...(enumerators?.map(enumerator => { return { key: `submitted_by__id:${enumerator.id}`, value: `${enumerator.fullname}` } }) || []).sort()
                     ]}
                     filters2={[
-                        { key: "audio_status:accepted", value: "Accepted" },
-                        { key: "audio_status:pending", value: "Pending" },
-                        { key: "audio_status:rejected", value: "Rejected" },
+                        { key: "second_audio_status:accepted", value: "Accepted" },
+                        { key: "second_audio_status:pending", value: "Pending" },
+                        { key: "second_audio_status:rejected", value: "Rejected" },
                         { key: "is_accepted:0:validations", value: "Validation Conflict" },
                     ]}
                     bulkActions={[
@@ -347,7 +347,7 @@ function AudiosTable() {
                         {
                             key: "duration", value: "Player", render: (item) => {
                                 return (
-                                    <div className='d-flex align-items-center'>{item.audio_status == "accepted" ?
+                                    <div className='d-flex align-items-center'>{item.second_audio_status == "accepted" ?
                                         (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
                                         :
                                         item.rejected ?
