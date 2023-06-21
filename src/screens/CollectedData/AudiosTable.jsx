@@ -350,7 +350,7 @@ function AudiosTable() {
                                     <div className='d-flex align-items-center'>{item.second_audio_status == "accepted" ?
                                         (<span className='ms-2 p-0 badge bg-success'><i className="bi bi-info-circle"></i></span>)
                                         :
-                                        item.rejected ?
+                                        item.second_audio_status == "rejected" ?
                                             (<span className='ms-2 p-0 badge bg-danger'><i className="bi bi-info-circle" ></i></span>)
                                             :
                                             (<span className='ms-2 p-0 badge bg-warning'><i className="bi bi-info-circle" ></i></span>)
