@@ -9,9 +9,11 @@ import PageMeta from '../../components/PageMeta';
 import { Spinner, useToast } from '@chakra-ui/react';
 import useAxios from '../../app/hooks/useAxios';
 import { BASE_API_URI } from '../../utils/constants';
+import { useSelector } from 'react-redux';
 
 
 function UserPayment() {
+    const loggedInUser = useSelector((state) => state.authentication.user);
     const [triggerReload, setTriggerReload] = useState(0);
     const [getGroups, { data: response = [], isFetching, error }] = useLazyGetGroupsQuery()
     const { trigger: executeCreditAction, data: creditResponseData, error: creditError, isLoading: isCrediting } = useAxios({ method: "POST" })
@@ -19,16 +21,21 @@ function UserPayment() {
     const { trigger: executeBalancePaymentAction, data: balancePaymentResponseData, error: balancePaymentError, isLoading: isPayingBalance } = useAxios({ method: "POST" })
     const { trigger: executeValidationBenefitAction, data: validationBenefitResponseData, error: validationBenefitError, isLoading: isPayingValidation } = useAxios({ method: "POST" })
 
+    const { trigger: archiveUser, data: archiveUserResponse, error: errorArhivingUser, isLoading: isArchivingUser } = useAxios({ method: "POST" })
+
     const [groups, setGroups] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
     const [totalToPay, setTotalToPay] = useState(0)
+    const [selectedUser, setSelectedUser] = useState(null);
 
     const creditModalRef = useRef(null);
     const paymentModalRef = useRef(null);
     const paymentBalanceModalRef = useRef(null);
     const paymentValidationModalRef = useRef(null);
-    const [paymentAmount, setPaymentAmount] = useState(0)
+    const deletionModalRef = useRef(null);
+    const [archiveAlertModal, setDeletionAlertModal] = useState(null);
 
+    const [paymentAmount, setPaymentAmount] = useState(0)
     const [creditModal, setCreditModal] = useState(null)
     const [paymentModal, setPaymentModal] = useState(null)
     const [balancePaymentModal, setBalancePaymentModal] = useState(null)
@@ -65,6 +72,10 @@ function UserPayment() {
         if (paymentValidationModalRef.current !== null && validationBenefitModal === null) {
             const modal = new Modal(paymentValidationModalRef.current, { keyboard: false })
             setValidationBenefitModal(modal)
+        }
+        if (deletionModalRef.current !== null && archiveAlertModal === null) {
+            const modal = new Modal(deletionModalRef.current, { keyboard: false })
+            setDeletionAlertModal(modal)
         }
     }, [])
 
@@ -148,7 +159,7 @@ function UserPayment() {
                 duration: 2000,
                 isClosable: true,
             })
-            paymentModal?.hide()
+            validationBenefitModal?.hide()
         }
     }, [validationBenefitResponseData])
 
@@ -164,6 +175,19 @@ function UserPayment() {
             })
         }
     }, [paymentError, isPaying])
+
+    useEffect(() => {
+        if (errorArhivingUser && !isArchivingUser) {
+            toast({
+                position: 'top-center',
+                title: `Error`,
+                description: errorArhivingUser,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [errorArhivingUser, isPaying])
 
     const showPaymentModal = (bulkSelectedIds) => {
         setSelectedIds(bulkSelectedIds)
@@ -229,9 +253,64 @@ function UserPayment() {
         )
     }
 
+    const showarchiveUserAlert = (user) => {
+        setSelectedUser(user)
+        archiveAlertModal?.show()
+    }
+
+    useEffect(() => {
+        if (archiveUserResponse?.message) {
+            toast({
+                position: 'top-center',
+                title: `Info`,
+                description: archiveUserResponse.message,
+                status: 'info',
+                duration: 2000,
+                isClosable: true,
+            })
+            archiveAlertModal?.hide()
+            setTriggerReload((triggerReload) => triggerReload + 1);
+        }
+    }, [archiveUserResponse])
+
+    const handleArchiveUser = async () => {
+        archiveUser(
+            `${BASE_API_URI}/archive-user/`,
+            { user_id: selectedUser?.id, archive: "true" }
+        )
+        archiveAlertModal?.hide()
+    }
+
     return (
         <Fragment>
             <PageMeta title="User Payment | UG Speech Data" />
+
+            <div ref={deletionModalRef} className="modal fade" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-md">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">
+                                User Archive - '{selectedUser?.other_names} {selectedUser?.surname}'
+                            </h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="modal-body d-flex justify-content-center overflow-scroll">
+                                <div className="d-flex flex-column">
+                                    <h5>Are you sure you want to {Boolean(selectedUser?.archived)? "unarchive":"archive"} this user?</h5>
+                                </div>
+                            </div>
+                            <p className="text-center mb-3">
+                                {isArchivingUser && <Spinner />}
+                            </p>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-outline-danger" onClick={() => handleArchiveUser(selectedUser)} >Yes, continue</button>
+                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div ref={creditModalRef} className="modal fade" tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-mg">
@@ -375,12 +454,21 @@ function UserPayment() {
                     responseDataAttribute="users"
                     reloadTrigger={triggerReload}
                     dataSourceUrl={`${BASE_API_URI}/payments/users`}
-                    filters={
+                    filters={[
+                        { key: "locale:ak_gh", value: "Akan"},
+                        { key: "locale:dga_gh", value: "Dagbani"},
+                        { key: "locale:dag_gh", value: "Dagaare"},
+                        { key: "locale:ee_gh", value: "Ewe"},
+                        { key: "locale:kpo_gh", value: "Ikposo"},
+                    ]}
+                    filters2={
                         [
                             { key: `wallet__balance__gt:0`, value: `Has balance`, defaultValue: true },
                             { key: `wallet__balance__lt:0`, value: `Negative balance`, defaultValue: false },
                             { key: `wallet__balance:0`, value: `Zero balance`, defaultValue: false },
                             ...(groups?.map(group => { return { key: `groups__name__icontains:${group.name}`, value: `User's in group: '${group.name}'` } }) || []),
+                            { value: "---------------------" },
+                            { key: `archived:1`, value: `Archived users` },
                         ]
                     }
                     bulkActions={[
@@ -460,6 +548,17 @@ function UserPayment() {
                             value: "Balance", render: (item) => {
                                 return (
                                     <span className="badge bg-primary">{item.balance}</span>
+                                )
+                            }
+                        }, {
+                            value: "Actions", render: (item) => {
+                                return (
+                                    <div className="d-flex">
+                                        <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showarchiveUserAlert(item)}>
+                                            <i className="bi bi-database me-1"></i>
+                                            {Boolean(item?.archived) ? "Unarchive" : "Archive"}
+                                        </button>
+                                    </div>
                                 )
                             }
                         }

@@ -464,9 +464,7 @@ function UsersCard() {
                                     <p className={item.is_active ? "" : "text-danger"}>{item.email_address}</p>
                                 )
                             }
-                        },
-
-                        {
+                        },{
                             key: "groups", value: "Group", render: (item) => {
                                 return (
                                     <div>
