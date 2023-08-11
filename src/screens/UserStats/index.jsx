@@ -65,7 +65,7 @@ function UserStatsScreen() {
             <div className="my-3 mx-auto col-md-10">
                 <div className="d-flex justify-content-between align-items-center">
                     <div>
-                        <h4><b>User Statistics and Activity Overview</b></h4>
+                        <h4><b>User Statistics Overview</b></h4>
                         <p className="text-muted mb-4">Explore comprehensive statistics encompassing user recording, validation, and transcription activities.</p>
                     </div>
                 </div>
