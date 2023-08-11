@@ -197,11 +197,11 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                 </div>
                             </th>
 
-                            {headers?.map(({ key, value, render = null }, index) => {
+                            {headers?.map(({ key, value, render = null, centered = null }, index) => {
                                 return (
                                     <th key={index} onClick={(e) => { if (key === sort) { setSortAscending(!sortAscending) }; triggerSort(key) }
                                     }
-                                        style={{ cursor: "pointer" }}
+                                        style={{ cursor: "pointer", textAlign: Boolean(centered) ? "center" : "left" }}
                                     >
                                         <div className="d-flex">
                                             {value.toUpperCase()}
@@ -242,9 +242,9 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                                         />
                                     </td>}
                                     <td>{index + 1}</td>
-                                    {headers?.map(({ key, render }, headerIndex) => {
+                                    {headers?.map(({ key, render, centered = null }, headerIndex) => {
                                         return (
-                                            <td className=" align-items-center" key={headerIndex}>
+                                            <td className=" align-items-center" key={headerIndex} style={{ textAlign: Boolean(centered) ? "center" : "left" }}>
                                                 {render ? render(item) : typeof item[key] != 'object' ? <span>{item[key]}</span> : "N/A"}
                                             </td>
                                         )

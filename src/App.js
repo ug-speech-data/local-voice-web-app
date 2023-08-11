@@ -22,6 +22,7 @@ import CategoryCard from "./screens/Setup/CategoriesCard";
 import GroupsCard from "./screens/Setup/GroupsCard";
 import TranscriptionResolution from "./screens/TranscriptionResolution/TranscriptionResolution";
 import FindUsers from "./screens/FindUsers";
+import UserStatsScreen from "./screens/UserStats";
 
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
         <Route exact path="/login" element={<LoginScreen />} />
         <Route exact path="/register" element={<RegisterScreen />} />
         <Route exact path="/search-users" element={<FindUsers />} />
-        
+
         <Route path="/tasks" element={
           <ProtectedRoute>
             <Tasks />
@@ -84,6 +85,12 @@ function App() {
         <Route path="/profile" element={
           <ProtectedRoute>
             <ProfileScreen />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/user-stats" element={
+          <ProtectedRoute permissions={[Permissions.VIEW_USER_STATS]}>
+            <UserStatsScreen />
           </ProtectedRoute>
         } />
 

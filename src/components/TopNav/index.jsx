@@ -108,7 +108,10 @@ function TopNav() {
                 {userPermissions.has(Permissions.MANAGE_PAYMENT) &&
                     <NavLink key="/payment" to="/payment" className={`nav-menu-item`}>PAYMENT</NavLink>
                 }
-                {userPermissions.has(Permissions.MANAGE_SETUP) &&
+                {userPermissions.has(Permissions.VIEW_USER_STATS) &&
+                    <NavLink key="/user-stats" to="/user-stats" className={`nav-menu-item`}>STATS</NavLink>
+                }
+                   {userPermissions.has(Permissions.MANAGE_SETUP) &&
                     <NavLink key="/setup" to="/setup" className={`nav-menu-item`}>SETUP</NavLink>
                 }
 
@@ -123,7 +126,7 @@ function TopNav() {
                         </button>
                     </div>
 
-                    <div className="drop-down" style={{height:"70vh", overflow:"auto"}}>
+                    <div className="drop-down" style={{ height: "70vh", overflow: "auto" }}>
                         {notifications.map((notification, index) => {
                             return <div key={notification.id} className='drop-down-item'>
                                 <p className='text-bold m-0'>{notification.title}</p>

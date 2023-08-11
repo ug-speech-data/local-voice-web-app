@@ -6,6 +6,7 @@ import UserPayment from './UserPayment';
 import TransactionHistory from './TransactionHistory';
 import BalanceWidget from "../../components/BalanceWidget";
 import ParticipantsTable from "./ParticipantsTable";
+import OthersPayment from "./OthersPayment";
 import PageMeta from "../../components/PageMeta";
 import { useParams, useLocation } from 'react-router-dom'
 import { useSearchParams } from "react-router-dom";
@@ -37,9 +38,10 @@ function Payment() {
                         <BalanceWidget />
                     </div>
                 </div>
-                <TabLayout tabs={["Participants", "Users", "History"]} currentTab={currentTab}>
+                <TabLayout tabs={["Participants", "Users", "Others", "History"]} currentTab={currentTab}>
                     <ParticipantsTable />
                     <UserPayment />
+                    <OthersPayment />
                     <TransactionHistory />
                 </TabLayout>
             </div>
