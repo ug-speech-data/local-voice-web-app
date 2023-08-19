@@ -62,7 +62,7 @@ function UserStatsScreen() {
         <Fragment>
             <PageMeta title="User Statistics | Speech Data UG" />
             <TopNav />
-            <div className="my-3 mx-auto col-11 col-11">
+            <div className="my-3 mx-auto col-md-11 col-11">
                 <div className="d-flex justify-content-between align-items-center">
                     <div>
                         <h4><b>User Statistics Overview</b></h4>

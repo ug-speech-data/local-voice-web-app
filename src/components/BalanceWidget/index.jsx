@@ -36,14 +36,17 @@ function BalanceWidget() {
 
     return (
         <Fragment>
-            <div className="balance-display d-flex align-items-center">
-                <p>Balance : GHC {balance !== null ? balance : "--"}</p>
-                <button className="ms-4 me-2 btn btn-sm btn-outline-primary"
-                    disabled={isLoading}
-                    onClick={() => trigger(`${BASE_API_URI}/payments/balance`)}>
-                    {isLoading && <Spinner size="sm" />}
-                    {!isLoading && <i className="bi bi-arrow-clockwise"></i>}
-                </button>
+            <div className="align-items-center">
+                <p><strong>BALANCE</strong></p>
+                <div className="d-flex">
+                    <p>₵{!Boolean(isNaN(balance - parseFloat(balance))) ? balance : "--.--"}</p>
+                    <button className="ms-4 me-2 btn btn-sm btn-light"
+                        disabled={isLoading}
+                        onClick={() => trigger(`${BASE_API_URI}/payments/balance`)}>
+                        {isLoading && <Spinner size="sm" />}
+                        {!isLoading && <i className="bi bi-arrow-clockwise"></i>}
+                    </button>
+                </div>
             </div>
         </Fragment >
     );
