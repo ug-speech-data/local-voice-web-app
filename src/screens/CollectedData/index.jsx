@@ -181,7 +181,7 @@ function CollectedData() {
             </div>
 
             <TopNav />
-            <div className="my-3 mx-auto col-md-10">
+            <div className="my-3 mx-auto col-md-11 col-11">
                 <div className="d-flex justify-content-between align-items-center">
                     <div>
                         <h4><b>COLLECTED DATA</b></h4>

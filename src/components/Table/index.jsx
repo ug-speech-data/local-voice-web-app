@@ -5,7 +5,21 @@ import { useSearchParams } from "react-router-dom";
 
 import { Spinner } from '@chakra-ui/react';
 
-function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, urlParams = "", setUrlParams = () => null, newUpdate = null, filters = null, filters2 = null, bulkActions = [], reloadTrigger = 0 }) {
+function TableView({ headers,
+    responseDataAttribute = "images",
+    dataSourceUrl,
+    urlParams = "",
+    setUrlParams = () => null,
+    newUpdate = null,
+    filters = null,
+    filters2 = null,
+    bulkActions = [],
+    reloadTrigger = 0,
+    exportable = true,
+    exportFileName = "table-data",
+    filterByDate = false,
+}) {
+
     const [originalData, setOriginalData] = useState([])
     const [displayedData, setDisplayedData] = useState([])
     const { trigger, data: responseData, error, isLoading } = useAxios()
@@ -21,6 +35,8 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
     // Filter inputs
     const [search, setSearch] = useState(searchParams.get('query') || "");
     const [sort, setSort] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     const [pageSize, setPageSize] = useState(100);
 
     // Pagination
@@ -54,15 +70,15 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
 
     useEffect(() => {
         setUrlParams(`?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}`)
-        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}`)
+        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}&start_date=${startDate}&end_date=${endDate}`)
     }, [page, filter, filter2, pageSize, dataSourceUrl])
 
     useEffect(() => {
-        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}`)
+        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}&start_date=${startDate}&end_date=${endDate}`)
     }, [reloadTrigger])
 
     const reloadData = () => {
-        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}`)
+        trigger(`${dataSourceUrl}?page=${page}&q=${search}&page_size=${pageSize}&filters=${filter}&filters=${filter2}&start_date=${startDate}&end_date=${endDate}`)
     }
 
     useEffect(() => {
@@ -99,13 +115,46 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
         setDisplayedData(newData)
     }, [newUpdate])
 
+
+    function exportTableToExcel(tableID, filename = 'hi') {
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+
+        console.log(tableSelect.outerHTML)
+
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+        // Specify file name
+        filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if (navigator.msSaveOrOpenBlob) {
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
     return (
         <Fragment>
             <div className="card-body" style={{ maxHeight: "70vh", overflowY: "auto" }}>
-                <div className="d-flex justify-content-between mb-3 p-3 mx-auto" style={{ position: "sticky", top: "0", background: "white", boxShadow: "0 0 1em 0.01em rgba(0,0,0,0.1)" }}>
+                <div className="d-flex justify-content-between mb-3 p-2 mx-auto" style={{ position: "sticky", top: "0", background: "white", boxShadow: "0 0 1em 0.01em rgba(0,0,0,0.1)" }}>
                     <div className="d-flex">
                         <div className="d-flex align-items-center">
-                            <label htmlFor="search" className="form-label me-2">Search</label>
                             <input type="search" className="form-control" id="search" aria-describedby="search"
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search"
@@ -134,36 +183,42 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                         {Boolean(filters) ?
                             <div className="d-flex align-items-center mx-3">
                                 <label htmlFor="filter" className="form-label me-2">Filters: </label>
-                                <div>
+                                <select className="form-select"
+                                    id="filter"
+                                    defaultValue={filter}
+                                    onChange={(e) => setFilter(e.target.value)}>
+                                    <option value="">None</option>
+                                    {filters?.map(({ key, value }, index) => {
+                                        return (
+                                            <option key={index} value={key}>{value}</option>
+                                        )
+                                    })}
+                                </select>
+
+                                {filters2 != null ?
                                     <select className="form-select"
                                         id="filter"
-                                        defaultValue={filter}
-                                        onChange={(e) => setFilter(e.target.value)}>
+                                        defaultValue={filter2}
+                                        onChange={(e) => setFilter2(e.target.value)}
+                                    >
                                         <option value="">None</option>
-                                        {filters?.map(({ key, value }, index) => {
+                                        {filters2?.map(({ key, value }, index) => {
                                             return (
                                                 <option key={index} value={key}>{value}</option>
                                             )
                                         })}
-                                    </select>
-
-                                    {filters2 != null ?
-                                        <select className="form-select"
-                                            id="filter"
-                                            defaultValue={filter2}
-                                            onChange={(e) => setFilter2(e.target.value)}
-                                        >
-                                            <option value="">None</option>
-                                            {filters2?.map(({ key, value }, index) => {
-                                                return (
-                                                    <option key={index} value={key}>{value}</option>
-                                                )
-                                            })}
-                                        </select> : ""
-                                    }
-                                </div>
+                                    </select> : ""
+                                }
                             </div>
                             : ""}
+
+                        {filterByDate ?
+                            <div className="d-flex align-items-center">
+                                <input className="form-control" type="date" value={startDate} name="start_date" id="start_date" onChange={(e) => setStartDate(e.target.value)} />
+                                <input className="form-control" type="date" value={endDate} name="end_date" id="end_date" onChange={(e) => setEndDate(e.target.value)} />
+                            </div>
+                            : ""}
+
                         <button className="btn btn-sm btn-outline-primary d-flex align-items-center"
                             disabled={isLoading}
                             onClick={reloadData}
@@ -174,7 +229,7 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                     </div>
                 </div>
 
-                <table className="table mb-2">
+                <table className="table mb-2" id="data_table">
                     <thead>
                         <tr>
                             {bulkActions?.length > 0 && <th>
@@ -297,6 +352,9 @@ function TableView({ headers, responseDataAttribute = "images", dataSourceUrl, u
                 >
                     <i className="bi bi-skip-forward"></i>
                 </button>
+                <div className="mx-2">
+                    {exportable ? <button className="btn btn-sm btn-outline-primary d-flex" onClick={() => exportTableToExcel('data_table', exportFileName)}> <i className="bi bi-file-spreadsheet-fill"></i>  Export</button> : ""}
+                </div>
             </div>
         </Fragment >
     );

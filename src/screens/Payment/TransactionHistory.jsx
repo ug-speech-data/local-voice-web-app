@@ -66,11 +66,17 @@ function TransactionHistory() {
                 <TableView
                     responseDataAttribute="transactions"
                     dataSourceUrl={`${BASE_API_URI}/payments/transactions-history`}
+                    filterByDate={true}
+                    exportFileName="transaction-history"
                     filters={[
                         { key: `status:new`, value: `New` },
                         { key: `status:pending`, value: `Pending` },
                         { key: `status:success`, value: `Success` },
                         { key: `status:failed`, value: `Failed` }
+                    ]}
+                    filters2={[
+                        { key: `direction:OUT`, value: `Momo sent` },
+                        { key: `direction:IN`, value: `Account deposit` },
                     ]}
                     bulkActions={[
                         { name: "Check status of selected", action: (bulkSelectedIds) => handleStatusCheck(bulkSelectedIds) },
@@ -88,8 +94,9 @@ function TransactionHistory() {
                             key: "network", value: "Network"
                         }, {
                             key: "fullname", value: "User"
-                        }, {
-                            key: "status_message", value: "Response"
+                        },
+                        {
+                            key: "created_at", value: "Date"
                         },
                         {
                             key: "note", value: "Note"
