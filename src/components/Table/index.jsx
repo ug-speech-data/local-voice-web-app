@@ -324,6 +324,7 @@ function TableView({ headers,
                         <option value="200">200</option>
                         <option value="300">300</option>
                         <option value="600">600</option>
+                        <option value="1000">1000</option>
                     </select>
                 </div>
                 <button className="btn btn-sm btn-primary"
