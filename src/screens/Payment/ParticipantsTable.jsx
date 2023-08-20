@@ -349,7 +349,6 @@ function ParticipantsTable() {
                                                                 transaction?.status === "new" ?
                                                                     <span className='badge bg-primary'>{transaction?.status}</span> :
                                                                     <span className='badge bg-danger'>{transaction?.status}</span>}
-
                                                     </td>
                                                 </tr>
                                             )}
@@ -394,7 +393,7 @@ function ParticipantsTable() {
                             name: "Pay selected", action: (bulkSelectedIds, selectedItems) => {
                                 let total = 0
                                 selectedItems.forEach(participant => {
-                                    total += Number.parseFloat(participant.amount)
+                                    total += Number.parseFloat(participant.balance)
                                 });
                                 setTotalToPay(total.toFixed(2))
                                 showBulkPayConfirmationModal(bulkSelectedIds)
