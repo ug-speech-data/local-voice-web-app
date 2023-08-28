@@ -7,6 +7,8 @@ if (process.env.NODE_ENV === 'production') {
     const url = window.location.href;
     if (url.search("://app.") >= 0) {
         BASE_API_URI = 'https://sdapi2.ugspeechdata.com/api'
+    } else if (url.search("://cloud.") >= 0) {
+        BASE_API_URI = 'https://cloudapi.ugspeechdata.com/api'
     } else {
         BASE_API_URI = 'https://sdapi.ugspeechdata.com/api'
     }
