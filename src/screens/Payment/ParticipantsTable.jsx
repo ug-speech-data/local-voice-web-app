@@ -380,6 +380,13 @@ function ParticipantsTable() {
                     filters={[
                         { key: "type:ASSISTED", value: "Assisted Participants" },
                         { key: "type:INDEPENDENT", value: "Independent Participants" },
+                        
+                        { value: "---------------------" },
+                        { key: "submitted_by__locale:ak_gh", value: "Akan"},
+                        { key: "submitted_by__locale:dga_gh", value: "Dagbani"},
+                        { key: "submitted_by__locale:dag_gh", value: "Dagaare"},
+                        { key: "submitted_by__locale:ee_gh", value: "Ewe"},
+                        { key: "submitted_by__locale:kpo_gh", value: "Ikposo"},
                     ]}
                     filters2={[
                         { key: "balance__gt:0", value: "Has balance", defaultValue: true },
