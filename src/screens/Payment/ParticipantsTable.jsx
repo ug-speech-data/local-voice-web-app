@@ -6,7 +6,7 @@ import {
     useDeleteParticipantsMutation,
     useUpdateParticipantsMutation,
 } from '../../features/resources/resources-api-slice';
-import { Spinner, useToast } from '@chakra-ui/react';
+import { Button, Spinner, useToast } from '@chakra-ui/react';
 import { BASE_API_URI } from '../../utils/constants';
 import useAxios from '../../app/hooks/useAxios';
 import PageMeta from '../../components/PageMeta';
@@ -17,6 +17,7 @@ function ParticipantsTable() {
     const [triggerReload, setTriggerReload] = useState(0);
     const [deleteParticipant, { isLoading: isDeletingParticipant, error: errorDeletingParticipant }] = useDeleteParticipantsMutation()
     const [putParticipant, { isLoading: isPuttingParticipant, isSuccess: successPuttingParticipant, error: errorPuttingParticipant }] = useUpdateParticipantsMutation()
+    const { trigger: triggerPaymentRecalculation, data: recalculationResponse, error: recalculationError, isLoading: isLoadingRecalculation } = useAxios({ method: "POST" })
 
     const deletionModalRef = useRef(null);
     const confirmationModalRef = useRef(null);
@@ -136,7 +137,17 @@ function ParticipantsTable() {
                 isClosable: true,
             })
         }
-    }, [errorPuttingParticipant, errorDeletingParticipant])
+        if (recalculationError) {
+            toast({
+                title: `An error occured.`,
+                description: recalculationError,
+                position: "top-center",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            })
+        }
+    }, [errorPuttingParticipant, errorDeletingParticipant, recalculationError])
 
     useEffect(() => {
         if (successPuttingParticipant) {
@@ -152,6 +163,22 @@ function ParticipantsTable() {
         }
         toast.close("submitting")
     }, [successPuttingParticipant])
+
+    useEffect(() => {
+        if (recalculationResponse?.message) {
+            toast({
+                title: "Info",
+                description: recalculationResponse?.message,
+                position: "top-center",
+                status: "info",
+                duration: 2000,
+                isClosable: true,
+            })
+            editParticipantModal?.hide()
+        }
+        toast.close("submitting")
+    }, [recalculationResponse])
+
 
     // Bulk actions
     const { trigger: executeBulkParticipantAction, data: bulkActionResponseData, error: bulkActionError, isLoading: isSubmittingBulkAction } = useAxios({ method: "POST" })
@@ -372,6 +399,17 @@ function ParticipantsTable() {
             </div>
 
             <div className="mb-5 overflow-scroll">
+                <div className="d-flex justify-content-start">
+                    <Button
+                        isLoading={isLoadingRecalculation}
+                        className='my-2'
+                        onClick={() => {
+                            triggerPaymentRecalculation(`${BASE_API_URI}/payments/recalculate-participant-amounts/`, {})
+                        }}>
+                        <i className="bi bi-hand-index me-2"></i>
+                        Recalculate all amounts
+                    </Button>
+                </div>
                 <TableView
                     reloadTrigger={triggerReload}
                     responseDataAttribute="participants"
@@ -380,6 +418,7 @@ function ParticipantsTable() {
                     filters={[
                         { key: "type:ASSISTED", value: "Assisted Participants" },
                         { key: "type:INDEPENDENT", value: "Independent Participants" },
+                        { key: `excluded_from_payment:0`, value: "No excluded from payment" },
                         { value: "---------------------" },
                         { key: "submitted_by__locale:ak_gh", value: "Akan" },
                         { key: "submitted_by__locale:dga_gh", value: "Dagbani" },
@@ -441,7 +480,9 @@ function ParticipantsTable() {
                     {
                         key: "percentage_audios_accepted", value: "% ACC."
                     }, {
-                        key: "amount", value: "Amt. (₵)"
+                        key: "amount", value: "Amt. (₵)", render: (item) => {
+                            return item.excluded_from_payment ? <strike className="text-danger" title="Excluded from payment.">{item.amount}</strike> : <span>{item.amount}</span>
+                        }
                     }, {
                         key: "balance", value: "Bal."
                     }, {
