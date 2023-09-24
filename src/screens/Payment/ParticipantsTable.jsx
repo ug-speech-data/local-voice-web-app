@@ -486,7 +486,9 @@ function ParticipantsTable() {
                             return item.excluded_from_payment ? <strike className="text-danger" title="Excluded from payment.">{item.amount}</strike> : <span>{item.amount}</span>
                         }
                     }, {
-                        key: "balance", value: "Bal."
+                        key: "balance", value: "Bal.", render: (item) => {
+                            return item.excluded_from_payment ? <strike className="text-danger" title="Excluded from payment.">{item.balance}</strike> : <span>{item.balance}</span>
+                        }
                     }, {
                         key: "paid", value: "Payment", render: (item) => {
                             return (
@@ -510,6 +512,7 @@ function ParticipantsTable() {
                                     <button className="btn btn-sm btn-outline-primary me-1 d-flex"
                                         disabled={isPuttingParticipant}
                                         onClick={() => toggleParticipantPaymentExclusion(item.id, !item.excluded_from_payment)}>
+                                        {isPuttingParticipant ? <Spinner size={"sm"} /> : ""}
                                         <i className="bi bi-hand-index me-1"></i>
                                         Toggle Exclusion
                                     </button>
