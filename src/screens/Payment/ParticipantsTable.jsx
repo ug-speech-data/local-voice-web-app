@@ -131,7 +131,7 @@ function ParticipantsTable() {
         if (errorPuttingParticipant) {
             toast({
                 title: `Error: ${errorPuttingParticipant.status}`,
-                description: "An error occurred while updating the image",
+                description: "An error occurred while updating the participant",
                 status: "error",
                 position: "top-center",
                 duration: 2000,
@@ -141,7 +141,7 @@ function ParticipantsTable() {
         if (errorDeletingParticipant) {
             toast({
                 title: `Error: ${errorDeletingParticipant.status}`,
-                description: "An error occurred while deleting the image",
+                description: "An error occurred while deleting the participant",
                 position: "top-center",
                 status: "error",
                 duration: 2000,
