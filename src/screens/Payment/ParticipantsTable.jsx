@@ -419,7 +419,8 @@ function ParticipantsTable() {
                     filters={[
                         { key: "type:ASSISTED", value: "Assisted Participants" },
                         { key: "type:INDEPENDENT", value: "Independent Participants" },
-                        { key: `excluded_from_payment:0`, value: "No excluded from payment" },
+                        { key: `excluded_from_payment:1`, value: "Excluded from payment" },
+                        { key: `excluded_from_payment:0`, value: "Not excluded from payment" },
                         { value: "---------------------" },
                         { key: "submitted_by__locale:ak_gh", value: "Akan" },
                         { key: "submitted_by__locale:dga_gh", value: "Dagbani" },
