@@ -96,20 +96,20 @@ function UserStatsScreen() {
                                 },
                             },
                             {
-                                key: "locale", value: "Locale", centered: true,
+                                key: "locale", value: "Locale", textAlign: "center",
                             },
-                            { key: "audios_submitted", value: "Audios Submitted", centered: true, },
-                            { key: "audios_rejected", value: "Rejected Audios", centered: true, },
-                            { key: "audios_pending", value: "Pending audios", centered: true, },
-                            { key: "audios_accepted", value: "Accepted Audios", centered: true, },
-                            { key: "audios_validated", value: "Aud. Validated", centered: true, },
-                            { key: "transcriptions_resolved", value: "Trans Resolved", centered: true, },
-                            { key: "audios_transcribed", value: "Transcription", centered: true, },
+                            { key: "audios_submitted", value: "Audios Submitted", textAlign: "center", },
+                            { key: "audios_rejected", value: "Rejected Audios", textAlign: "center", },
+                            { key: "audios_pending", value: "Pending audios", textAlign: "center", },
+                            { key: "audios_accepted", value: "Accepted Audios", textAlign: "center", },
+                            { key: "audios_validated", value: "Aud. Validated", textAlign: "center", },
+                            { key: "transcriptions_resolved", value: "Trans Resolved", textAlign: "center", },
+                            { key: "audios_transcribed", value: "Transcription", textAlign: "center", },
 
                             {
-                                value: "Actions", render: (item) => {
+                                value: "Actions", textAlign: "right", render: (item) => {
                                     return (
-                                        <div className="d-flex">
+                                        <div className="d-flex justify-content-end">
                                             <button className="btn btn-sm btn-outline-primary me-1 d-flex" disabled={isLoading} onClick={() => handleSendRequest(item.id)}>
                                                 <i className="bi bi-list me-1"></i>
                                                 Update

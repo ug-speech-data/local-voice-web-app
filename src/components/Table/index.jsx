@@ -19,7 +19,6 @@ function TableView({ headers,
     exportFileName = "table-data",
     filterByDate = false,
 }) {
-
     const [originalData, setOriginalData] = useState([])
     const [displayedData, setDisplayedData] = useState([])
     const { trigger, data: responseData, error, isLoading } = useAxios()
@@ -152,7 +151,7 @@ function TableView({ headers,
     return (
         <section className="table-component">
             <div className="card-body" style={{ maxHeight: "70vh", overflowY: "auto" }}>
-            <div className="d-flex justify-content-between mb-3 p-2 mx-auto table-controls-container">
+                <div className="d-flex justify-content-between mb-3 p-2 mx-auto table-controls-container">
                     <div className="d-flex">
                         <div className="d-flex align-items-center">
                             <input type="search" className="form-control" id="search" aria-describedby="search"
@@ -253,16 +252,14 @@ function TableView({ headers,
                                     </div>
                                 </th>
 
-                                {headers?.map(({ key, value, render = null, centered = null }, index) => {
+                                {headers?.map(({ key, value, render = null, textAlign = "left" }, index) => {
                                     return (
                                         <th key={index} onClick={(e) => { if (key === sort) { setSortAscending(!sortAscending) }; triggerSort(key) }
                                         }
-                                            style={{ cursor: "pointer", textAlign: Boolean(centered) ? "center" : "left" }}
+                                            style={{ cursor: "pointer", textAlign: textAlign }}
                                         >
-                                            <div className="d-flex">
-                                                {value.toUpperCase()}
-                                                {sort === key && (sortAscending ? <i className="bi bi-caret-down-fill"></i> : <i className="bi bi-caret-up-fill"></i>)}
-                                            </div>
+                                            {value}
+                                            {sort === key && (sortAscending ? <i className="bi bi-caret-down-fill"></i> : <i className="bi bi-caret-up-fill"></i>)}
                                         </th>
                                     )
                                 })}
@@ -298,9 +295,9 @@ function TableView({ headers,
                                             />
                                         </td>}
                                         <td>{index + 1}</td>
-                                        {headers?.map(({ key, render, centered = null }, headerIndex) => {
+                                        {headers?.map(({ key, render, textAlign = "left" }, headerIndex) => {
                                             return (
-                                                <td className=" align-items-center" key={headerIndex} style={{ textAlign: Boolean(centered) ? "center" : "left" }}>
+                                                <td className=" align-items-center" key={headerIndex} style={{ textAlign: textAlign }}>
                                                     {render ? render(item) : typeof item[key] != 'object' ? <span>{item[key]}</span> : "N/A"}
                                                 </td>
                                             )
@@ -319,7 +316,7 @@ function TableView({ headers,
                 </div> : ""
             }
 
-            <div className="d-flex align-items-center mx-3 my-3">
+            <div className="d-flex align-items-center my-3 table-footer-controls">
                 <div className="d-flex align-items-center me-2">
                     <select className="form-select" name="page_size" id="page_size" onChange={(e) => setPageSize(e.target.value)} defaultValue={page}>
                         <option value="100">100</option>

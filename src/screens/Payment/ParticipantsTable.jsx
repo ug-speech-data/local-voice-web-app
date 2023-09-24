@@ -116,6 +116,17 @@ function ParticipantsTable() {
         }
     }
 
+    const toggleParticipantPaymentExclusion = async (participantId, newExclusionStatus) => {
+        const body = {
+            excluded_from_payment: newExclusionStatus,
+            id: participantId,
+        }
+        const response = await putParticipant(body).unwrap()
+        if (response?.participant !== undefined) {
+            setNewUpdate({ item: response.participant, action: "update" })
+        }
+    }
+
     useEffect(() => {
         if (errorPuttingParticipant) {
             toast({
@@ -151,7 +162,9 @@ function ParticipantsTable() {
 
     useEffect(() => {
         if (successPuttingParticipant) {
+            toast.close("successPuttingParticipant")
             toast({
+                id: "successPuttingParticipant",
                 title: "Success",
                 description: "Participant updated successfully",
                 position: "top-center",
@@ -399,17 +412,6 @@ function ParticipantsTable() {
             </div>
 
             <div className="mb-5 overflow-scroll">
-                <div className="d-flex justify-content-start">
-                    <Button
-                        isLoading={isLoadingRecalculation}
-                        className='my-2'
-                        onClick={() => {
-                            triggerPaymentRecalculation(`${BASE_API_URI}/payments/recalculate-participant-amounts/`, {})
-                        }}>
-                        <i className="bi bi-hand-index me-2"></i>
-                        Recalculate all amounts
-                    </Button>
-                </div>
                 <TableView
                     reloadTrigger={triggerReload}
                     responseDataAttribute="participants"
@@ -502,14 +504,19 @@ function ParticipantsTable() {
                         }
                     },
                     {
-                        value: "Actions", render: (item) => {
+                        value: "Actions", textAlign: "right", render: (item) => {
                             return (
-                                <div className="d-flex">
+                                <div className="d-flex justify-content-end">
+                                    <button className="btn btn-sm btn-outline-primary me-1 d-flex"
+                                        disabled={isPuttingParticipant}
+                                        onClick={() => toggleParticipantPaymentExclusion(item.id, !item.excluded_from_payment)}>
+                                        <i className="bi bi-hand-index me-1"></i>
+                                        Toggle Exclusion
+                                    </button>
                                     <button className="btn btn-sm btn-outline-primary me-1 d-flex" onClick={() => showEditParticipantModal(item)}>
                                         <i className="bi bi-list me-1"></i>
                                         More
                                     </button>
-
                                     <button className="btn btn-sm btn-outline-danger me-1 d-flex" onClick={() => showDeleteParticipantModal(item)}>
                                         <i className="bi bi-list me-1"></i>
                                         Delete
@@ -520,6 +527,19 @@ function ParticipantsTable() {
                     }]}
                 >
                 </TableView>
+
+                <hr />
+                <div className="d-flex justify-content-end">
+                    <Button
+                        isLoading={isLoadingRecalculation}
+                        className='my-2'
+                        onClick={() => {
+                            triggerPaymentRecalculation(`${BASE_API_URI}/payments/recalculate-participant-amounts/`, {})
+                        }}>
+                        <i className="bi bi-hand-index me-2"></i>
+                        Recalculate all amounts
+                    </Button>
+                </div>
             </div>
         </Fragment >
     );
