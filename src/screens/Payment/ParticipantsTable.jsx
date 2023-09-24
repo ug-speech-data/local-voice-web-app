@@ -116,14 +116,14 @@ function ParticipantsTable() {
         }
     }
 
-    const toggleParticipantPaymentExclusion = async (participantId, newExclusionStatus) => {
+    const toggleParticipantPaymentExclusion = async (index, participantId, newExclusionStatus) => {
         const body = {
             excluded_from_payment: newExclusionStatus,
             id: participantId,
         }
         const response = await putParticipant(body).unwrap()
         if (response?.participant !== undefined) {
-            setNewUpdate({ item: response.participant, action: "update" })
+            setNewUpdate({ item: response.participant, action: "update", index })
         }
     }
 
@@ -375,7 +375,6 @@ function ParticipantsTable() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {console.log(selectedParticipant?.transactions)}
                                             {selectedParticipant?.transactions?.map(transaction =>
                                                 <tr>
                                                     <td>{transaction.transaction_id}</td>
@@ -506,12 +505,12 @@ function ParticipantsTable() {
                         }
                     },
                     {
-                        value: "Actions", textAlign: "right", render: (item) => {
+                        value: "Actions", textAlign: "right", render: (item, index = 0) => {
                             return (
                                 <div className="d-flex justify-content-end">
                                     <button className="btn btn-sm btn-outline-primary me-1 d-flex"
                                         disabled={isPuttingParticipant}
-                                        onClick={() => toggleParticipantPaymentExclusion(item.id, !item.excluded_from_payment)}>
+                                        onClick={() => toggleParticipantPaymentExclusion(index, item.id, !item.excluded_from_payment)}>
                                         {isPuttingParticipant ? <Spinner size={"sm"} /> : ""}
                                         <i className="bi bi-hand-index me-1"></i>
                                         Toggle Exclusion

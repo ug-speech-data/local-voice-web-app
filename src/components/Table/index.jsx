@@ -105,10 +105,14 @@ function TableView({ headers,
         if (newUpdate === null) {
             return
         }
-        const { item, action } = newUpdate
+        const { item, action, index = 0 } = newUpdate
         let newData = [...originalData.filter(c => c.id !== item.id)]
         if (action === "update") {
-            newData = [item, ...newData]
+            newData = [
+                ...newData.slice(0, index),
+                item,
+                ...newData.slice(index)
+            ]
         }
         setOriginalData(newData)
         setDisplayedData(newData)
@@ -298,7 +302,7 @@ function TableView({ headers,
                                         {headers?.map(({ key, render, textAlign = "left" }, headerIndex) => {
                                             return (
                                                 <td className=" align-items-center" key={headerIndex} style={{ textAlign: textAlign }}>
-                                                    {render ? render(item) : typeof item[key] != 'object' ? <span>{item[key]}</span> : "N/A"}
+                                                    {render ? render(item, index) : typeof item[key] != 'object' ? <span>{item[key]}</span> : "N/A"}
                                                 </td>
                                             )
                                         })}
