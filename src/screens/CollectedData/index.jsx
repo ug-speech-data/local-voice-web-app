@@ -28,6 +28,7 @@ function CollectedData() {
 
     const [status, setStatus] = useState("accepted")
     const [locale, setLocale] = useState("all")
+    const [dataType, setDataType] = useState("metadata_and_audio")
     const [randomise, setRandomise] = useState("false")
     const [numberOfFiles, setNumberOfFiles] = useState(0)
     const [skip, setSkip] = useState(0)
@@ -82,6 +83,7 @@ function CollectedData() {
                 tag: tag,
                 locale: locale,
                 randomise: randomise,
+                data_type: dataType,
                 skip: randomise === "false"? skip: 0,
                 "number_of_files": numberOfFiles,
             }
@@ -136,6 +138,14 @@ function CollectedData() {
                                 <select name="randomise" id="randomise" className='form-select' defaultValue={randomise} onChange={(e) => setRandomise(e.target.value)}>
                                     <option value="false">False</option>
                                     <option value="true">True</option>
+                                </select>
+                            </div>
+
+                            <div className='form-group my-3'>
+                                <label htmlFor="data_type"><b>Data Type</b></label>
+                                <select name="data_type" id="data_type" className='form-select' defaultValue={dataType} onChange={(e) => setDataType(e.target.value)}>
+                                    <option value="metadata_and_audio">Metadata + Audio</option>
+                                    <option value="metadata_only">Only Metadata</option>
                                 </select>
                             </div>
 
